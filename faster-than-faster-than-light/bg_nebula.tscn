@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn8u0s6bv084r"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qgsab"]
+transparency = 1
+albedo_color = Color(0, 0.392157, 1, 0.196078)
+emission_enabled = true
+emission = Color(0.196078, 0.196078, 0.196078, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_qgsab"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_qgsab")
+radius = 30.0
+height = 60.0
+
+[node name="BGNebula" type="MeshInstance3D"]
+mesh = SubResource("SphereMesh_qgsab")

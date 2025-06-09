@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=3 uid="uid://cacny3icm7ern"]
+
+[ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
+[ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
+[ext_resource type="PackedScene" uid="uid://we015wgfhmco" path="res://bg_star.tscn" id="2_qtpbo"]
+[ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
+
+[sub_resource type="Environment" id="Environment_d5lh8"]
+background_energy_multiplier = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5lh8"]
+albedo_color = Color(1, 1, 0, 1)
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_81phd"]
+material = SubResource("StandardMaterial3D_d5lh8")
+radius = 100.0
+height = 200.0
+
+[node name="Space" type="Node3D"]
+script = ExtResource("1_81phd")
+bg_star = ExtResource("2_qtpbo")
+bg_nebula = ExtResource("3_rxlph")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_d5lh8")
+
+[node name="Background" type="Node3D" parent="."]
+
+[node name="MainStar" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, 0, -1000)
+mesh = SubResource("SphereMesh_81phd")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 20, 50)
+
+[node name="Starship" parent="." instance=ExtResource("1_d5lh8")]
