@@ -36,3 +36,8 @@ func _ready() -> void:
 		var new_star = bg_star.instantiate()
 		new_star.position = Vector3(randf_range(-1500, 1500), randf_range(-1500, 1500), randf_range(-1500, -200))
 		$Background.add_child(new_star)
+
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("debug_quit"):
+		get_tree().quit()

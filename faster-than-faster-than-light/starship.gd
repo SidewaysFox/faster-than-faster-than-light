@@ -18,11 +18,31 @@ class_name Starship extends Node3D
 # Variables
 var hull: int = 10
 var resources: int = 0
+var jumping: bool = true
+var jump_mode: int = -1
+var jump_destination: Vector3
 
 # Misc stats
 var kills: int = 0
 var total_hull_damage: int = 0
 
 
+func _ready() -> void:
+	if team != 0:
+		global_position = Vector3(-2000 * team, randf_range(-200, 200), randf_range(-200, 200))
+	else:
+		global_position = Vector3(randf_range(50, 50), randf_range(-25, 25), randf_range(-10, -150))
+	jump_destination = Vector3(randf_range(-200, -50) * team, randf_range(-25, 25), randf_range(-10, -150))
+	$JumpDelay.start(randf() * 3)
+	print(global_position)
+	print(jump_destination)
+
+
 func _process(delta: float) -> void:
-	pass
+	if jumping:
+		if jump_mode == 0 and team != 0:
+			global_position = lerp(global_position, jump_destination, 0.1)
+
+
+func _on_jump_delay_timeout() -> void:
+	jump_mode += 1

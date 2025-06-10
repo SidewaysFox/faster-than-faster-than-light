@@ -10,9 +10,15 @@ emission_energy_multiplier = 0.2
 
 [sub_resource type="BoxMesh" id="BoxMesh_k81bx"]
 material = SubResource("StandardMaterial3D_ng4vp")
+size = Vector3(5, 5, 5)
 
 [node name="Starship" type="Node3D"]
 script = ExtResource("1_ng4vp")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_k81bx")
+
+[node name="JumpDelay" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="JumpDelay" to="." method="_on_jump_delay_timeout"]

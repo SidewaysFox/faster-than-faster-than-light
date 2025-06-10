@@ -33,6 +33,79 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, 0, -1000)
 mesh = SubResource("SphereMesh_81phd")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 20, 50)
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
 
 [node name="Starship" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship2" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship3" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship4" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship5" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship6" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship7" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship8" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship9" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship10" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship11" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship12" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship13" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship14" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship15" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship16" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship17" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship18" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship19" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship20" parent="." instance=ExtResource("1_d5lh8")]
+team = 1
+
+[node name="Starship21" parent="." instance=ExtResource("1_d5lh8")]
+team = -1
+
+[node name="Starship22" parent="." instance=ExtResource("1_d5lh8")]
+team = -1
+
+[node name="Starship23" parent="." instance=ExtResource("1_d5lh8")]
+team = -1
+
+[node name="Starship24" parent="." instance=ExtResource("1_d5lh8")]
+team = -1
+
+[node name="Starship25" parent="." instance=ExtResource("1_d5lh8")]
+team = -1
