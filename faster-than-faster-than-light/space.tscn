@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=12 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
@@ -8,13 +8,33 @@
 [sub_resource type="Environment" id="Environment_d5lh8"]
 background_energy_multiplier = 0.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d5lh8"]
-albedo_color = Color(1, 1, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxlph"]
+albedo_color = Color(1, 0.470588, 0, 1)
 emission_enabled = true
-emission = Color(1, 1, 0, 1)
+emission = Color(1, 0.470588, 0, 1)
 
-[sub_resource type="SphereMesh" id="SphereMesh_81phd"]
-material = SubResource("StandardMaterial3D_d5lh8")
+[sub_resource type="SphereMesh" id="SphereMesh_ulv8f"]
+material = SubResource("StandardMaterial3D_rxlph")
+radius = 100.0
+height = 200.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5eul"]
+albedo_color = Color(1, 0.470588, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.470588, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_b5fhv"]
+material = SubResource("StandardMaterial3D_w5eul")
+radius = 100.0
+height = 200.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4fhbr"]
+albedo_color = Color(1, 0.470588, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.470588, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_1vxpe"]
+material = SubResource("StandardMaterial3D_4fhbr")
 radius = 100.0
 height = 200.0
 
@@ -28,9 +48,17 @@ environment = SubResource("Environment_d5lh8")
 
 [node name="Background" type="Node3D" parent="."]
 
-[node name="MainStar" type="MeshInstance3D" parent="Background"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -500, 0, -1000)
-mesh = SubResource("SphereMesh_81phd")
+[node name="MainStar1" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
+mesh = SubResource("SphereMesh_ulv8f")
+
+[node name="MainStar2" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
+mesh = SubResource("SphereMesh_b5fhv")
+
+[node name="MainStar3" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
+mesh = SubResource("SphereMesh_1vxpe")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)

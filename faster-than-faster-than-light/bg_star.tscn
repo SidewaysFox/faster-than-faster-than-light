@@ -1,14 +1,18 @@
 [gd_scene load_steps=3 format=3 uid="uid://we015wgfhmco"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_81qv8"]
+resource_local_to_scene = true
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
 emission_energy_multiplier = 16.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_xsk27"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_81qv8")
 radius = 0.6
 height = 1.2
+radial_segments = 6
+rings = 3
 
 [node name="BGStar" type="MeshInstance3D"]
 mesh = SubResource("SphereMesh_xsk27")
