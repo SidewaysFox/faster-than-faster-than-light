@@ -1,12 +1,23 @@
-[gd_scene load_steps=12 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=15 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
 [ext_resource type="PackedScene" uid="uid://we015wgfhmco" path="res://bg_star.tscn" id="2_qtpbo"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
+[ext_resource type="Shader" uid="uid://c382ugk33pnhp" path="res://space.gdshader" id="4_ulv8f"]
 
 [sub_resource type="Environment" id="Environment_d5lh8"]
 background_energy_multiplier = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
+render_priority = 0
+shader = ExtResource("4_ulv8f")
+shader_parameter/bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_4fhbr"]
+flip_faces = true
+radius = 1000.0
+height = 2000.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxlph"]
 albedo_color = Color(1, 0.470588, 0, 1)
@@ -51,6 +62,10 @@ bg_nebula = ExtResource("3_rxlph")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_d5lh8")
+
+[node name="BGStars" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_ulv8f")
+mesh = SubResource("SphereMesh_4fhbr")
 
 [node name="Background" type="Node3D" parent="."]
 
