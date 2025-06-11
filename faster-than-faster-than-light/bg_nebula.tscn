@@ -13,8 +13,8 @@ resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_qgsab")
 radius = 30.0
 height = 60.0
-radial_segments = 16
-rings = 8
+radial_segments = 8
+rings = 4
 
 [node name="BGNebula" type="MeshInstance3D"]
 mesh = SubResource("SphereMesh_5miou")

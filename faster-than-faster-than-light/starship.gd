@@ -32,8 +32,8 @@ func _ready() -> void:
 		global_position = Vector3(-2000 * team, randf_range(-200, 200), randf_range(-200, 200))
 	else:
 		global_position = Vector3(randf_range(50, 50), randf_range(-25, 25), randf_range(-10, -150))
-	jump_destination = Vector3(randf_range(-200, -50) * team, randf_range(-25, 25), randf_range(-10, -150))
-	$JumpDelay.start(randf() * 3)
+	jump_destination = Vector3(randf_range(-170, -50) * team, randf_range(-60, 60), randf_range(25, -100))
+	$JumpDelay.start(randf() * 2)
 
 
 func _process(delta: float) -> void:
