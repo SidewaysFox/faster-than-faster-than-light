@@ -9,12 +9,14 @@ var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1
 
 
 func _ready() -> void:
+	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
+	$BGStars.material_override.set_shader_parameter("prob_mod", randf_range(0.9, 1.1))
 	for i in system_types.pick_random():
 		var z: float = randf_range(-3000, -300)
 		var x: float = randf_range(z * -1.25, z * 1.25)
 		var y: float = randf_range(z / 0.8, z / -2.3)
 		var colour = star_colours.pick_random()
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.color = colour
+		$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
 		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
 		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(75, 180)
 		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
@@ -44,12 +46,12 @@ func _ready() -> void:
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2
 				nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))
 				$Background.add_child(new_nebula)
-	for i in randi_range(400, 1200):
-		var new_star = bg_star.instantiate()
-		new_star.mesh.radius = randf_range(0.6, 1.5)
-		new_star.mesh.height = new_star.mesh.radius * 2
-		new_star.position = Vector3(randf_range(-1500, 1500), randf_range(-1500, 1500), randf_range(-1500, -200))
-		$Background.add_child(new_star)
+	#for i in randi_range(400, 1200):
+		#var new_star = bg_star.instantiate()
+		#new_star.mesh.radius = randf_range(0.6, 1.5)
+		#new_star.mesh.height = new_star.mesh.radius * 2
+		#new_star.position = Vector3(randf_range(-1500, 1500), randf_range(-1500, 1500), randf_range(-1500, -200))
+		#$Background.add_child(new_star)
 
 
 func _process(delta: float) -> void:

@@ -1,18 +1,20 @@
-shader_type canvas_item;
+shader_type spatial;
 
 uniform vec4 bg_color: source_color;
+uniform float seed = 1.0;
+uniform float prob_mod = 1.0;
 
 float rand(vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233)) * seed) * 43758.5453123);
 }
 
 void fragment() {
 	float size = 100.0;
-	float prob = 0.9;
+	float prob = 0.9 * prob_mod;
 	vec2 pos = floor(1.0 / size * FRAGCOORD.xy);
 	float color = 0.0;
 	float starValue = rand(pos);
-
+	
 	if (starValue > prob)
 	{
 		vec2 center = size * pos + vec2(size, size) * 0.5;
@@ -25,5 +27,5 @@ void fragment() {
 		float r = rand(SCREEN_UV.xy);
 		color = r * (0.85 * sin(TIME * (r * 5.0) + 720.0 * r) + 0.95);
 	}
-	COLOR = vec4(vec3(color),1.0) + bg_color;
+	ALBEDO = vec3(color);
 }
