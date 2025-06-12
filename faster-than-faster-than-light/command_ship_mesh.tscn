@@ -1,0 +1,177 @@
+[gd_scene load_steps=23 format=3 uid="uid://b7rwxfw7w8fbl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hmim6"]
+albedo_color = Color(0.784314, 0.784314, 0.784314, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_2cnno"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(20, 8, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hmim6"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(5, 7, 6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7qwto"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(4, 6, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mc23g"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(3, 4, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cv37d"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(3, 2.5, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7qwto"]
+albedo_color = Color(0.470588, 0.470588, 0.470588, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_378tv"]
+material = SubResource("StandardMaterial3D_7qwto")
+size = Vector3(5, 3, 7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xykhg"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(5, 5, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_clinx"]
+material = SubResource("StandardMaterial3D_hmim6")
+size = Vector3(2.5, 2.5, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2cnno"]
+albedo_color = Color(0.470588, 0.470588, 0.470588, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_qf0m3"]
+material = SubResource("StandardMaterial3D_2cnno")
+size = Vector3(10, 2, 15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_378tv"]
+albedo_color = Color(0.470588, 0.470588, 0.470588, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_sst43"]
+material = SubResource("StandardMaterial3D_378tv")
+size = Vector3(10, 1.6, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc23g"]
+albedo_color = Color(0.470588, 0.470588, 0.470588, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_oqr01"]
+material = SubResource("StandardMaterial3D_mc23g")
+size = Vector3(10, 1.2, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wpmgm"]
+albedo_color = Color(1, 0.313726, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.313726, 0, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_tgjb4"]
+material = SubResource("StandardMaterial3D_wpmgm")
+size = Vector3(18, 0.1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t4v17"]
+material = SubResource("StandardMaterial3D_wpmgm")
+size = Vector3(14, 0.1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_geswp"]
+material = SubResource("StandardMaterial3D_wpmgm")
+size = Vector3(18, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q70nf"]
+material = SubResource("StandardMaterial3D_wpmgm")
+size = Vector3(12, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t7sr1"]
+material = SubResource("StandardMaterial3D_wpmgm")
+size = Vector3(8, 0.5, 0.1)
+
+[node name="CommandShipMesh" type="Node3D"]
+
+[node name="Hull" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_2cnno")
+
+[node name="HullFront" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+mesh = SubResource("BoxMesh_hmim6")
+
+[node name="HullFront2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 0)
+mesh = SubResource("BoxMesh_7qwto")
+
+[node name="HullFront3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 2, 0)
+mesh = SubResource("BoxMesh_mc23g")
+
+[node name="HullFront4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2.75, 0)
+mesh = SubResource("BoxMesh_cv37d")
+
+[node name="HullBridge" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5, 0)
+mesh = SubResource("BoxMesh_378tv")
+
+[node name="HullBack" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
+mesh = SubResource("BoxMesh_xykhg")
+
+[node name="HullBack2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 0)
+mesh = SubResource("BoxMesh_clinx")
+
+[node name="Wing" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_qf0m3")
+
+[node name="WingRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7.5)
+mesh = SubResource("BoxMesh_sst43")
+
+[node name="WingRight2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 10)
+mesh = SubResource("BoxMesh_oqr01")
+
+[node name="WingLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7.5)
+mesh = SubResource("BoxMesh_sst43")
+
+[node name="WingLeft2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -10)
+mesh = SubResource("BoxMesh_oqr01")
+
+[node name="HullAccent" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4, 0)
+mesh = SubResource("BoxMesh_tgjb4")
+
+[node name="HullAccentRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 3)
+mesh = SubResource("BoxMesh_t4v17")
+
+[node name="HullAccentLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, -3)
+mesh = SubResource("BoxMesh_t4v17")
+
+[node name="HullSideAccent" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 5)
+mesh = SubResource("BoxMesh_geswp")
+
+[node name="HullSideAccent2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 5)
+mesh = SubResource("BoxMesh_q70nf")
+
+[node name="WingAccent" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 11.5)
+mesh = SubResource("BoxMesh_t7sr1")

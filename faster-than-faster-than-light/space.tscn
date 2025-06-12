@@ -16,8 +16,8 @@ shader_parameter/size = 100.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_4fhbr"]
 flip_faces = true
-radius = 3000.0
-height = 6000.0
+radius = 3500.0
+height = 7000.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxlph"]
 albedo_color = Color(1, 0.470588, 0, 1)
@@ -81,11 +81,39 @@ mesh = SubResource("SphereMesh_1vxpe")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
 
-[node name="Starship" parent="." instance=ExtResource("1_d5lh8")]
+[node name="FriendlyShips" type="Node3D" parent="."]
+
+[node name="Starship" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
 team = 1
 
-[node name="Starship2" parent="." instance=ExtResource("1_d5lh8")]
+[node name="Starship2" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
 team = 1
+type = 1
 
-[node name="Starship3" parent="." instance=ExtResource("1_d5lh8")]
+[node name="Starship3" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
 team = 1
+type = 1
+
+[node name="Starship4" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="Starship5" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="Starship6" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="Starship7" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="Starship8" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="NeutralShips" type="Node3D" parent="."]
+
+[node name="HostileShips" type="Node3D" parent="."]

@@ -15,7 +15,7 @@ void fragment() {
 	vec2 pos = floor(1.0 / size * FRAGCOORD.xy);
 	float color = 0.0;
 	float starValue = rand(pos);
-	
+
 	if (starValue > prob)
 	{
 		vec2 center = size * pos + vec2(size, size) * 0.5;

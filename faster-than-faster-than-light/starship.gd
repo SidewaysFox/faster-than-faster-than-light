@@ -4,16 +4,31 @@ class_name Starship extends Node3D
 @export_category("Properties")
 ## What team the starship is on - 0 is neutral, 1 is friendly, 2 is hostile
 @export var team: int = 0
+# -1: Hostile
+# 0: Neutral
+# 1: Friendly
 ## The starship's type
 @export var type: int = 0
+# 0: Command ship
+# 1: Fighter
+# 2: Shield
+# 3: Infiltration
+# 4: Repair
+# 5: Scanner
+# 6: Relay
+# 7: Drone command
+## The starship's species of origin
+@export var species: int = 0
+# -1: Unmanned
+# 0: Human
 ## The starship's name
 @export var ship_name: String = "Starship"
 ## The starship's maximum hull points
 @export var hull_strength: int = 10
 ## The starship's currently active weapons
 @export var weapons: Array[int] = []
-## The maximum number of resources the ship can carry
-@export var storage: int = 50
+## Ship meshes
+@export var meshes: Array[PackedScene] = []
 
 # Variables
 var hull: int = 10
@@ -28,6 +43,7 @@ var total_hull_damage: int = 0
 
 
 func _ready() -> void:
+	add_child(meshes[type].instantiate())
 	if team != 0:
 		global_position = Vector3(-2000 * team, randf_range(-200, 200), randf_range(-200, 200))
 	else:
