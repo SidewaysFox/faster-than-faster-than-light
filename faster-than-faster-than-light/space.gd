@@ -11,6 +11,7 @@ var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1
 func _ready() -> void:
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
 	$BGStars.material_override.set_shader_parameter("prob_mod", randf_range(0.9, 1.1))
+	$BGStars.material_override.set_shader_parameter("size", randf_range(75.0, 125.0))
 	for i in system_types.pick_random():
 		var z: float = randf_range(-3000, -300)
 		var x: float = randf_range(z * -1.25, z * 1.25)
