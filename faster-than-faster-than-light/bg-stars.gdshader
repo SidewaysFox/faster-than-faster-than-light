@@ -3,7 +3,7 @@ render_mode unshaded;
 
 uniform vec4 bg_color: source_color;
 uniform float seed = 1.0;
-uniform float prob_mod = 1.0;
+uniform float prob = 0.9;
 uniform float size = 100.0;
 
 float rand(vec2 st) {
@@ -11,7 +11,6 @@ float rand(vec2 st) {
 }
 
 void fragment() {
-	float prob = 0.9 * prob_mod;
 	vec2 pos = floor(1.0 / size * FRAGCOORD.xy);
 	float color = 0.0;
 	float starValue = rand(pos);

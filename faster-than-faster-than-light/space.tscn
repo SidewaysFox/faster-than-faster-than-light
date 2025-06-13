@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=15 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
@@ -11,7 +11,7 @@ render_priority = 0
 shader = ExtResource("4_ulv8f")
 shader_parameter/bg_color = Color(0, 0, 0, 1)
 shader_parameter/seed = 1.0
-shader_parameter/prob_mod = 1.0
+shader_parameter/prob = 1.0
 shader_parameter/size = 100.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_4fhbr"]
@@ -55,6 +55,8 @@ height = 200.0
 radial_segments = 48
 rings = 24
 
+[sub_resource type="Environment" id="Environment_ulv8f"]
+
 [node name="Space" type="Node3D"]
 script = ExtResource("1_81phd")
 bg_star = ExtResource("2_qtpbo")
@@ -80,6 +82,7 @@ mesh = SubResource("SphereMesh_1vxpe")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
+environment = SubResource("Environment_ulv8f")
 
 [node name="FriendlyShips" type="Node3D" parent="."]
 
@@ -111,6 +114,14 @@ team = 1
 type = 1
 
 [node name="Starship8" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="Starship9" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
+team = 1
+type = 1
+
+[node name="Starship10" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
 team = 1
 type = 1
 

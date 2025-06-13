@@ -6,20 +6,34 @@ extends Node3D
 
 var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(1, 1, 1), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
+var main_star_count: int
 
 
 func _ready() -> void:
+	# TODO: tesselating noise map with shader
+	# TODO: add star glow
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
-	$BGStars.material_override.set_shader_parameter("prob_mod", randf_range(0.98, 1.1))
-	$BGStars.material_override.set_shader_parameter("size", randf_range(80.0, 130.0))
-	for i in system_types.pick_random():
-		var z: float = randf_range(-2500, -300)
-		var x: float = randf_range(z * -1.1, z * 1.1)
-		var y: float = randf_range(z / 0.8, z / -2.3)
+	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.88, 1.0))
+	$BGStars.material_override.set_shader_parameter("size", randf_range(70.0, 160.0))
+	main_star_count = system_types.pick_random()
+	print(main_star_count)
+	for i in main_star_count:
+		var x: float
+		var y: float
+		var z: float
+		z = randf_range(-2500, -300)
+		x = randf_range(z * -1.1, z * 1.1)
+		y = randf_range(z / 0.8, z / -2.3)
+		while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
+			print(Vector3(x, y, z))
+			print(Vector3(x, y, z).distance_to(Vector3.ZERO))
+			z = randf_range(-2500, -300)
+			x = randf_range(z * -1.1, z * 1.1)
+			y = randf_range(z / 0.8, z / -2.3)
 		var colour = star_colours.pick_random()
 		$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
 		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
-		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(75, 180)
+		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 240)
 		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
 		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
 	var nebula_pos: Vector3
@@ -31,7 +45,7 @@ func _ready() -> void:
 			for j in randi_range(50, 300):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.color = Color(nebula_colour, 0.01)
+				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.02)
 				new_nebula.mesh.material.emission = Color(nebula_colour)
 				new_nebula.mesh.radius = randf_range(20, 50)
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2
@@ -41,7 +55,7 @@ func _ready() -> void:
 			for j in randi_range(1, 25):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.01)
+				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.02)
 				new_nebula.mesh.material.emission = Color(nebula_colour)
 				new_nebula.mesh.radius = randf_range(20, 50)
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2

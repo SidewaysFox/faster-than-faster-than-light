@@ -16,7 +16,10 @@ class_name Starship extends Node3D
 # 4: Repair
 # 5: Scanner
 # 6: Relay
-# 7: Drone command
+# 7: Drone command ship
+# 8: Drone fighter
+# 9: Drone infiltration
+#10: Drone repair
 ## The starship's species of origin
 @export var species: int = 0
 # -1: Unmanned
@@ -32,7 +35,7 @@ class_name Starship extends Node3D
 
 # Variables
 var hull: int = 10
-var resources: int = 0
+var target: int = -1
 var jumping: bool = true
 var jump_mode: int = -1
 var jump_destination: Vector3
