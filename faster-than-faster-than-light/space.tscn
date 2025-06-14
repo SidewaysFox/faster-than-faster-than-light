@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
-[ext_resource type="PackedScene" uid="uid://we015wgfhmco" path="res://bg_star.tscn" id="2_qtpbo"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
+[ext_resource type="PackedScene" uid="uid://b4sj2kgmpfsbh" path="res://user_interface.tscn" id="3_ulv8f"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg-stars.gdshader" id="4_ulv8f"]
+
+[sub_resource type="Environment" id="Environment_ulv8f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
 render_priority = 0
@@ -55,12 +57,23 @@ height = 200.0
 radial_segments = 48
 rings = 24
 
-[sub_resource type="Environment" id="Environment_ulv8f"]
-
 [node name="Space" type="Node3D"]
 script = ExtResource("1_81phd")
-bg_star = ExtResource("2_qtpbo")
 bg_nebula = ExtResource("3_rxlph")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UserInterface" parent="CanvasLayer" instance=ExtResource("3_ulv8f")]
+unique_name_in_owner = true
+
+[node name="WarpInDialogue" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
+environment = SubResource("Environment_ulv8f")
 
 [node name="BGStars" type="MeshInstance3D" parent="."]
 material_override = SubResource("ShaderMaterial_ulv8f")
@@ -80,14 +93,11 @@ mesh = SubResource("SphereMesh_b5fhv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_1vxpe")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
-environment = SubResource("Environment_ulv8f")
-
 [node name="FriendlyShips" type="Node3D" parent="."]
 
 [node name="Starship" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
 team = 1
+hull_strength = 30
 
 [node name="Starship2" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
 team = 1
@@ -128,3 +138,5 @@ type = 1
 [node name="NeutralShips" type="Node3D" parent="."]
 
 [node name="HostileShips" type="Node3D" parent="."]
+
+[connection signal="timeout" from="WarpInDialogue" to="CanvasLayer/UserInterface" method="_on_warp_in_dialogue_timeout"]

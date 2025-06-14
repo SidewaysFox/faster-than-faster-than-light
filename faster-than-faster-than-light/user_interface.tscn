@@ -1,0 +1,94 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4sj2kgmpfsbh"]
+
+[ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxhmu"]
+bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.470588)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 96
+corner_radius_top_right = 16
+corner_radius_bottom_right = 96
+corner_radius_bottom_left = 16
+expand_margin_left = 40.0
+expand_margin_top = 40.0
+expand_margin_right = 40.0
+expand_margin_bottom = 40.0
+
+[node name="UserInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kxhmu")
+
+[node name="Dialogue" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 300.0
+offset_top = 200.0
+offset_right = -300.0
+offset_bottom = -200.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_kxhmu")
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialogue"]
+layout_mode = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialogue/MarginContainer"]
+layout_mode = 2
+
+[node name="DialogueText" type="Label" parent="Dialogue/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1190, 0)
+layout_mode = 2
+theme_override_constants/line_spacing = 8
+theme_override_font_sizes/font_size = 64
+text = "og dvvvhh hdp uih uh  puhpugouyguy gg ougouy guyyg ijh lhl hglg ougu  hdfh hsdfijsjdf hsdfhjsjkjfjsdlfj jhsdfh hsdfhkj hsdfjljhlfl uwlfl wgfl gl gg ouygs fuygwu egfluwy gfluwlufe auja fk jhalkjaj alj lkjh lkajhj ljk ljha lkja lkjb jl jk ladbflaheiao;woq  jnbjd"
+autowrap_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialogue/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 75
+
+[node name="Options" type="VBoxContainer" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Option1" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "OPTION1"
+vertical_alignment = 1
+
+[node name="Option2" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "OPTION2"
+vertical_alignment = 1
+
+[node name="Option3" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "OPTION3"
+vertical_alignment = 1
+
+[node name="Option4" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "OPTION4"
+vertical_alignment = 1
