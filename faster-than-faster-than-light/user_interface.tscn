@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=5 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
+[ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxhmu"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.470588)
@@ -18,6 +19,18 @@ expand_margin_top = 40.0
 expand_margin_right = 40.0
 expand_margin_bottom = 40.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7dvk"]
+bg_color = Color(0.0156863, 0.0313726, 0.0627451, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 48
+corner_radius_top_right = 48
+corner_radius_bottom_right = 48
+corner_radius_bottom_left = 48
+
 [node name="UserInterface" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -26,8 +39,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_kxhmu")
+galaxy_map_token = ExtResource("2_i7dvk")
 
 [node name="Dialogue" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -92,3 +107,19 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "OPTION4"
 vertical_alignment = 1
+
+[node name="GalaxyMap" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 380.0
+offset_top = 230.0
+offset_right = -340.0
+offset_bottom = -230.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i7dvk")
+
+[node name="Tokens" type="Node2D" parent="GalaxyMap"]
+position = Vector2(45, 0)

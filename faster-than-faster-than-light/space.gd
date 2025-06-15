@@ -48,7 +48,7 @@ func _ready() -> void:
 	for i in randi_range(1, 20):
 		nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
 		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1))
-		# Big or small
+		# Big or small nebula
 		if randi_range(0, 40) == 4: # Because I like the number 4
 			for j in randi_range(50, 300):
 				var new_nebula = bg_nebula.instantiate()

@@ -2,6 +2,8 @@ extends Control
 
 
 @onready var main: Node = get_node("/root/Space")
+@export var galaxy_map_token: PackedScene
+var galaxy_map_showing: bool = false
 var dialogue_showing: bool = true
 var max_option: int = 3
 var current_dialogue_selection: int = 1
@@ -46,6 +48,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 
 func _ready() -> void:
 	$Dialogue.hide()
+	for i in Global.galaxy_data:
+		var new_token: Node = galaxy_map_token.instantiate()
+		new_token.position = i[1]
+		$GalaxyMap/Tokens.add_child(new_token)
 
 
 func _process(delta: float) -> void:
@@ -65,6 +71,16 @@ func _process(delta: float) -> void:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
 			else:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	elif Input.is_action_just_pressed("5"):
+		galaxy_map_showing = not galaxy_map_showing
+	if galaxy_map_showing:
+		$GalaxyMap.show()
+		if Input.is_action_pressed("right2") and $GalaxyMap/Tokens.position.x > -3820:
+			$GalaxyMap/Tokens.position.x -= 600 * delta
+		if Input.is_action_pressed("left2") and $GalaxyMap/Tokens.position.x < 45:
+			$GalaxyMap/Tokens.position.x += 600 * delta
+	else:
+		$GalaxyMap.hide()
 
 
 func dialogue_set_up(library: int, id: int) -> void:
@@ -83,6 +99,7 @@ func dialogue_set_up(library: int, id: int) -> void:
 # Close the dialogue box
 func close() -> void:
 	$Dialogue.hide()
+	dialogue_showing = false
 
 
 func _on_warp_in_dialogue_timeout() -> void:
@@ -93,3 +110,4 @@ func _on_warp_in_dialogue_timeout() -> void:
 			possible_dialogues.append(warp_in_dialogue.find(i))
 	dialogue_set_up(0, possible_dialogues.pick_random())
 	$Dialogue.show()
+	dialogue_showing = true
