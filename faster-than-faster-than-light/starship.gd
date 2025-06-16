@@ -44,7 +44,7 @@ var jumping: bool = true
 var jump_mode: int = -1
 var jump_destination: Vector3
 
-# Misc stats
+# Miscellaneous stats
 var kills: int = 0
 var total_hull_damage: int = 0
 

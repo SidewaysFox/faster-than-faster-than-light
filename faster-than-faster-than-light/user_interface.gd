@@ -48,10 +48,15 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 
 func _ready() -> void:
 	$Dialogue.hide()
+	var leftmost_token: Array = [0, 800]
 	for i in Global.galaxy_data:
 		var new_token: Node = galaxy_map_token.instantiate()
+		new_token.id = i[0]
 		new_token.position = i[1]
+		if i[1].x < leftmost_token[1]:
+			leftmost_token = [i[0], i[1].x]
 		$GalaxyMap/Tokens.add_child(new_token)
+	Global.current_system = leftmost_token[0]
 
 
 func _process(delta: float) -> void:
@@ -76,9 +81,9 @@ func _process(delta: float) -> void:
 	if galaxy_map_showing:
 		$GalaxyMap.show()
 		if Input.is_action_pressed("right2") and $GalaxyMap/Tokens.position.x > -3820:
-			$GalaxyMap/Tokens.position.x -= 600 * delta
+			$GalaxyMap/Tokens.position.x -= 800 * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2") and $GalaxyMap/Tokens.position.x < 45:
-			$GalaxyMap/Tokens.position.x += 600 * delta
+			$GalaxyMap/Tokens.position.x += 800 * delta * Global.joystick_sens
 	else:
 		$GalaxyMap.hide()
 
