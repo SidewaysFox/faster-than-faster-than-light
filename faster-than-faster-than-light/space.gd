@@ -53,7 +53,7 @@ func _ready() -> void:
 			for j in randi_range(50, 300):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.02)
+				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.05)
 				new_nebula.mesh.material.emission = Color(nebula_colour)
 				new_nebula.mesh.radius = randf_range(20, 50)
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2
@@ -63,7 +63,7 @@ func _ready() -> void:
 			for j in randi_range(1, 25):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.02)
+				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.04)
 				new_nebula.mesh.material.emission = Color(nebula_colour)
 				new_nebula.mesh.radius = randf_range(20, 50)
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2

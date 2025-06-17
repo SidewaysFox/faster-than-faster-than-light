@@ -4,11 +4,14 @@ extends Node2D
 @onready var ui: Node = find_parent("UserInterface")
 var id: int
 var rotation_rate: float = randf_range(-45.0, 45.0)
+var panel_left: float = 385.0
+var panel_right: float = 1575.0
 
 
 func _process(delta: float) -> void:
 	rotation_degrees += rotation_rate * delta
-	if global_position.x > 380.0 and global_position.x < 3020.0 and ui.galaxy_map_showing:
+	# Check if it should be visible on the galaxy map
+	if global_position.x > panel_left and global_position.x < panel_right and ui.galaxy_map_showing:
 		show()
 	else:
 		hide()

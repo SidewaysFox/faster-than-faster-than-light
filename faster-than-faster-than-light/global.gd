@@ -2,6 +2,9 @@ extends Node
 
 
 var sector_count: int = 8
+var sector_size: float = 400
+var gmap_top: float = 30
+var gmap_bot: float = 590
 var sector_system_count: int = 25
 var joystick_sens: float = 1.5
 var galaxy_data: Array = []
@@ -14,6 +17,6 @@ func _ready() -> void:
 	var system_id: int = 0
 	for s in sector_count:
 		for n in sector_system_count:
-			galaxy_data.append([system_id, Vector2((sector * 800) + (randf() * 800), randf_range(60, 1560)), s])
+			galaxy_data.append([system_id, Vector2((sector * sector_size) + (randf() * sector_size), randf_range(gmap_top, gmap_bot)), s])
 			system_id += 1
 		sector += 1

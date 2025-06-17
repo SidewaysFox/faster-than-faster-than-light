@@ -7,6 +7,10 @@
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg-stars.gdshader" id="4_ulv8f"]
 
 [sub_resource type="Environment" id="Environment_ulv8f"]
+background_mode = 1
+glow_enabled = true
+glow_intensity = 4.5
+glow_bloom = 0.84
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
 render_priority = 0

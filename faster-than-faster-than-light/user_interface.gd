@@ -80,10 +80,10 @@ func _process(delta: float) -> void:
 		galaxy_map_showing = not galaxy_map_showing
 	if galaxy_map_showing:
 		$GalaxyMap.show()
-		if Input.is_action_pressed("right2") and $GalaxyMap/Tokens.position.x > -3820:
-			$GalaxyMap/Tokens.position.x -= 800 * delta * Global.joystick_sens
+		if Input.is_action_pressed("right2") and $GalaxyMap/Tokens.position.x > -2020:
+			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2") and $GalaxyMap/Tokens.position.x < 45:
-			$GalaxyMap/Tokens.position.x += 800 * delta * Global.joystick_sens
+			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
 	else:
 		$GalaxyMap.hide()
 

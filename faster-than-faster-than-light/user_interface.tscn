@@ -42,7 +42,6 @@ script = ExtResource("1_kxhmu")
 galaxy_map_token = ExtResource("2_i7dvk")
 
 [node name="Dialogue" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -55,10 +54,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_kxhmu")
 
 [node name="MarginContainer" type="MarginContainer" parent="Dialogue"]
 layout_mode = 2
-theme_override_constants/margin_left = 60
-theme_override_constants/margin_top = 60
-theme_override_constants/margin_right = 60
-theme_override_constants/margin_bottom = 60
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Dialogue/MarginContainer"]
 layout_mode = 2
@@ -68,45 +67,49 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(1190, 0)
 layout_mode = 2
 theme_override_constants/line_spacing = 8
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/font_size = 36
 text = "og dvvvhh hdp uih uh  puhpugouyguy gg ougouy guyyg ijh lhl hglg ougu  hdfh hsdfijsjdf hsdfhjsjkjfjsdlfj jhsdfh hsdfhkj hsdfjljhlfl uwlfl wgfl gl gg ouygs fuygwu egfluwy gfluwlufe auja fk jhalkjaj alj lkjh lkajhj ljk ljha lkja lkjb jl jk ladbflaheiao;woq  jnbjd"
 autowrap_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Dialogue/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_top = 75
+theme_override_constants/margin_top = 30
 
 [node name="Options" type="VBoxContainer" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Option1" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 32
 text = "OPTION1"
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Option2" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 32
 text = "OPTION2"
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Option3" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 32
 text = "OPTION3"
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Option4" type="Label" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 32
 text = "OPTION4"
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="GalaxyMap" type="PanelContainer" parent="."]
 layout_mode = 1
