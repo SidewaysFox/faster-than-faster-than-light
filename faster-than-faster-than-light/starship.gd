@@ -36,34 +36,43 @@ class_name Starship extends Node3D
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
 
+# Miscellaneous stats
+var kills: int = 0
+var total_hull_damage: int = 0
+
 # Variables
+@onready var main: Node = get_node("/root/Space")
 var hull: int = 10
 var target: int = -1
 var jumping: bool = true
 var jump_mode: int = -1
-var jump_destination: Vector3
+var jump_destination: float
+var warp_destination: float
 var spawn_location: Vector3
-
-# Miscellaneous stats
-var kills: int = 0
-var total_hull_damage: int = 0
 
 
 func _ready() -> void:
 	add_child(meshes[type].instantiate())
 	if team != 0:
-		global_position = Vector3(-2000 * team, randf_range(-200, 200), randf_range(-200, 200))
+		global_position = Vector3(-2000 * team, randf_range(-60, 60), randf_range(-100, 0))
 	else:
 		global_position = Vector3(randf_range(50, 50), randf_range(-25, 25), randf_range(-10, -150))
-	jump_destination = Vector3(randf_range(-120, -50) * team, randf_range(-60, 60), randf_range(-100, 0))
-	$JumpDelay.start(randf() * 2)
+	jump_destination = randf_range(-120, -50) * team
+	warp_destination = -global_position.x
+	$JumpDelay.start(1 + (randf() * 2))
 
 
 func _process(delta: float) -> void:
 	if jumping:
 		if jump_mode == 0 and team != 0:
-			global_position = lerp(global_position, jump_destination, 0.1)
+			global_position.x = lerp(global_position.x, jump_destination, 0.1)
+		elif jump_mode == 1:
+			global_position.x = lerp(global_position.x, warp_destination, 0.1)
 
 
 func _on_jump_delay_timeout() -> void:
 	jump_mode += 1
+
+
+func begin_warp() -> void:
+	$JumpDelay.start(randf() * 2)

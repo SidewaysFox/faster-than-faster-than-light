@@ -137,3 +137,4 @@ F={
 [rendering]
 
 renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.0156863, 0.0313726, 0.0627451, 1)

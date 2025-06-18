@@ -2,7 +2,7 @@ extends Node3D
 
 
 @export var bg_nebula: PackedScene
-var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]
+var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(1, 1, 1), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
 var main_star_count: int
 var system_properties: Array = []
@@ -39,9 +39,9 @@ func _ready() -> void:
 		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 250)
 		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
 		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
-		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 1.4) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.2:
+		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.22:
 			star_proximity = true
-		print(($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 1.4) / Vector3(x, y, z).distance_to(Vector3.ZERO))
+		print(($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO))
 	# Create nebulae
 	var nebula_pos: Vector3
 	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
@@ -78,3 +78,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("debug_quit"):
 		get_tree().quit()
+
+
+func commence_warp() -> void:
+	for ship in $FriendlyShips.get_children():
+		ship.begin_warp()

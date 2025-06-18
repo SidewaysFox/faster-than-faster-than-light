@@ -71,7 +71,7 @@ bg_nebula = ExtResource("3_rxlph")
 unique_name_in_owner = true
 
 [node name="WarpInDialogue" type="Timer" parent="."]
-wait_time = 3.0
+wait_time = 4.0
 one_shot = true
 autostart = true
 

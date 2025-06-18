@@ -3,6 +3,8 @@ extends Control
 
 @onready var main: Node = get_node("/root/Space")
 @export var galaxy_map_token: PackedScene
+var fade_mode: int = -1
+var cursor_speed: float = 150
 var galaxy_map_showing: bool = false
 var dialogue_showing: bool = true
 var max_option: int = 3
@@ -48,18 +50,17 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 
 func _ready() -> void:
 	$Dialogue.hide()
-	var leftmost_token: Array = [0, 800]
 	for i in Global.galaxy_data:
 		var new_token: Node = galaxy_map_token.instantiate()
 		new_token.id = i[0]
 		new_token.position = i[1]
-		if i[1].x < leftmost_token[1]:
-			leftmost_token = [i[0], i[1].x]
 		$GalaxyMap/Tokens.add_child(new_token)
-	Global.current_system = leftmost_token[0]
 
 
 func _process(delta: float) -> void:
+	$ScreenFade.color.a += fade_mode * delta
+	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
+	
 	if dialogue_showing:
 		if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
 			current_dialogue_selection -= 1
@@ -76,14 +77,39 @@ func _process(delta: float) -> void:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
 			else:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
-	elif Input.is_action_just_pressed("5"):
+	elif Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D"):
 		galaxy_map_showing = not galaxy_map_showing
+		if galaxy_map_showing:
+			if Global.galaxy_data[Global.current_system][1].x > 900:
+				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system][1].x
+			%Cursor.position = Global.galaxy_data[Global.current_system][1]
 	if galaxy_map_showing:
 		$GalaxyMap.show()
-		if Input.is_action_pressed("right2") and $GalaxyMap/Tokens.position.x > -2020:
+		if Input.is_action_pressed("right2"):
 			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
-		if Input.is_action_pressed("left2") and $GalaxyMap/Tokens.position.x < 45:
+		if Input.is_action_pressed("left2"):
 			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
+		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")) * cursor_speed * Global.joystick_sens * delta
+		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
+			var closest_token: Array = [0, 400]
+			var n: int = 0
+			for token in %Cursor.get_overlapping_areas():
+				var x = [n, %Cursor.position.distance_squared_to(token.position), token.id]
+				if x[1] < closest_token[1]:
+					closest_token = x
+				n += 1
+			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
+			if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+				galaxy_map_showing = false
+				Global.new_system(closest_token[2])
+				await get_tree().create_timer(1).timeout
+				main.commence_warp()
+				await get_tree().create_timer(2).timeout
+				fade_mode = 1
+				await get_tree().create_timer(3).timeout
+				main.get_tree().reload_current_scene()
+		$GalaxyMap/Tokens.position.x = clampf($GalaxyMap/Tokens.position.x, -2040.0, 45.0)
+		%Cursor.global_position.x = clampf(%Cursor.global_position.x, 385.0, 1535.0)
 	else:
 		$GalaxyMap.hide()
 

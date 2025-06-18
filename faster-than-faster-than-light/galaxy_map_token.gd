@@ -1,11 +1,15 @@
-extends Node2D
+extends Area2D
 
 
 @onready var ui: Node = find_parent("UserInterface")
 var id: int
 var rotation_rate: float = randf_range(-45.0, 45.0)
-var panel_left: float = 385.0
-var panel_right: float = 1575.0
+var panel_left: float = 365.0
+var panel_right: float = 1555.0
+
+
+func _ready() -> void:
+	pass
 
 
 func _process(delta: float) -> void:
@@ -15,3 +19,11 @@ func _process(delta: float) -> void:
 		show()
 	else:
 		hide()
+
+
+func _on_timer_timeout() -> void:
+	if id == Global.current_system:
+		$ColorRect2.show()
+		scale = Vector2.ONE * 1.5
+	else:
+		$ColorRect2.hide()

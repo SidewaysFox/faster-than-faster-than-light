@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=7 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -30,6 +30,21 @@ corner_radius_top_left = 48
 corner_radius_top_right = 48
 corner_radius_bottom_right = 48
 corner_radius_bottom_left = 48
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_juc2q"]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.313726, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i7dvk"]
+radius = 18.0
 
 [node name="UserInterface" type="Control"]
 layout_mode = 3
@@ -116,9 +131,9 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 380.0
+offset_left = 360.0
 offset_top = 230.0
-offset_right = -340.0
+offset_right = -360.0
 offset_bottom = -230.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -126,3 +141,29 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_i7dvk")
 
 [node name="Tokens" type="Node2D" parent="GalaxyMap"]
 position = Vector2(45, 0)
+
+[node name="Cursor" type="Area2D" parent="GalaxyMap/Tokens"]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(-45, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Panel" type="Panel" parent="GalaxyMap/Tokens/Cursor"]
+custom_minimum_size = Vector2(25, 25)
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2(20, 20)
+theme_override_styles/panel = SubResource("StyleBoxFlat_juc2q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GalaxyMap/Tokens/Cursor"]
+shape = SubResource("CircleShape2D_i7dvk")
+
+[node name="ScreenFade" type="ColorRect" parent="."]
+z_index = 10
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.0156863, 0.0313726, 0.0627451, 1)
