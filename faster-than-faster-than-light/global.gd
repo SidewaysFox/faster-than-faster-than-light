@@ -9,9 +9,10 @@ var sector_system_count: int = 25
 var joystick_sens: float = 1.5
 var galaxy_data: Array = []
 var current_system: int
+var system_position: Vector2
 var unique_visits: int = -1
 var visited_systems: Array[int] = []
-var jump_distance: int = 4
+var jump_distance: int = 100
 
 
 func _ready() -> void:

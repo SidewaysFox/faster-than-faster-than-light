@@ -1,16 +1,10 @@
-[gd_scene load_steps=15 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=14 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
 [ext_resource type="PackedScene" uid="uid://b4sj2kgmpfsbh" path="res://user_interface.tscn" id="3_ulv8f"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg-stars.gdshader" id="4_ulv8f"]
-
-[sub_resource type="Environment" id="Environment_ulv8f"]
-background_mode = 1
-glow_enabled = true
-glow_intensity = 4.5
-glow_bloom = 0.84
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
 render_priority = 0
@@ -77,7 +71,6 @@ autostart = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
-environment = SubResource("Environment_ulv8f")
 
 [node name="BGStars" type="MeshInstance3D" parent="."]
 material_override = SubResource("ShaderMaterial_ulv8f")

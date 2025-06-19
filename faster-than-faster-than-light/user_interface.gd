@@ -4,7 +4,7 @@ extends Control
 @onready var main: Node = get_node("/root/Space")
 @export var galaxy_map_token: PackedScene
 var fade_mode: int = -1
-var cursor_speed: float = 150
+var cursor_speed: float = 250
 var galaxy_map_showing: bool = false
 var dialogue_showing: bool = true
 var max_option: int = 3
@@ -58,6 +58,12 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_pressed("debug"):
+		$FPS.show()
+	else:
+		$FPS.hide()
+	$FPS.text = "FPS: " + str(1 / delta)
+	
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
@@ -91,15 +97,18 @@ func _process(delta: float) -> void:
 			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
 		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")) * cursor_speed * Global.joystick_sens * delta
 		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
+			var in_warp_range: bool = false
 			var closest_token: Array = [0, 400]
 			var n: int = 0
 			for token in %Cursor.get_overlapping_areas():
 				var x = [n, %Cursor.position.distance_squared_to(token.position), token.id]
 				if x[1] < closest_token[1]:
 					closest_token = x
+					if token.position.distance_to(Global.system_position) <= Global.jump_distance:
+						in_warp_range = true
 				n += 1
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
-			if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range:
 				galaxy_map_showing = false
 				Global.new_system(closest_token[2])
 				await get_tree().create_timer(1).timeout
@@ -110,6 +119,7 @@ func _process(delta: float) -> void:
 				main.get_tree().reload_current_scene()
 		$GalaxyMap/Tokens.position.x = clampf($GalaxyMap/Tokens.position.x, -2040.0, 45.0)
 		%Cursor.global_position.x = clampf(%Cursor.global_position.x, 385.0, 1535.0)
+		%Cursor.global_position.y = clampf(%Cursor.global_position.y, 256.0, 824.0)
 	else:
 		$GalaxyMap.hide()
 

@@ -1,9 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://dvn3rjgv4sa7a"]
+[gd_scene load_steps=4 format=3 uid="uid://dvn3rjgv4sa7a"]
 
 [ext_resource type="Script" uid="uid://qp3py3u8s4yb" path="res://galaxy_map_token.gd" id="1_iu22n"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iu22n"]
 size = Vector2(5, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iu22n"]
+bg_color = Color(1, 1, 1, 0.392157)
+corner_radius_top_left = 100
+corner_radius_top_right = 100
+corner_radius_bottom_right = 100
+corner_radius_bottom_left = 100
 
 [node name="GalaxyMapToken" type="Area2D"]
 collision_layer = 2
@@ -32,5 +39,13 @@ autostart = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_iu22n")
+
+[node name="Range" type="Panel" parent="."]
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+pivot_offset = Vector2(100, 100)
+theme_override_styles/panel = SubResource("StyleBoxFlat_iu22n")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
