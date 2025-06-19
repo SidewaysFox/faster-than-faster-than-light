@@ -1,7 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=13 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
-[ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="1_d5lh8"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
 [ext_resource type="PackedScene" uid="uid://b4sj2kgmpfsbh" path="res://user_interface.tscn" id="3_ulv8f"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg-stars.gdshader" id="4_ulv8f"]
@@ -91,46 +90,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_1vxpe")
 
 [node name="FriendlyShips" type="Node3D" parent="."]
-
-[node name="Starship" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-hull_strength = 30
-
-[node name="Starship2" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship3" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship4" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship5" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship6" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship7" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship8" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship9" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
-
-[node name="Starship10" parent="FriendlyShips" instance=ExtResource("1_d5lh8")]
-team = 1
-type = 1
 
 [node name="NeutralShips" type="Node3D" parent="."]
 

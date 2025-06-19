@@ -13,6 +13,10 @@ func _ready() -> void:
 	# TODO: tesselating noise map with shader
 	# TODO: add star glow
 	
+	if not Global.initilising:
+		for ship in Global.fleet:
+			$FriendlyShips.add_child(ship.duplicate())
+	
 	# Pass information to the BGStar GLSL script
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
 	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.88, 1.0))
@@ -39,7 +43,7 @@ func _ready() -> void:
 		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 250)
 		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
 		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
-		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.22:
+		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.2:
 			star_proximity = true
 		print(($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO))
 	# Create nebulae
@@ -76,8 +80,12 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("debug_quit"):
+	if Input.is_action_just_pressed("debug quit"):
 		get_tree().quit()
+	if Input.is_action_pressed("hide ui"):
+		%UserInterface.hide()
+	else:
+		%UserInterface.show()
 
 
 func commence_warp() -> void:

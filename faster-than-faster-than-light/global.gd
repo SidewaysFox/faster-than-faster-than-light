@@ -1,6 +1,11 @@
 extends Node
 
 
+var starship: PackedScene = preload("res://starship.tscn")
+var initilising: bool = true
+var resources: int = 0
+var fuel: int = 45
+var fleet: Array = []
 var sector_count: int = 8
 var sector_size: float = 400
 var gmap_top: float = 30
@@ -10,9 +15,9 @@ var joystick_sens: float = 1.5
 var galaxy_data: Array = []
 var current_system: int
 var system_position: Vector2
-var unique_visits: int = -1
+var unique_visits: int = 0
 var visited_systems: Array[int] = []
-var jump_distance: int = 100
+var jump_distance: float = 180.0
 
 
 func _ready() -> void:
@@ -30,6 +35,19 @@ func _ready() -> void:
 			starting_system = [i[0], i[1].x]
 	current_system = starting_system[0]
 	new_system(current_system)
+	
+	var new_ship: Node = starship.instantiate()
+	new_ship.team = 1
+	new_ship.hull_strength = 20
+	fleet.append(new_ship)
+	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	
+	for i in 2:
+		new_ship = starship.instantiate()
+		new_ship.team = 1
+		new_ship.type = 1
+		fleet.append(new_ship)
+		get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
 
 
 func new_system(system: int) -> void:
@@ -37,3 +55,5 @@ func new_system(system: int) -> void:
 		unique_visits += 1
 		visited_systems.append(system)
 	current_system = system
+	if unique_visits > 1:
+		initilising = false

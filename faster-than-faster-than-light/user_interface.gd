@@ -15,41 +15,52 @@ var option_results: Array
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[1],
 	"As your fleet exits its jump, you take in the picturesque scenery around you.",
-	[["Enjoy the view as your warp drives charge up once more.", "close"]]
+	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
 	],
 	[[1],
 	"You wait with bated breath, half expecting a rebel ambush as you exit warp, but none comes. You live another day.",
-	[["Let's not wait around. Charge up the warp drives.", "close"]]
+	[["Let's not wait around. Charge up the warp drives.", ["close"]]]
 	],
 	[[1],
 	"Although this system is devoid of anything of particular interest to your fleet, you can't help but remain apprehensive about your task and the rebel fleet chasing you. In these distant reaches of space, it feels like everything wants you dead.",
-	[["Play some cards with your crew to ease your nerves while you wait for the warp drives to charge.", "close"], ["Remain alone for the time being.", "close"]]
+	[["Play some cards with your crew to ease your nerves while you wait for the warp drives to charge.", ["close"]], ["Remain alone for the time being.", ["close"]]]
+	],
+	[[1],
+	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(5, 15), 0]]]
 	],
 	[[2],
 	"As your fleet exits its jump, you see two stars locked in each others' orbits. You spend a moment taking a deep breath, before returning to your duties on deck.",
-	[["Enjoy the view as your warp drives charge up once more.", "close"]]
+	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
 	],
 	[[3],
 	"As your fleet exits its jump, you are surprised to find you and your fleet amongst a trinary star system, a rare sight for anyone not part of the navy.",
-	[["Enjoy the view as your warp drives charge up once more.", "close"]]
+	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
 	],
 	[[1, "star proximity"],
 	"As you exit warp, you realise you've ended up dangerously close to this system's star. Your ships could be in danger if you linger for too long.",
-	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", "close"]]
+	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close"]]]
 	],
 	[[2, "star proximity"],
 	"The binary system of stars you've just warped into makes it hard to miss the fact that you've come in far too close for comfort to one of them.",
-	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", "close"]]
+	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close"]]]
 	],
 	[[3, "star proximity"],
 	"You find yourself and your fleet in a trinary system, but your close proximity to one of the stars unfortunately means you cannot affort to take in the view.",
-	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", "close"]]
+	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close"]]]
+	],
+]
+
+var response_dialogue: Array = [ # Main text, [option, result]
+	["As you search the wreckages, you manage to pick out some scraps.",
+	[["Continue the journey.", ["close"]]]
 	],
 ]
 
 
 func _ready() -> void:
 	$Dialogue.hide()
+	$ScreenFade.show()
 	for i in Global.galaxy_data:
 		var new_token: Node = galaxy_map_token.instantiate()
 		new_token.id = i[0]
@@ -64,6 +75,11 @@ func _process(delta: float) -> void:
 		$FPS.hide()
 	$FPS.text = "FPS: " + str(1 / delta)
 	
+	%ResourcesLabel.text = "RSRC: " + str(Global.resources)
+	%ResourcesLabel.add_theme_color_override("font_color", lerp(%ResourcesLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
+	%FuelLabel.text = "FUEL: " + str(Global.fuel)
+	%FuelLabel.add_theme_color_override("font_color", lerp(%FuelLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
+	
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
@@ -77,7 +93,13 @@ func _process(delta: float) -> void:
 			if current_dialogue_selection > max_option:
 				current_dialogue_selection = 1
 		if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
-			call(option_results[current_dialogue_selection - 1])
+			var args: Array = []
+			if len(option_results[current_dialogue_selection - 1]) > 1:
+				for i in len(option_results[current_dialogue_selection - 1]) - 1:
+					args.append(option_results[current_dialogue_selection - 1][i + 1])
+				callv(option_results[current_dialogue_selection - 1][0], args)
+			else:
+				call(option_results[current_dialogue_selection - 1][0])
 		for i in max_option:
 			if i + 1 == current_dialogue_selection:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
@@ -88,9 +110,12 @@ func _process(delta: float) -> void:
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system][1].x > 900:
 				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system][1].x
+			else:
+				$GalaxyMap/Tokens.position.x = 45
 			%Cursor.position = Global.galaxy_data[Global.current_system][1]
 	if galaxy_map_showing:
 		$GalaxyMap.show()
+		$GalaxyMapTitle.show()
 		if Input.is_action_pressed("right2"):
 			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2"):
@@ -108,8 +133,10 @@ func _process(delta: float) -> void:
 						in_warp_range = true
 				n += 1
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
-			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range:
+			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and Global.fuel > len(Global.fleet):
 				galaxy_map_showing = false
+				Global.fuel -= len(Global.fleet)
+				_quantity_change(1, false)
 				Global.new_system(closest_token[2])
 				await get_tree().create_timer(1).timeout
 				main.commence_warp()
@@ -122,6 +149,7 @@ func _process(delta: float) -> void:
 		%Cursor.global_position.y = clampf(%Cursor.global_position.y, 256.0, 824.0)
 	else:
 		$GalaxyMap.hide()
+		$GalaxyMapTitle.hide()
 
 
 func dialogue_set_up(library: int, id: int) -> void:
@@ -131,16 +159,17 @@ func dialogue_set_up(library: int, id: int) -> void:
 	if library == 0:
 		%DialogueText.text = warp_in_dialogue[id][1]
 		max_option = len(warp_in_dialogue[id][2])
-		for i in len(warp_in_dialogue[id][2]):
+		for i in max_option:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + warp_in_dialogue[id][2][i][0]
 			option_results.append(warp_in_dialogue[id][2][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
-
-
-# Close the dialogue box
-func close() -> void:
-	$Dialogue.hide()
-	dialogue_showing = false
+	elif library == 1:
+		%DialogueText.text = response_dialogue[id][0]
+		max_option = len(response_dialogue[id][1])
+		for i in max_option:
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + response_dialogue[id][1][i][0]
+			option_results.append(response_dialogue[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).show()
 
 
 func _on_warp_in_dialogue_timeout() -> void:
@@ -152,3 +181,32 @@ func _on_warp_in_dialogue_timeout() -> void:
 	dialogue_set_up(0, possible_dialogues.pick_random())
 	$Dialogue.show()
 	dialogue_showing = true
+
+
+func _quantity_change(quantity: int, up: bool) -> void:
+	if quantity == 0:
+		if up:
+			%ResourcesLabel.add_theme_color_override("font_color", Color(0, 1, 0))
+		else:
+			%ResourcesLabel.add_theme_color_override("font_color", Color(1, 0, 0))
+	if quantity == 1:
+		if up:
+			%FuelLabel.add_theme_color_override("font_color", Color(0, 1, 0))
+		else:
+			%FuelLabel.add_theme_color_override("font_color", Color(1, 0, 0))
+
+
+# Close the dialogue box
+func close() -> void:
+	$Dialogue.hide()
+	dialogue_showing = false
+
+
+# Give the player resources from a dialogue event
+func resources(n: int, response: int) -> void:
+	Global.resources += n
+	if n > 0:
+		_quantity_change(0, true)
+	else:
+		_quantity_change(0, false)
+	dialogue_set_up(1, response)

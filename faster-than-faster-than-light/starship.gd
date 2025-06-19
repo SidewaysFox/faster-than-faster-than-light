@@ -19,16 +19,17 @@ class_name Starship extends Node3D
 # 7: Drone command ship
 # 8: Drone fighter
 # 9: Drone repair
-## The starship's species of origin
-@export var species: int = 0
+## The starship's alignment
+@export var alignment: int = 0
 # -2: Unmanned rebel
 # -1: Rebel
 # 0: Federation
-# 1: Human
+# 1: Civilian
+# 2: Pirate
 ## The starship's name
 @export var ship_name: String = "Starship"
 ## The starship's current level
-@export var level: int = 0
+@export var level: int = 1
 ## The starship's maximum hull points
 @export var hull_strength: int = 10
 ## The starship's currently active weapons

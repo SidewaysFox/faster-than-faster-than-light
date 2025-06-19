@@ -16,8 +16,10 @@ func _on_timer_timeout() -> void:
 	if id == Global.current_system:
 		$ColorRect2.show()
 		Global.system_position = position
-		$Range.scale = Vector2.ONE * (Global.jump_distance / 100)
+		$Range.scale = Vector2.ONE * (Global.jump_distance / 100.0)
 		$Range.show()
 	else:
 		$ColorRect2.hide()
 		$Range.hide()
+		if Global.visited_systems.has(id):
+			$ColorRect.color = Color(1, 1, 0)
