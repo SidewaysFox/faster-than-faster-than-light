@@ -1,12 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://cjxyia0bj1uuo"]
+[gd_scene load_steps=5 format=3 uid="uid://cjxyia0bj1uuo"]
 
 [ext_resource type="Script" uid="uid://ou4uilyxtgnd" path="res://starship.gd" id="1_ng4vp"]
 [ext_resource type="PackedScene" uid="uid://b7rwxfw7w8fbl" path="res://command_ship_mesh.tscn" id="2_86p3r"]
 [ext_resource type="PackedScene" uid="uid://bj55jmmx5j5ur" path="res://fighter_mesh.tscn" id="2_wpmgm"]
+[ext_resource type="PackedScene" uid="uid://dtmka8h8pyslt" path="res://relay_mesh.tscn" id="4_deqbx"]
 
 [node name="Starship" type="Node3D"]
 script = ExtResource("1_ng4vp")
-meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm")])
+meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), null, null, null, null, ExtResource("4_deqbx"), null, null, null])
 
 [node name="JumpDelay" type="Timer" parent="."]
 one_shot = true

@@ -2,7 +2,9 @@ class_name Starship extends Node3D
 
 
 @export_category("Properties")
-## What team the starship is on - 0 is neutral, 1 is friendly, 2 is hostile
+## The starship's ID, used to identify it in data storage
+@export var id: int = 0
+## What team the starship is on
 @export var team: int = 0
 # -1: Hostile
 # 0: Neutral
@@ -76,4 +78,8 @@ func _on_jump_delay_timeout() -> void:
 
 
 func begin_warp() -> void:
+	Global.fleet[id].ship_name = ship_name
+	Global.fleet[id].level = level
+	Global.fleet[id].hull_strength = hull_strength
+	Global.fleet[id].weapons = weapons
 	$JumpDelay.start(randf() * 2)

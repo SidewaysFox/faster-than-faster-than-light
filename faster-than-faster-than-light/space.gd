@@ -43,7 +43,7 @@ func _ready() -> void:
 		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 250)
 		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
 		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
-		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.2:
+		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
 			star_proximity = true
 		print(($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO))
 	# Create nebulae

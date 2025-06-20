@@ -29,6 +29,14 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
 	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(5, 15), 0]]]
 	],
+	[[1],
+	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
+	[["Scrap what's left of the freighter hulls.", ["dialogue_set_up", 1, 1]]]
+	],
+	[[1],
+	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(20, 40), 2]]]
+	],
 	[[2],
 	"As your fleet exits its jump, you see two stars locked in each others' orbits. You spend a moment taking a deep breath, before returning to your duties on deck.",
 	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
@@ -54,6 +62,12 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 var response_dialogue: Array = [ # Main text, [option, result]
 	["As you search the wreckages, you manage to pick out some scraps.",
 	[["Continue the journey.", ["close"]]]
+	],
+	["You search the wreckages but there is nothing of value to find.",
+	[["Continue the journey.", ["close"]]]
+	],
+	["Looking through the charred remains of the freighters, you come across a hidden vault that the pirates must have missed. Opening the vault, you find a variety of exotic materials inside!",
+	[["Celebrate and continue the journey.", ["close"]]]
 	],
 ]
 
@@ -133,7 +147,7 @@ func _process(delta: float) -> void:
 						in_warp_range = true
 				n += 1
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
-			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and Global.fuel > len(Global.fleet):
+			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and Global.fuel >= len(Global.fleet):
 				galaxy_map_showing = false
 				Global.fuel -= len(Global.fleet)
 				_quantity_change(1, false)

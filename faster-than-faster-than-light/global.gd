@@ -6,18 +6,19 @@ var initilising: bool = true
 var resources: int = 0
 var fuel: int = 45
 var fleet: Array = []
+var jump_distance: float = 180.0
+var augmentations: Array = []
+var galaxy_data: Array = []
 var sector_count: int = 8
 var sector_size: float = 400
+var sector_system_count: int = 25
 var gmap_top: float = 30
 var gmap_bot: float = 590
-var sector_system_count: int = 25
-var joystick_sens: float = 1.5
-var galaxy_data: Array = []
 var current_system: int
 var system_position: Vector2
-var unique_visits: int = 0
 var visited_systems: Array[int] = []
-var jump_distance: float = 180.0
+var unique_visits: int = 0
+var joystick_sens: float = 1.5
 
 
 func _ready() -> void:
@@ -42,12 +43,28 @@ func _ready() -> void:
 	fleet.append(new_ship)
 	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
 	
-	for i in 2:
-		new_ship = starship.instantiate()
-		new_ship.team = 1
-		new_ship.type = 1
-		fleet.append(new_ship)
-		get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	new_ship = starship.instantiate()
+	new_ship.id = 1
+	new_ship.team = 1
+	new_ship.type = 1
+	fleet.append(new_ship)
+	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	
+	new_ship = starship.instantiate()
+	new_ship.id = 2
+	new_ship.team = 1
+	new_ship.type = 6
+	fleet.append(new_ship)
+	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	
+	stats_update()
+
+
+func stats_update() -> void:
+	jump_distance = 100.0
+	for ship in fleet:
+		if ship.type == 6:
+			jump_distance += 25 * ship.level
 
 
 func new_system(system: int) -> void:

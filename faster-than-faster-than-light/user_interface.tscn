@@ -191,6 +191,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_juc2q")
 shape = SubResource("CircleShape2D_i7dvk")
 
 [node name="GalaxyMapTitle" type="Panel" parent="."]
+layout_mode = 0
 offset_left = 400.0
 offset_top = 146.0
 offset_right = 800.0
