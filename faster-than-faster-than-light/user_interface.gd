@@ -134,7 +134,7 @@ func _process(delta: float) -> void:
 			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2"):
 			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
-		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")) * cursor_speed * Global.joystick_sens * delta
+		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")).normalized() * cursor_speed * Global.joystick_sens * delta
 		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
 			var in_warp_range: bool = false
 			var closest_token: Array = [0, 400]

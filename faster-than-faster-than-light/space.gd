@@ -19,8 +19,8 @@ func _ready() -> void:
 	
 	# Pass information to the BGStar GLSL script
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
-	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.88, 1.0))
-	$BGStars.material_override.set_shader_parameter("size", randf_range(70.0, 160.0))
+	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.91, 1.0))
+	$BGStars.material_override.set_shader_parameter("size", randf_range(50.0, 120.0))
 	# Establish this system's star(s)
 	main_star_count = system_types.pick_random()
 	for i in main_star_count:
@@ -49,7 +49,7 @@ func _ready() -> void:
 	# Create nebulae
 	var nebula_pos: Vector3
 	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
-	for i in randi_range(1, 20):
+	for i in randi_range(1, 22):
 		nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
 		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1))
 		# Big or small nebula
@@ -64,7 +64,7 @@ func _ready() -> void:
 				nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
 				$Background.add_child(new_nebula)
 		else:
-			for j in randi_range(1, 25):
+			for j in randi_range(1, 20):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
 				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.04)
