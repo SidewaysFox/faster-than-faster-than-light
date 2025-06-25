@@ -46,7 +46,7 @@ var total_hull_damage: int = 0
 # Variables
 @onready var main: Node = get_node("/root/Space")
 var hull: int = 10
-var target: int = -1
+var target: Node
 var jumping: bool = true
 var jump_mode: int = -1
 var jump_destination: float
@@ -63,6 +63,10 @@ func _ready() -> void:
 	jump_destination = randf_range(-120, -50) * team
 	warp_destination = -global_position.x
 	$JumpDelay.start(1 + (randf() * 2))
+	if len(main.get_node("HostileShips").get_children()) > 0:
+		print("thar be enemie")
+		target = main.get_node("HostileShips").get_children().pick_random()
+		print(target)
 
 
 func _process(delta: float) -> void:

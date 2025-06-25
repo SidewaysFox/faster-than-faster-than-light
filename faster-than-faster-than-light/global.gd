@@ -27,13 +27,23 @@ func _ready() -> void:
 	var system_id: int = 0
 	var starting_system: Array = [0, 800.0]
 	for s in sector_count:
-		for n in sector_system_count:
-			galaxy_data.append([system_id, Vector2((sector * sector_size) + (randf() * sector_size), randf_range(gmap_top, gmap_bot)), s])
+		for n in sector_system_count: # ID, position, sector, enemy presence
+			var enemy_presence: bool
+			if randi_range(1, 4) == 4:
+				enemy_presence = true
+			else:
+				enemy_presence = false
+			galaxy_data.append({
+				"id": system_id,
+				"position": Vector2((sector * sector_size) + (randf() * sector_size), randf_range(gmap_top, gmap_bot)),
+				"sector": s,
+				"enemy presence": enemy_presence
+				})
 			system_id += 1
 		sector += 1
 	for i in galaxy_data:
-		if i[1].x < starting_system[1]:
-			starting_system = [i[0], i[1].x]
+		if i["position"].x < starting_system[1]:
+			starting_system = [i["id"], i["position"].x]
 	current_system = starting_system[0]
 	new_system(current_system)
 	

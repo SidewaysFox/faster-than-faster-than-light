@@ -7,6 +7,7 @@ var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1
 var main_star_count: int
 var system_properties: Array = []
 var star_proximity: bool = false
+var in_combat: bool = false
 
 
 func _ready() -> void:
@@ -75,6 +76,8 @@ func _ready() -> void:
 				$Background.add_child(new_nebula)
 	# Set up conditions for the warp in dialogue
 	system_properties.append(main_star_count)
+	if Global.galaxy_data[Global.current_system]["enemy presence"]:
+		system_properties.append("enemy presence")
 	if star_proximity:
 		system_properties.append("star proximity")
 

@@ -15,15 +15,15 @@ var option_results: Array
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[1],
 	"As your fleet exits its jump, you take in the picturesque scenery around you.",
-	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
+	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
 	],
 	[[1],
 	"You wait with bated breath, half expecting a rebel ambush as you exit warp, but none comes. You live another day.",
-	[["Let's not wait around. Charge up the warp drives.", ["close"]]]
+	[["Let's not wait around. Charge up the warp drives.", ["close", false]]]
 	],
 	[[1],
 	"Although this system is devoid of anything of particular interest to your fleet, you can't help but remain apprehensive about your task and the rebel fleet chasing you. In these distant reaches of space, it feels like everything wants you dead.",
-	[["Play some cards with your crew to ease your nerves while you wait for the warp drives to charge.", ["close"]], ["Remain alone for the time being.", ["close"]]]
+	[["Play some cards with your crew to ease your nerves while you wait for the warp drives to charge.", ["close", false]], ["Remain alone for the time being.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
@@ -37,37 +37,61 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
 	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(20, 40), 2]]]
 	],
+	[[1, "enemy presence"],
+	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
+	[["Get ready for combat.", ["close", true]]]
+	],
 	[[2],
 	"As your fleet exits its jump, you see two stars locked in each others' orbits. You spend a moment taking a deep breath, before returning to your duties on deck.",
-	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
+	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
+	],
+	[[2, "enemy presence"],
+	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
+	[["Get ready for combat.", ["close", true]]]
 	],
 	[[3],
 	"As your fleet exits its jump, you are surprised to find you and your fleet amongst a trinary star system, a rare sight for anyone not part of the navy.",
-	[["Enjoy the view as your warp drives charge up once more.", ["close"]]]
+	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
+	],
+	[[3, "enemy presence"],
+	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet - in a trinary system too! We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
+	[["Get ready for combat.", ["close", true]]]
 	],
 	[[1, "star proximity"],
 	"As you exit warp, you realise you've ended up dangerously close to this system's star. Your ships could be in danger if you linger for too long.",
-	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close"]]]
+	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close", false]]]
+	],
+	[[1, "enemy presence", "star proximity"],
+	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
+	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
 	],
 	[[2, "star proximity"],
 	"The binary system of stars you've just warped into makes it hard to miss the fact that you've come in far too close for comfort to one of them.",
-	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close"]]]
+	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close", false]]]
+	],
+	[[2, "enemy presence", "star proximity"],
+	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
+	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
 	],
 	[[3, "star proximity"],
 	"You find yourself and your fleet in a trinary system, but your close proximity to one of the stars unfortunately means you cannot affort to take in the view.",
-	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close"]]]
+	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close", false]]]
+	],
+	[[3, "enemy presence", "star proximity"],
+	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
+	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
 	],
 ]
 
 var response_dialogue: Array = [ # Main text, [option, result]
 	["As you search the wreckages, you manage to pick out some scraps.",
-	[["Continue the journey.", ["close"]]]
+	[["Continue the journey.", ["close", false]]]
 	],
 	["You search the wreckages but there is nothing of value to find.",
-	[["Continue the journey.", ["close"]]]
+	[["Continue the journey.", ["close", false]]]
 	],
 	["Looking through the charred remains of the freighters, you come across a hidden vault that the pirates must have missed. Opening the vault, you find a variety of exotic materials inside!",
-	[["Celebrate and continue the journey.", ["close"]]]
+	[["Celebrate and continue the journey.", ["close", false]]]
 	],
 ]
 
@@ -77,8 +101,8 @@ func _ready() -> void:
 	$ScreenFade.show()
 	for i in Global.galaxy_data:
 		var new_token: Node = galaxy_map_token.instantiate()
-		new_token.id = i[0]
-		new_token.position = i[1]
+		new_token.id = i["id"]
+		new_token.position = i["position"]
 		$GalaxyMap/Tokens.add_child(new_token)
 
 
@@ -122,11 +146,11 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D"):
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
-			if Global.galaxy_data[Global.current_system][1].x > 900:
-				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system][1].x
+			if Global.galaxy_data[Global.current_system]["position"].x > 900:
+				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
 			else:
 				$GalaxyMap/Tokens.position.x = 45
-			%Cursor.position = Global.galaxy_data[Global.current_system][1]
+			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
 	if galaxy_map_showing:
 		$GalaxyMap.show()
 		$GalaxyMapTitle.show()
@@ -211,9 +235,11 @@ func _quantity_change(quantity: int, up: bool) -> void:
 
 
 # Close the dialogue box
-func close() -> void:
+func close(combat: bool) -> void:
 	$Dialogue.hide()
 	dialogue_showing = false
+	if combat:
+		main.in_combat = true
 
 
 # Give the player resources from a dialogue event
