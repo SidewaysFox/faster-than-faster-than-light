@@ -2,21 +2,55 @@ extends Node3D
 
 
 @export var bg_nebula: PackedScene
+@export var starship: PackedScene
 var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(1, 1, 1), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
 var main_star_count: int
 var system_properties: Array = []
+var system_stage: String
 var star_proximity: bool = false
 var in_combat: bool = false
+
+var pirate_fleets: Dictionary = {
+	"early": [
+		[1, 1],
+		#[1, 2],
+		#[1, 3],
+		#[1, 4],
+		#[3, 3],
+		[1, 1, 1],
+		#[1, 1, 2],
+	],
+	"middle": [
+		#[1, 1, 1, 4],
+		#[1, 1, 2, 4],
+		#[1, 1, 1, 1],
+		#[1, 1, 1, 1, 1],
+	],
+	"late": [
+		#[1, 1, 1, 2, 2, 2, 3],
+		#[1, 1, 1, 2, 2, 2, 3, 4],
+		#[1, 1, 2, 3, 3, 3, 3, 4],
+		#[1, 1, 1, 1, 1, 1, 1, 1],
+	]
+}
 
 
 func _ready() -> void:
 	# TODO: tesselating noise map with shader
 	# TODO: add star glow
 	
+	# Spawn fleet
 	if not Global.initilising:
 		for ship in Global.fleet:
 			$FriendlyShips.add_child(ship.duplicate())
+	
+	if Global.galaxy_data[Global.current_system]["position"].x > 2200:
+		system_stage = "late"
+	elif Global.galaxy_data[Global.current_system]["position"].x > 1100:
+		system_stage = "middle"
+	else:
+		system_stage = "early"
 	
 	# Pass information to the BGStar GLSL script
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
@@ -55,6 +89,7 @@ func _ready() -> void:
 		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1))
 		# Big or small nebula
 		if randi_range(0, 40) == 4: # Because I like the number 4
+			# Big
 			for j in randi_range(50, 300):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
@@ -65,6 +100,7 @@ func _ready() -> void:
 				nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
 				$Background.add_child(new_nebula)
 		else:
+			# Small
 			for j in randi_range(1, 20):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
@@ -78,11 +114,20 @@ func _ready() -> void:
 	system_properties.append(main_star_count)
 	if Global.galaxy_data[Global.current_system]["enemy presence"]:
 		system_properties.append("enemy presence")
+		var enemy_fleet: Array = pirate_fleets[system_stage].pick_random()
+		for ship in enemy_fleet:
+			var new_enemy: Node = starship.instantiate()
+			new_enemy.id = Global.get_new_ship_id()
+			new_enemy.team = -1
+			new_enemy.type = ship
+			new_enemy.alignment = 3
+			$HostileShips.add_child(new_enemy)
 	if star_proximity:
 		system_properties.append("star proximity")
 
 
 func _process(delta: float) -> void:
+	# UI stuff
 	if Input.is_action_just_pressed("debug quit"):
 		get_tree().quit()
 	if Input.is_action_pressed("hide ui"):
@@ -91,6 +136,7 @@ func _process(delta: float) -> void:
 		%UserInterface.show()
 
 
+# Start warp animations
 func commence_warp() -> void:
 	for ship in $FriendlyShips.get_children():
 		ship.begin_warp()

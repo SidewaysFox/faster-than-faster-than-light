@@ -23,11 +23,10 @@ class_name Starship extends Node3D
 # 9: Drone repair
 ## The starship's alignment
 @export var alignment: int = 0
-# -2: Unmanned rebel
-# -1: Rebel
 # 0: Federation
 # 1: Civilian
-# 2: Pirate
+# 2: Rebel
+# 3: Pirate
 ## The starship's name
 @export var ship_name: String = "Starship"
 ## The starship's current level
@@ -55,21 +54,24 @@ var spawn_location: Vector3
 
 
 func _ready() -> void:
-	add_child(meshes[type].instantiate())
+	# Apply appropriate mesh
+	var new_mesh: Node = meshes[type].instantiate()
+	new_mesh.type = alignment
+	add_child(new_mesh)
+	# Starting location based on team
 	if team != 0:
 		global_position = Vector3(-2000 * team, randf_range(-60, 60), randf_range(-100, 0))
+		rotation.y = (PI / 2) - ((PI * team) / 2)
 	else:
 		global_position = Vector3(randf_range(50, 50), randf_range(-25, 25), randf_range(-10, -150))
+		jumping = false
 	jump_destination = randf_range(-120, -50) * team
 	warp_destination = -global_position.x
 	$JumpDelay.start(1 + (randf() * 2))
-	if len(main.get_node("HostileShips").get_children()) > 0:
-		print("thar be enemie")
-		target = main.get_node("HostileShips").get_children().pick_random()
-		print(target)
 
 
 func _process(delta: float) -> void:
+	# Do jumping animations
 	if jumping:
 		if jump_mode == 0 and team != 0:
 			global_position.x = lerp(global_position.x, jump_destination, 0.1)
@@ -82,8 +84,17 @@ func _on_jump_delay_timeout() -> void:
 
 
 func begin_warp() -> void:
+	# Update fleet data
 	Global.fleet[id].ship_name = ship_name
 	Global.fleet[id].level = level
 	Global.fleet[id].hull_strength = hull_strength
 	Global.fleet[id].weapons = weapons
 	$JumpDelay.start(randf() * 2)
+
+
+func _on_targeting_delay_timeout() -> void:
+	# Choose a target
+	if team == 1 and len(main.get_node("HostileShips").get_children()) > 0:
+		target = main.get_node("HostileShips").get_child(0)
+	elif team == -1:
+		target = main.get_node("FriendlyShips").get_child(0)

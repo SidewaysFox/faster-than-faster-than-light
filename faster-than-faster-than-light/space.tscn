@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=14 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
 [ext_resource type="PackedScene" uid="uid://b4sj2kgmpfsbh" path="res://user_interface.tscn" id="3_ulv8f"]
+[ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="3_w5eul"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg-stars.gdshader" id="4_ulv8f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
@@ -59,6 +60,7 @@ rings = 24
 [node name="Space" type="Node3D"]
 script = ExtResource("1_81phd")
 bg_nebula = ExtResource("3_rxlph")
+starship = ExtResource("3_w5eul")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

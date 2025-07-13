@@ -99,6 +99,7 @@ var response_dialogue: Array = [ # Main text, [option, result]
 func _ready() -> void:
 	$Dialogue.hide()
 	$ScreenFade.show()
+	# Generate visual galaxy map
 	for i in Global.galaxy_data:
 		var new_token: Node = galaxy_map_token.instantiate()
 		new_token.id = i["id"]
@@ -107,29 +108,32 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# debug stuff
 	if Input.is_action_pressed("debug"):
 		$FPS.show()
 	else:
 		$FPS.hide()
 	$FPS.text = "FPS: " + str(1 / delta)
 	
+	# Update fuel and resource UI elements
 	%ResourcesLabel.text = "RSRC: " + str(Global.resources)
 	%ResourcesLabel.add_theme_color_override("font_color", lerp(%ResourcesLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
 	%FuelLabel.text = "FUEL: " + str(Global.fuel)
 	%FuelLabel.add_theme_color_override("font_color", lerp(%FuelLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
 	
+	# Screen fade stuff
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
+	# Check if the dialogue is showing:
 	if dialogue_showing:
+		# Move selection up/down
 		if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
 			current_dialogue_selection -= 1
-			if current_dialogue_selection < 1:
-				current_dialogue_selection = max_option
 		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
 			current_dialogue_selection += 1
-			if current_dialogue_selection > max_option:
-				current_dialogue_selection = 1
+		clamp(current_dialogue_selection, 0, max_option)
+		# Select
 		if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 			var args: Array = []
 			if len(option_results[current_dialogue_selection - 1]) > 1:
@@ -138,11 +142,13 @@ func _process(delta: float) -> void:
 				callv(option_results[current_dialogue_selection - 1][0], args)
 			else:
 				call(option_results[current_dialogue_selection - 1][0])
+		# Appropriately colour the selected option
 		for i in max_option:
 			if i + 1 == current_dialogue_selection:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
 			else:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	# Show or hide the galaxy map
 	elif Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D"):
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
@@ -151,14 +157,17 @@ func _process(delta: float) -> void:
 			else:
 				$GalaxyMap/Tokens.position.x = 45
 			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
+	# Galaxy map stuff
 	if galaxy_map_showing:
 		$GalaxyMap.show()
 		$GalaxyMapTitle.show()
+		# Left/right scrolling
 		if Input.is_action_pressed("right2"):
 			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2"):
 			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
 		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")).normalized() * cursor_speed * Global.joystick_sens * delta
+		# Cursor snapping
 		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
 			var in_warp_range: bool = false
 			var closest_token: Array = [0, 400]
@@ -171,47 +180,59 @@ func _process(delta: float) -> void:
 						in_warp_range = true
 				n += 1
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
+			# Warping input
 			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and Global.fuel >= len(Global.fleet):
 				galaxy_map_showing = false
 				Global.fuel -= len(Global.fleet)
 				_quantity_change(1, false)
 				Global.new_system(closest_token[2])
+				# Warp sequence
 				await get_tree().create_timer(1).timeout
 				main.commence_warp()
 				await get_tree().create_timer(2).timeout
 				fade_mode = 1
 				await get_tree().create_timer(3).timeout
 				main.get_tree().reload_current_scene()
+		# Clamping
 		$GalaxyMap/Tokens.position.x = clampf($GalaxyMap/Tokens.position.x, -2040.0, 45.0)
 		%Cursor.global_position.x = clampf(%Cursor.global_position.x, 385.0, 1535.0)
 		%Cursor.global_position.y = clampf(%Cursor.global_position.y, 256.0, 824.0)
 	else:
+		# Not showing
 		$GalaxyMap.hide()
 		$GalaxyMapTitle.hide()
 
 
+# Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int) -> void:
+	# Hide the options by default
 	for child in %Options.get_children():
 		child.hide()
 	option_results = []
+	# Warp in dialogue
 	if library == 0:
 		%DialogueText.text = warp_in_dialogue[id][1]
 		max_option = len(warp_in_dialogue[id][2])
+		# Options
 		for i in max_option:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + warp_in_dialogue[id][2][i][0]
 			option_results.append(warp_in_dialogue[id][2][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
+	# Response dialogue
 	elif library == 1:
 		%DialogueText.text = response_dialogue[id][0]
 		max_option = len(response_dialogue[id][1])
+		# Options
 		for i in max_option:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + response_dialogue[id][1][i][0]
 			option_results.append(response_dialogue[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
 
 
+# Small interval before showing the warp in dialogue
 func _on_warp_in_dialogue_timeout() -> void:
-	# Search through options for the warp in dialogue and find which ones are appropriate for this system
+	# Search through options for the warp in dialogue and find which ones are
+	# appropriate for this system
 	var possible_dialogues: Array = []
 	for i in warp_in_dialogue:
 		if i[0] == main.system_properties:
@@ -221,12 +242,15 @@ func _on_warp_in_dialogue_timeout() -> void:
 	dialogue_showing = true
 
 
+# Called when either fuel or resources are spent or gained
 func _quantity_change(quantity: int, up: bool) -> void:
+	# Resources
 	if quantity == 0:
 		if up:
 			%ResourcesLabel.add_theme_color_override("font_color", Color(0, 1, 0))
 		else:
 			%ResourcesLabel.add_theme_color_override("font_color", Color(1, 0, 0))
+	# Fuel
 	if quantity == 1:
 		if up:
 			%FuelLabel.add_theme_color_override("font_color", Color(0, 1, 0))

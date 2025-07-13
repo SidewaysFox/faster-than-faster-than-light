@@ -1,4 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://dtmka8h8pyslt"]
+[gd_scene load_steps=13 format=3 uid="uid://dtmka8h8pyslt"]
+
+[ext_resource type="Script" uid="uid://dj2c17mgoq0wa" path="res://starship_mesh.gd" id="1_6q4y1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ng4vp"]
 albedo_color = Color(0.784314, 0.784314, 0.784314, 1)
@@ -55,6 +57,7 @@ material = SubResource("StandardMaterial3D_ogk3x")
 size = Vector3(2, 8, 12)
 
 [node name="FighterMesh" type="Node3D"]
+script = ExtResource("1_6q4y1")
 
 [node name="Hull" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_wpmgm")
