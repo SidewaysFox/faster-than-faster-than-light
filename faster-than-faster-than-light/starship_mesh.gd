@@ -13,10 +13,11 @@ var palettes: Array[Array] = [ # Main, accent
 func _ready() -> void:
 	print("mesh type " + str(type))
 	for part in get_children():
+		print(part.name)
 		if "Accent" in part.name:
 			part.mesh.material.albedo_color = palettes[type][2]
 			part.mesh.material.emission = palettes[type][2]
-			print(part.mesh.material.albedo_color)
+			print("this one: " + part.name)
 		elif "Hull" in part.name:
 			part.mesh.material.albedo_color = palettes[type][0]
 			part.mesh.material.emission = Color(1, 1, 1)
@@ -26,3 +27,5 @@ func _ready() -> void:
 		elif "Bridge" in part.name:
 			part.mesh.material.albedo_color = palettes[type][3]
 			part.mesh.material.emission = Color(1, 1, 1)
+		print(part.mesh.material.albedo_color)
+		print(part.mesh.material.emission)

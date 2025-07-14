@@ -56,7 +56,7 @@ emission_energy_multiplier = 0.1
 material = SubResource("StandardMaterial3D_ogk3x")
 size = Vector3(2, 8, 12)
 
-[node name="FighterMesh" type="Node3D"]
+[node name="RelayMesh" type="Node3D"]
 script = ExtResource("1_6q4y1")
 
 [node name="Hull" type="MeshInstance3D" parent="."]
@@ -82,6 +82,6 @@ mesh = SubResource("BoxMesh_ng4vp")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 mesh = SubResource("BoxMesh_86p3r")
 
-[node name="RelayDish" type="MeshInstance3D" parent="."]
+[node name="WingRelayDish" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
 mesh = SubResource("BoxMesh_6q4y1")
