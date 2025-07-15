@@ -16,5 +16,7 @@ one_shot = true
 one_shot = true
 autostart = true
 
+[node name="WeaponReload1" type="Timer" parent="."]
+
 [connection signal="timeout" from="JumpDelay" to="." method="_on_jump_delay_timeout"]
 [connection signal="timeout" from="TargetingDelay" to="." method="_on_targeting_delay_timeout"]

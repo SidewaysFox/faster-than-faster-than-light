@@ -20,6 +20,7 @@ var visited_systems: Array[int] = []
 var unique_visits: int = 0
 var joystick_sens: float = 1.5
 var next_ship_id: int = 0
+var in_combat: bool = false
 
 
 func _ready() -> void:

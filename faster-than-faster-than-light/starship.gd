@@ -34,7 +34,7 @@ class_name Starship extends Node3D
 ## The starship's maximum hull points
 @export var hull_strength: int = 10
 ## The starship's currently active weapons
-@export var weapons: Array[int] = []
+@export var weapons: Array[Array] = []
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
 

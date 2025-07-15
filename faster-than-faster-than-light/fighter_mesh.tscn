@@ -1,66 +1,49 @@
-[gd_scene load_steps=12 format=3 uid="uid://bj55jmmx5j5ur"]
+[gd_scene load_steps=7 format=3 uid="uid://bj55jmmx5j5ur"]
 
 [ext_resource type="Script" uid="uid://dj2c17mgoq0wa" path="res://starship_mesh.gd" id="1_25wfh"]
-[ext_resource type="Material" uid="uid://b5ma4f8vehwdk" path="res://federation_tertiary.tres" id="2_2rvkq"]
-[ext_resource type="Material" uid="uid://be30yfgtn7lb2" path="res://federation_secondary.tres" id="3_1yf3p"]
-[ext_resource type="Material" uid="uid://d3w2n04e24dmb" path="res://federation_accent.tres" id="4_2rvkq"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wpmgm"]
-material = ExtResource("2_2rvkq")
+resource_local_to_scene = true
 size = Vector3(7, 3, 4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_deqbx"]
-material = ExtResource("3_1yf3p")
+resource_local_to_scene = true
 size = Vector3(10, 2, 2)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yf3p"]
-resource_local_to_scene = true
-albedo_color = Color(0.627451, 0.627451, 0.627451, 1)
-emission_enabled = true
-emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 0.1
-
 [sub_resource type="BoxMesh" id="BoxMesh_fb3fn"]
-material = SubResource("StandardMaterial3D_1yf3p")
+resource_local_to_scene = true
 size = Vector3(10, 2, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_86p3r"]
-material = ExtResource("4_2rvkq")
+resource_local_to_scene = true
 size = Vector3(5, 0.1, 0.5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p8bte"]
-resource_local_to_scene = true
-albedo_color = Color(1, 0.313726, 0, 1)
-emission_enabled = true
-emission = Color(1, 0.313726, 0, 1)
-emission_energy_multiplier = 0.1
-
 [sub_resource type="BoxMesh" id="BoxMesh_ng4vp"]
-material = SubResource("StandardMaterial3D_p8bte")
+resource_local_to_scene = true
 size = Vector3(8, 0.5, 0.1)
 
 [node name="FighterMesh" type="Node3D"]
 script = ExtResource("1_25wfh")
 
-[node name="Hull" type="MeshInstance3D" parent="."]
+[node name="Hull0" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_wpmgm")
 
-[node name="WingRight" type="MeshInstance3D" parent="."]
+[node name="WingRight1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
 mesh = SubResource("BoxMesh_deqbx")
 
-[node name="WingLeft" type="MeshInstance3D" parent="."]
+[node name="WingLeft1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
 mesh = SubResource("BoxMesh_fb3fn")
 
-[node name="HullAccent" type="MeshInstance3D" parent="."]
+[node name="HullAccent3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 mesh = SubResource("BoxMesh_86p3r")
 
-[node name="WingRightAccent" type="MeshInstance3D" parent="."]
+[node name="WingRightAccent3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 4)
 mesh = SubResource("BoxMesh_ng4vp")
 
-[node name="WingLeftAccent" type="MeshInstance3D" parent="."]
+[node name="WingLeftAccent3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -4)
 mesh = SubResource("BoxMesh_ng4vp")

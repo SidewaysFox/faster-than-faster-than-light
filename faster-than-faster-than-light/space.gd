@@ -9,7 +9,6 @@ var main_star_count: int
 var system_properties: Array = []
 var system_stage: String
 var star_proximity: bool = false
-var in_combat: bool = false
 
 var pirate_fleets: Dictionary = {
 	"early": [

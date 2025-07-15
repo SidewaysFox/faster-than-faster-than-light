@@ -263,7 +263,7 @@ func close(combat: bool) -> void:
 	$Dialogue.hide()
 	dialogue_showing = false
 	if combat:
-		main.in_combat = true
+		Global.in_combat = true
 
 
 # Give the player resources from a dialogue event
