@@ -32,9 +32,11 @@ class_name Starship extends Node3D
 ## The starship's current level
 @export var level: int = 1
 ## The starship's maximum hull points
-@export var hull_strength: int = 10
+@export var hull_strength: int = 6
+## The starship's chance to avoid enemy weapons
+@export var agility: float = 0.2
 ## The starship's currently active weapons
-@export var weapons: Array[Array] = []
+@export var weapons: Array[int] = [0]
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
 
@@ -44,7 +46,7 @@ var total_hull_damage: int = 0
 
 # Variables
 @onready var main: Node = get_node("/root/Space")
-var hull: int = 10
+var hull: int = 6
 var target: Node
 var jumping: bool = true
 var jump_mode: int = -1
@@ -58,6 +60,7 @@ func _ready() -> void:
 	var new_mesh: Node = meshes[type].instantiate()
 	new_mesh.type = alignment
 	add_child(new_mesh)
+	
 	# Starting location based on team
 	if team != 0:
 		global_position = Vector3(-2000 * team, randf_range(-60, 60), randf_range(-100, 0))
@@ -68,9 +71,26 @@ func _ready() -> void:
 	jump_destination = randf_range(-120, -50) * team
 	warp_destination = -global_position.x
 	$JumpDelay.start(1 + (randf() * 2))
+	
+	if type == 1:
+		var index: int = 1
+		for weapon_id in weapons:
+			get_node("WeaponReload" + str(index)).wait_time = Global.weapon_list[weapon_id]["Reload time"]
 
 
 func _process(delta: float) -> void:
+	if hull <= 0:
+		queue_free()
+	
+	if type == 1:
+		# Start shooting!!!
+		if Global.in_combat:
+			if $WeaponReload1.is_stopped():
+				for i in len(weapons):
+					get_node("WeaponReload" + str(i + 1)).start()
+		else:
+			$WeaponReload1.stop()
+	
 	# Do jumping animations
 	if jumping:
 		if jump_mode == 0 and team != 0:
@@ -92,9 +112,20 @@ func begin_warp() -> void:
 	$JumpDelay.start(randf() * 2)
 
 
-func _on_targeting_delay_timeout() -> void:
+func new_target() -> void:
 	# Choose a target
-	if team == 1 and len(main.get_node("HostileShips").get_children()) > 0:
+	if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
 		target = main.get_node("HostileShips").get_child(0)
-	elif team == -1:
-		target = main.get_node("FriendlyShips").get_child(0)
+	elif team == -1 and main.get_node("FriendlyShips").get_child_count() > 0:
+		target = main.get_node("FriendlyShips").get_children().pick_random()
+
+
+# Find a way to ensure ships don't fire on the exact same frame
+func _weapon_fire(firing: int) -> void:
+	var weapon_info = Global.weapon_list[weapons[firing]]
+	if weapon_info["Type"] == 0:
+		target.hull -= weapon_info["Damage"]
+		print(target.hull)
+		if target.hull <= 0:
+			await get_tree().create_timer(0.5)
+			new_target()

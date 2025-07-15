@@ -5,6 +5,7 @@ var starship: PackedScene = preload("res://starship.tscn")
 var initilising: bool = true
 var resources: int = 0
 var fuel: int = 45
+var starting_fleet: Array[int] = [0, 1, 1]
 var fleet: Array = []
 var jump_distance: float = 180.0
 var augmentations: Array = []
@@ -19,8 +20,75 @@ var system_position: Vector2
 var visited_systems: Array[int] = []
 var unique_visits: int = 0
 var joystick_sens: float = 1.5
-var next_ship_id: int = 0
+var next_ship_id: int = -1
 var in_combat: bool = false
+
+var starship_base_stats: Array[Dictionary] = [
+	{
+		"Hull Strength": 20,
+		"Agility": 0.1,
+	},
+	{
+		"Hull Strength": 6,
+		"Agility": 0.2,
+	},
+	{
+		"Hull Strength": 5,
+		"Agility": 0.2,
+	},
+	{
+		"Hull Strength": 8,
+		"Agility": 0.15,
+	},
+	{
+		"Hull Strength": 6,
+		"Agility": 0.15,
+	},
+	{
+		"Hull Strength": 6,
+		"Agility": 0.25,
+	},
+	{
+		"Hull Strength": 8,
+		"Agility": 0.25,
+	},
+	{
+		"Hull Strength": 10,
+		"Agility": 0.12,
+	},
+	{
+		"Hull Strength": 3,
+		"Agility": 0.4,
+	},
+	{
+		"Hull Strength": 3,
+		"Agility": 0.35,
+	},
+]
+
+var weapon_list: Array[Dictionary] = [
+	{
+		"Name": "Phasor 1",
+		"Type": 0,
+		"Slots": 1,
+		"Damage": 1,
+		"Reload time": 6.0
+	},
+	{
+		"Name": "Phasor 2",
+		"Type": 0,
+		"Slots": 2,
+		"Damage": 1,
+		"Reload time": 4.5
+	},
+	{
+		"Name": "Phasor 3",
+		"Type": 0,
+		"Slots": 3,
+		"Damage": 1,
+		"Reload time": 3.0
+	},
+]
 
 
 func _ready() -> void:
@@ -54,29 +122,8 @@ func _ready() -> void:
 	new_system(current_system)
 	
 	# Create the fleet
-	# This will probably be changed later in favour of raw data, instead of
-	# storing the actual objects and nodes
-	# I will probably change this particular initialisation at some point too
-	var new_ship: Node = starship.instantiate()
-	new_ship.id = next_ship_id
-	new_ship.team = 1
-	new_ship.hull_strength = 20
-	fleet.append(new_ship)
-	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
-	
-	new_ship = starship.instantiate()
-	new_ship.id = get_new_ship_id()
-	new_ship.team = 1
-	new_ship.type = 1
-	fleet.append(new_ship)
-	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
-	
-	new_ship = starship.instantiate()
-	new_ship.id = get_new_ship_id()
-	new_ship.team = 1
-	new_ship.type = 6
-	fleet.append(new_ship)
-	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	for ship in starting_fleet:
+		create_new_starship(ship)
 	
 	stats_update()
 
@@ -104,3 +151,16 @@ func new_system(system: int) -> void:
 	# Check if this is the first system
 	if unique_visits > 1:
 		initilising = false
+
+
+func create_new_starship(type: int) -> void:
+	var new_ship: Node = starship.instantiate()
+	new_ship = starship.instantiate()
+	new_ship.id = get_new_ship_id()
+	new_ship.team = 1
+	new_ship.type = type
+	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
+	new_ship.hull = new_ship.hull_strength
+	new_ship.agility = starship_base_stats[type]["Agility"]
+	fleet.append(new_ship)
+	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
