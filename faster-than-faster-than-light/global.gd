@@ -72,14 +72,14 @@ var weapon_list: Array[Dictionary] = [
 		"Type": 0,
 		"Slots": 1,
 		"Damage": 1,
-		"Reload time": 6.0
+		"Reload time": 7.0
 	},
 	{
 		"Name": "Phasor 2",
 		"Type": 0,
 		"Slots": 2,
 		"Damage": 1,
-		"Reload time": 4.5
+		"Reload time": 5.0
 	},
 	{
 		"Name": "Phasor 3",
@@ -93,7 +93,6 @@ var weapon_list: Array[Dictionary] = [
 
 func _ready() -> void:
 	# Establish the game
-	print("go")
 	var sector: int = 0
 	var system_id: int = 0
 	var starting_system: Array = [0, 800.0]
@@ -160,7 +159,19 @@ func create_new_starship(type: int) -> void:
 	new_ship.team = 1
 	new_ship.type = type
 	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
-	new_ship.hull = new_ship.hull_strength
+	new_ship.hull = starship_base_stats[type]["Hull Strength"]
 	new_ship.agility = starship_base_stats[type]["Agility"]
 	fleet.append(new_ship)
 	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+
+
+func create_enemy_ship(type: int) -> void:
+	var new_enemy: Node = starship.instantiate()
+	new_enemy.id = Global.get_new_ship_id()
+	new_enemy.team = -1
+	new_enemy.type = type
+	new_enemy.alignment = 3
+	new_enemy.hull_strength = starship_base_stats[type]["Hull Strength"]
+	new_enemy.hull = starship_base_stats[type]["Hull Strength"]
+	new_enemy.agility = starship_base_stats[type]["Agility"]
+	get_node("/root/Space/HostileShips").add_child(new_enemy)

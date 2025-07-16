@@ -11,26 +11,38 @@ var system_stage: String
 var star_proximity: bool = false
 
 var pirate_fleets: Dictionary = {
-	"early": [
+	"start": [
 		[1, 1],
 		#[1, 2],
 		#[1, 3],
 		#[1, 4],
+		#[1, 5],
+		[1, 6],
+		#[1, 7],
 		#[3, 3],
-		[1, 1, 1],
-		#[1, 1, 2],
 	],
-	"middle": [
+	"early": [
+		[1, 1, 1],
+		[1, 1, 6],
 		#[1, 1, 1, 4],
 		#[1, 1, 2, 4],
-		#[1, 1, 1, 1],
-		#[1, 1, 1, 1, 1],
+		[1, 1, 1, 1],
+		[1, 1, 1, 6],
+		[1, 1, 6, 6],
+	],
+	"middle": [
+		[1, 1, 1, 1, 1],
+		#[1, 1, 1, 4, 4],
+		[1, 1, 1, 1, 6],
+		#[1, 1, 2, 4],
+		[1, 1, 1, 1, 1, 1],
+		[1, 1, 1, 1, 1, 6],
 	],
 	"late": [
 		#[1, 1, 1, 2, 2, 2, 3],
+		[1, 1, 1, 1, 1, 1, 1, 1],
 		#[1, 1, 1, 2, 2, 2, 3, 4],
 		#[1, 1, 2, 3, 3, 3, 3, 4],
-		#[1, 1, 1, 1, 1, 1, 1, 1],
 	]
 }
 
@@ -44,12 +56,14 @@ func _ready() -> void:
 		for ship in Global.fleet:
 			$FriendlyShips.add_child(ship.duplicate())
 	
-	if Global.galaxy_data[Global.current_system]["position"].x > 2200:
+	if Global.galaxy_data[Global.current_system]["position"].x > 2400:
 		system_stage = "late"
-	elif Global.galaxy_data[Global.current_system]["position"].x > 1100:
+	elif Global.galaxy_data[Global.current_system]["position"].x > 1600:
 		system_stage = "middle"
-	else:
+	elif Global.galaxy_data[Global.current_system]["position"].x > 800:
 		system_stage = "early"
+	else:
+		system_stage = "start"
 	
 	# Pass information to the BGStar GLSL script
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
@@ -79,7 +93,6 @@ func _ready() -> void:
 		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
 		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
 			star_proximity = true
-		print(($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO))
 	# Create nebulae
 	var nebula_pos: Vector3
 	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
@@ -115,12 +128,7 @@ func _ready() -> void:
 		system_properties.append("enemy presence")
 		var enemy_fleet: Array = pirate_fleets[system_stage].pick_random()
 		for ship in enemy_fleet:
-			var new_enemy: Node = starship.instantiate()
-			new_enemy.id = Global.get_new_ship_id()
-			new_enemy.team = -1
-			new_enemy.type = ship
-			new_enemy.alignment = 3
-			$HostileShips.add_child(new_enemy)
+			Global.create_enemy_ship(ship)
 	if star_proximity:
 		system_properties.append("star proximity")
 
@@ -133,6 +141,14 @@ func _process(delta: float) -> void:
 		%UserInterface.hide()
 	else:
 		%UserInterface.show()
+	
+	if Global.in_combat:
+		if $FriendlyShips.get_child(0).hull <= 0:
+			Global.in_combat = false
+			# Lose the game
+		if $HostileShips.get_child_count() < 1:
+			Global.in_combat = false
+			# Win the encounter
 
 
 # Start warp animations

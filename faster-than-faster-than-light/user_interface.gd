@@ -132,7 +132,7 @@ func _process(delta: float) -> void:
 			current_dialogue_selection -= 1
 		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
 			current_dialogue_selection += 1
-		clamp(current_dialogue_selection, 0, max_option)
+		current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
 		# Select
 		if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 			var args: Array = []
@@ -181,7 +181,7 @@ func _process(delta: float) -> void:
 				n += 1
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
 			# Warping input
-			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and Global.fuel >= len(Global.fleet):
+			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
 				galaxy_map_showing = false
 				Global.fuel -= len(Global.fleet)
 				_quantity_change(1, false)

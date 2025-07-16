@@ -3,14 +3,14 @@ class_name Starship extends Node3D
 
 @export_category("Properties")
 ## The starship's ID, used to identify it in data storage
-@export var id: int = 0
+@export var id: int
 ## What team the starship is on
-@export var team: int = 0
+@export var team: int
 # -1: Hostile
 # 0: Neutral
 # 1: Friendly
 ## The starship's type
-@export var type: int = 0
+@export var type: int
 # 0: Command ship
 # 1: Fighter
 # 2: Shield
@@ -22,7 +22,7 @@ class_name Starship extends Node3D
 # 8: Drone fighter
 # 9: Drone repair
 ## The starship's alignment
-@export var alignment: int = 0
+@export var alignment: int
 # 0: Federation
 # 1: Civilian
 # 2: Rebel
@@ -30,13 +30,14 @@ class_name Starship extends Node3D
 ## The starship's name
 @export var ship_name: String = "Starship"
 ## The starship's current level
-@export var level: int = 1
+@export var level: int
 ## The starship's maximum hull points
-@export var hull_strength: int = 6
+@export var hull_strength: int
 ## The starship's chance to avoid enemy weapons
-@export var agility: float = 0.2
+@export var agility: float
 ## The starship's currently active weapons
 @export var weapons: Array[int] = [0]
+@export_category("Misc")
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
 
@@ -46,7 +47,8 @@ var total_hull_damage: int = 0
 
 # Variables
 @onready var main: Node = get_node("/root/Space")
-var hull: int = 6
+@export_category("Bugfixing")
+@export var hull: int # WHY DOES THIS NEED TO BE EXPORTED
 var target: Node
 var jumping: bool = true
 var jump_mode: int = -1
@@ -80,6 +82,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if hull <= 0:
+		await get_tree().create_timer(0.1).timeout
 		queue_free()
 	
 	if type == 1:
@@ -122,10 +125,8 @@ func new_target() -> void:
 
 # Find a way to ensure ships don't fire on the exact same frame
 func _weapon_fire(firing: int) -> void:
-	var weapon_info = Global.weapon_list[weapons[firing]]
+	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
 	if weapon_info["Type"] == 0:
-		target.hull -= weapon_info["Damage"]
-		print(target.hull)
-		if target.hull <= 0:
-			await get_tree().create_timer(0.5)
+		if target == null:
 			new_target()
+		target.hull -= weapon_info["Damage"]
