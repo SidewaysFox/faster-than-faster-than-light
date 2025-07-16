@@ -5,7 +5,7 @@ var starship: PackedScene = preload("res://starship.tscn")
 var initilising: bool = true
 var resources: int = 0
 var fuel: int = 45
-var starting_fleet: Array[int] = [0, 1, 1]
+var starting_fleet: Array[int] = [0, 1, 1, 1, 6, 6, 6]
 var fleet: Array = []
 var jump_distance: float = 180.0
 var augmentations: Array = []
@@ -158,6 +158,8 @@ func create_new_starship(type: int) -> void:
 	new_ship.id = get_new_ship_id()
 	new_ship.team = 1
 	new_ship.type = type
+	new_ship.alignment = 0
+	new_ship.level = 1
 	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_ship.hull = starship_base_stats[type]["Hull Strength"]
 	new_ship.agility = starship_base_stats[type]["Agility"]
@@ -171,6 +173,7 @@ func create_enemy_ship(type: int) -> void:
 	new_enemy.team = -1
 	new_enemy.type = type
 	new_enemy.alignment = 3
+	new_enemy.level = 1
 	new_enemy.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_enemy.hull = starship_base_stats[type]["Hull Strength"]
 	new_enemy.agility = starship_base_stats[type]["Agility"]
