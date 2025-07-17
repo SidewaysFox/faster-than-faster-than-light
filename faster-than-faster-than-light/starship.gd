@@ -40,6 +40,8 @@ class_name Starship extends Node3D
 @export_category("Misc")
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
+## Projectiles
+@export var projectiles: Array[PackedScene] = []
 
 # Miscellaneous stats
 var kills: int = 0
@@ -82,7 +84,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if hull <= 0:
-		await get_tree().create_timer(0.1).timeout
+		if team == 1:
+			Global.fleet.remove_at(_get_data_location())
 		queue_free()
 	
 	if type == 1:
@@ -108,10 +111,13 @@ func _on_jump_delay_timeout() -> void:
 
 func begin_warp() -> void:
 	# Update fleet data
-	Global.fleet[id].ship_name = ship_name
-	Global.fleet[id].level = level
-	Global.fleet[id].hull_strength = hull_strength
-	Global.fleet[id].weapons = weapons
+	var index: int = _get_data_location()
+	Global.fleet[index].ship_name = ship_name
+	Global.fleet[index].level = level
+	Global.fleet[index].hull_strength = hull_strength
+	Global.fleet[index].hull = hull
+	Global.fleet[index].agility = agility
+	Global.fleet[index].weapons = weapons
 	$JumpDelay.start(randf() * 2)
 
 
@@ -129,4 +135,21 @@ func _weapon_fire(firing: int) -> void:
 	if weapon_info["Type"] == 0:
 		if target == null:
 			new_target()
-		target.hull -= weapon_info["Damage"]
+		_new_projectile(weapon_info["Type"], weapon_info["Damage"])
+
+
+func _new_projectile(form: int, damage: int) -> void:
+	var new_projectile: Node = projectiles[form].instantiate()
+	new_projectile.starting_position = global_position
+	new_projectile.target = target
+	new_projectile.damage = damage
+	get_parent().get_parent().get_node("Projectiles").add_child(new_projectile)
+
+
+func _get_data_location() -> int:
+	var index: int = 0
+	for ship in Global.fleet:
+		if ship.id == id:
+			break
+		index += 1
+	return index

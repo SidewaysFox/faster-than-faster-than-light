@@ -3,12 +3,13 @@ extends Node3D
 
 @export var bg_nebula: PackedScene
 @export var starship: PackedScene
-var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
+var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(1, 1, 1), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
 var main_star_count: int
 var system_properties: Array = []
 var system_stage: String
 var star_proximity: bool = false
+var warp_charge: float = 0.0
 
 var pirate_fleets: Dictionary = {
 	"start": [
@@ -20,6 +21,13 @@ var pirate_fleets: Dictionary = {
 		[1, 6],
 		#[1, 7],
 		#[3, 3],
+		[1, 1, 1],
+		#[1, 1, 2],
+		#[1, 1, 3],
+		#[1, 1, 4],
+		#[1, 1, 5],
+		[1, 1, 6],
+		#[1, 3, 3],
 	],
 	"early": [
 		[1, 1, 1],
@@ -143,6 +151,7 @@ func _process(delta: float) -> void:
 		%UserInterface.show()
 	
 	if Global.in_combat:
+		warp_charge += Global.charge_rate * delta
 		if $FriendlyShips.get_child(0).hull <= 0:
 			Global.in_combat = false
 			# Lose the game

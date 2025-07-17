@@ -125,8 +125,6 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
-	print(Global.in_combat)
-	
 	# Check if the dialogue is showing:
 	if dialogue_showing:
 		# Move selection up/down
@@ -151,7 +149,7 @@ func _process(delta: float) -> void:
 			else:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 	# Show or hide the galaxy map
-	elif (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and not Global.in_combat:
+	elif (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and main.warp_charge >= 100:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -185,6 +183,7 @@ func _process(delta: float) -> void:
 			# Warping input
 			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
 				galaxy_map_showing = false
+				Global.in_combat = false
 				Global.fuel -= len(Global.fleet)
 				_quantity_change(1, false)
 				Global.new_system(closest_token[2])
@@ -266,6 +265,8 @@ func close(combat: bool) -> void:
 	dialogue_showing = false
 	if combat:
 		Global.in_combat = true
+	else:
+		main.warp_charge = 100.0
 
 
 # Give the player resources from a dialogue event

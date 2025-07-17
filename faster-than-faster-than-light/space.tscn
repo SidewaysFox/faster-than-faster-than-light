@@ -99,4 +99,6 @@ mesh = SubResource("SphereMesh_1vxpe")
 
 [node name="HostileShips" type="Node3D" parent="."]
 
+[node name="Projectiles" type="Node3D" parent="."]
+
 [connection signal="timeout" from="WarpInDialogue" to="CanvasLayer/UserInterface" method="_on_warp_in_dialogue_timeout"]
