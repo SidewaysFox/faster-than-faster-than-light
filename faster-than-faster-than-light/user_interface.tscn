@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=11 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -74,6 +74,30 @@ expand_margin_top = 8.0
 expand_margin_right = 8.0
 expand_margin_bottom = 8.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r3lf1"]
+bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 16
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hsgek"]
+bg_color = Color(1, 0.313726, 0, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 16
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 16
+
 [node name="UserInterface" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -85,6 +109,7 @@ script = ExtResource("1_kxhmu")
 galaxy_map_token = ExtResource("2_i7dvk")
 
 [node name="Dialogue" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -155,6 +180,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="GalaxyMap" type="PanelContainer" parent="."]
+visible = false
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -191,6 +217,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_juc2q")
 shape = SubResource("CircleShape2D_i7dvk")
 
 [node name="GalaxyMapTitle" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 400.0
 offset_top = 146.0
@@ -243,6 +270,32 @@ theme_override_font_sizes/font_size = 48
 text = "FUEL: 45"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ChargeProgress" type="ProgressBar" parent="InfoTabs/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(560, 80)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_r3lf1")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hsgek")
+show_percentage = false
+
+[node name="Label" type="Label" parent="InfoTabs/HBoxContainer/ChargeProgress"]
+custom_minimum_size = Vector2(560, 80)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 48
+text = "WARP CHARGE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShipActionMenu" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ShipSelect" type="PanelContainer" parent="ShipActionMenu"]
+layout_mode = 2
 
 [node name="ScreenFade" type="ColorRect" parent="."]
 visible = false

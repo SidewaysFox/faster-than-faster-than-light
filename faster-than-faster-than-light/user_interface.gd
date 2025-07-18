@@ -8,6 +8,7 @@ var cursor_speed: float = 250
 var galaxy_map_showing: bool = false
 var dialogue_showing: bool = true
 var max_option: int = 3
+var ready_to_select: bool = false
 var current_dialogue_selection: int = 1
 var option_results: Array
 
@@ -121,6 +122,8 @@ func _process(delta: float) -> void:
 	%FuelLabel.text = "FUEL: " + str(Global.fuel)
 	%FuelLabel.add_theme_color_override("font_color", lerp(%FuelLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
 	
+	%ChargeProgress.value = main.warp_charge
+	
 	# Screen fade stuff
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
@@ -134,7 +137,7 @@ func _process(delta: float) -> void:
 			current_dialogue_selection += 1
 		current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
 		# Select
-		if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+		if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select:
 			var args: Array = []
 			if len(option_results[current_dialogue_selection - 1]) > 1:
 				for i in len(option_results[current_dialogue_selection - 1]) - 1:
@@ -148,6 +151,7 @@ func _process(delta: float) -> void:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
 			else:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+		%ChargeProgress/Label.text = "WAITING"
 	# Show or hide the galaxy map
 	elif (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and main.warp_charge >= 100:
 		galaxy_map_showing = not galaxy_map_showing
@@ -157,6 +161,11 @@ func _process(delta: float) -> void:
 			else:
 				$GalaxyMap/Tokens.position.x = 45
 			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
+	else:
+		if main.warp_charge < 100:
+			%ChargeProgress/Label.text = "WARP CHARGING"
+		else:
+			%ChargeProgress/Label.text = "WARP CHARGED"
 	# Galaxy map stuff
 	if galaxy_map_showing:
 		$GalaxyMap.show()
@@ -241,6 +250,7 @@ func _on_warp_in_dialogue_timeout() -> void:
 	dialogue_set_up(0, possible_dialogues.pick_random())
 	$Dialogue.show()
 	dialogue_showing = true
+	ready_to_select = true
 
 
 # Called when either fuel or resources are spent or gained

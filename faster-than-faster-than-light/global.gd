@@ -5,7 +5,7 @@ var starship: PackedScene = preload("res://starship.tscn")
 var initilising: bool = true
 var resources: int = 0
 var fuel: int = 45
-var starting_fleet: Array[int] = [0, 1, 1, 6, 6]
+var starting_fleet: Array[int] = [0,]
 var fleet: Array = []
 var jump_distance: float = 180.0
 var charge_rate: float = 2.5
@@ -101,7 +101,7 @@ func _ready() -> void:
 	for s in sector_count:
 		for n in sector_system_count: # ID, position, sector, enemy presence
 			var enemy_presence: bool
-			if randi_range(4, 4) == 4:
+			if randi_range(1, 4) == 4:
 				enemy_presence = true
 			else:
 				enemy_presence = false
