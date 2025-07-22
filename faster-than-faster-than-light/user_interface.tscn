@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=31 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -97,6 +97,198 @@ corner_radius_top_left = 32
 corner_radius_top_right = 16
 corner_radius_bottom_right = 32
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q287o"]
+bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f4522"]
+bg_color = Color(0.313726, 0, 0, 0.627451)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 0.627451)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tsqwh"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eaf2e"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l7m13"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1dg8"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pd2cl"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4g22y"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1kx6s"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aha7b"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q4f8x"]
+bg_color = Color(0.0784314, 0.0784314, 0.0784314, 0.627451)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.156863, 0.156863, 0.156863, 0.627451)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pe3dc"]
+bg_color = Color(0, 0, 0.313726, 0.627451)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 0.627451)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c247d"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qhj0k"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w70da"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a5sny"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3lq7k"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jotli"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ffd87"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_veoxi"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
 
 [node name="UserInterface" type="Control"]
 layout_mode = 3
@@ -289,13 +481,270 @@ text = "WARP CHARGE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ShipActionMenu" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="ShipActionMenu" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -200.0
+grow_horizontal = 2
+grow_vertical = 0
 
-[node name="ShipSelect" type="PanelContainer" parent="ShipActionMenu"]
+[node name="Title" type="PanelContainer" parent="ShipActionMenu"]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_q287o")
+
+[node name="Label" type="Label" parent="ShipActionMenu/Title"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "SHIP ACTION MENU"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Tabs" type="HBoxContainer" parent="ShipActionMenu"]
+layout_mode = 2
+
+[node name="ActionFriendlyShips" type="PanelContainer" parent="ShipActionMenu/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 200)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f4522")
+
+[node name="GridContainer" type="GridContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Ship0" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tsqwh")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship1" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_eaf2e")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship1"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship2" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l7m13")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship3" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_p1dg8")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship4" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pd2cl")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship5" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4g22y")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship5"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship6" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1kx6s")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship6"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship7" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_aha7b")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship7"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Instruction" type="PanelContainer" parent="ShipActionMenu/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 200)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_q4f8x")
+
+[node name="Label" type="Label" parent="ShipActionMenu/Tabs/Instruction"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "TARGET"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ActionTargetShips" type="PanelContainer" parent="ShipActionMenu/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 200)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pe3dc")
+
+[node name="GridContainer" type="GridContainer" parent="ShipActionMenu/Tabs/ActionTargetShips"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="Ship0" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c247d")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship0"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship1" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qhj0k")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship1"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship2" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_w70da")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship3" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_a5sny")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship4" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3lq7k")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship5" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jotli")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship5"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship6" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ffd87")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship6"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ship7" type="PanelContainer" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_veoxi")
+
+[node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship7"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0.627451, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NoTargets" type="Label" parent="ShipActionMenu/Tabs/ActionTargetShips"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "NO POTENTIAL TARGETS DETECTED"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="ScreenFade" type="ColorRect" parent="."]
 visible = false

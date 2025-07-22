@@ -11,6 +11,14 @@ var max_option: int = 3
 var ready_to_select: bool = false
 var current_dialogue_selection: int = 1
 var option_results: Array
+var action_menu_showing: bool = false
+var hovered_ship: int = 0
+var hovered_target: int = 0
+var selected_ship: int = 0
+var targeting_mode: int = 0
+
+var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
+var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
 
 
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
@@ -27,8 +35,16 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[["Play some cards with your crew to ease your nerves while you wait for the warp drives to charge.", ["close", false]], ["Remain alone for the time being.", ["close", false]]]
 	],
 	[[1],
+	"Despite your relatively unique journey so far, you find yourself ultimately feeling bored with nothing to do.",
+	[["Hope for something interesting to happen.", ["close", false]], ["Remain careful for what you wish for.", ["close", false]]]
+	],
+	[[1],
+	"As you warp into the system, your onboard threat assessment radar begins loudly blaring at you. After a couple minutes of your crew in complete panick attempting to identify a threat, you are told it was merely a false alarm.",
+	[["Calm down and get the radar fixed.", ["close", false]], ["Punish the crew members operating the radar.", ["close", false]]]
+	],
+	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(5, 15), 0]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(5, 15), 0, true, 0, 1]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
@@ -36,7 +52,11 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(20, 40), 2]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(20, 40), 0, true, 2, 1]]]
+	],
+	[[1],
+	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(3, 7), 1, true, 4, 1]]]
 	],
 	[[1, "enemy presence"],
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
@@ -93,6 +113,24 @@ var response_dialogue: Array = [ # Main text, [option, result]
 	],
 	["Looking through the charred remains of the freighters, you come across a hidden vault that the pirates must have missed. Opening the vault, you find a variety of exotic materials inside!",
 	[["Celebrate and continue the journey.", ["close", false]]]
+	],
+	["You have lost.",
+	[["Try once more.", ["restart"]], ["Give up.", ["quit"]]]
+	],
+	["Unfortunately no usable material was found, but some unused fuel canisters were successfully recovered.",
+	[["Add them to your fleet's fuel reserves and continue the journey.", ["close", false]]]
+	],
+]
+
+var encounter_win_dialogue: Array = [
+	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials.",
+	[["Continue the journey.", ["close", false]]]
+	],
+	["With the enemy fleet defeated, you order your crews to quickly search the wreckages for anything useful.",
+	[["Collect scrap and continue the journey.", ["close", false]]]
+	],
+	["You barely manage to hear muffled screams through the static of the final enemy ship's transmitters. As the sound fades away, you gather resources from the fresh debris field.",
+	[["Reap your reward and move on.", ["close", false]]]
 	],
 ]
 
@@ -153,7 +191,7 @@ func _process(delta: float) -> void:
 				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 		%ChargeProgress/Label.text = "WAITING"
 	# Show or hide the galaxy map
-	elif (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and main.warp_charge >= 100:
+	elif (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and not action_menu_showing and main.warp_charge >= 100:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -166,6 +204,8 @@ func _process(delta: float) -> void:
 			%ChargeProgress/Label.text = "WARP CHARGING"
 		else:
 			%ChargeProgress/Label.text = "WARP CHARGED"
+		if (Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and not galaxy_map_showing:
+			action_menu_showing = not action_menu_showing
 	# Galaxy map stuff
 	if galaxy_map_showing:
 		$GalaxyMap.show()
@@ -211,7 +251,94 @@ func _process(delta: float) -> void:
 		# Not showing
 		$GalaxyMap.hide()
 		$GalaxyMapTitle.hide()
-
+	# Ship action menu stuff
+	if action_menu_showing:
+		$ShipActionMenu.show()
+		if Input.is_action_just_pressed("left1"):
+			hovered_ship -= 1
+		if Input.is_action_just_pressed("right1"):
+			hovered_ship += 1
+		if Input.is_action_just_pressed("down1"):
+			hovered_ship += 4
+		if Input.is_action_just_pressed("up1"):
+			hovered_ship -= 4
+		hovered_ship = clamp(hovered_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
+		if Input.is_action_just_pressed("left2"):
+			hovered_target -= 1
+		if Input.is_action_just_pressed("right2"):
+			hovered_target += 1
+		if Input.is_action_just_pressed("down2"):
+			hovered_target += 4
+		if Input.is_action_just_pressed("up2"):
+			hovered_target -= 4
+		for i in %ActionTargetShips/GridContainer.get_children():
+			i.hide()
+		for i in %ActionFriendlyShips/GridContainer.get_children():
+			i.hide()
+		var index: int = 0
+		if targeting_mode == 1 or targeting_mode == 3 or targeting_mode == 5:
+			var hostiles_count: int = main.get_node("HostileShips").get_child_count()
+			if hostiles_count > 0:
+				%ActionTargetShips/NoTargets.hide()
+				hovered_target = clamp(hovered_target, 0, hostiles_count - 1)
+				for ship in main.get_node("HostileShips").get_children():
+					var box: Node = %ActionTargetShips/GridContainer.get_child(index)
+					var stylebox: Resource = box.get_theme_stylebox("panel")
+					box.get_node("Code").text = ship_codes[ship.type]
+					if index == hovered_target:
+						stylebox.border_color = Color8(100, 100, 160)
+					else:
+						stylebox.border_color = Color8(0, 0, 160)
+					if main.get_node("FriendlyShips").get_child(selected_ship).target != null:
+						if index == main.get_node("FriendlyShips").get_child(selected_ship).target.get_index():
+							stylebox.draw_center = true
+						else:
+							stylebox.draw_center = false
+					box.show()
+					index += 1
+				if Input.is_action_just_pressed("A"):
+					main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+			else:
+				%ActionTargetShips/NoTargets.show()
+		elif targeting_mode == 4:
+			for ship in main.get_node("FriendlyShips").get_children():
+				var box: Node = %ActionTargetShips/GridContainer.get_child(index)
+				var stylebox: Resource = box.get_theme_stylebox("panel")
+				box.get_node("Code").text = ship_codes[ship.type]
+				if index == hovered_target:
+					stylebox.border_color = Color8(100, 100, 160)
+				else:
+					stylebox.border_color = Color8(0, 0, 160)
+				if index == main.get_node("FriendlyShips").get_child(selected_ship).target.get_index():
+					stylebox.draw_center = true
+				else:
+					stylebox.draw_center = false
+				box.show()
+				index += 1
+		elif targeting_mode == 7:
+			pass # Select which drones to deploy
+		index = 0
+		for ship in main.get_node("FriendlyShips").get_children():
+			var box: Node = %ActionFriendlyShips/GridContainer.get_child(index)
+			var stylebox: Resource = box.get_theme_stylebox("panel")
+			box.get_node("Code").text = ship_codes[ship.type]
+			box.set_meta("type", ship.type)
+			if index == hovered_ship:
+				stylebox.border_color = Color8(160, 100, 100)
+			else:
+				stylebox.border_color = Color8(160, 0, 0)
+			if index == selected_ship:
+				stylebox.draw_center = true
+			else:
+				stylebox.draw_center = false
+			box.show()
+			index += 1
+		if Input.is_action_just_pressed("1"):
+			selected_ship = hovered_ship
+			targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
+			%Instruction/Label.text = targeting_options[targeting_mode]
+	else:
+		$ShipActionMenu.hide()
 
 # Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int) -> void:
@@ -237,6 +364,18 @@ func dialogue_set_up(library: int, id: int) -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + response_dialogue[id][1][i][0]
 			option_results.append(response_dialogue[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
+	# Encounter win dialogue
+	elif library == 2:
+		%DialogueText.text = encounter_win_dialogue[id][0]
+		max_option = len(encounter_win_dialogue[id][1])
+		# Options
+		for i in max_option:
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + encounter_win_dialogue[id][1][i][0]
+			option_results.append(encounter_win_dialogue[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).show()
+	$Dialogue.show()
+	dialogue_showing = true
+	ready_to_select = true
 
 
 # Small interval before showing the warp in dialogue
@@ -248,21 +387,18 @@ func _on_warp_in_dialogue_timeout() -> void:
 		if i[0] == main.system_properties:
 			possible_dialogues.append(warp_in_dialogue.find(i))
 	dialogue_set_up(0, possible_dialogues.pick_random())
-	$Dialogue.show()
-	dialogue_showing = true
-	ready_to_select = true
 
 
 # Called when either fuel or resources are spent or gained
-func _quantity_change(quantity: int, up: bool) -> void:
+func _quantity_change(quantity_type: int, up: bool) -> void:
 	# Resources
-	if quantity == 0:
+	if quantity_type == 0:
 		if up:
 			%ResourcesLabel.add_theme_color_override("font_color", Color(0, 1, 0))
 		else:
 			%ResourcesLabel.add_theme_color_override("font_color", Color(1, 0, 0))
 	# Fuel
-	if quantity == 1:
+	if quantity_type == 1:
 		if up:
 			%FuelLabel.add_theme_color_override("font_color", Color(0, 1, 0))
 		else:
@@ -280,10 +416,36 @@ func close(combat: bool) -> void:
 
 
 # Give the player resources from a dialogue event
-func resources(n: int, response: int) -> void:
-	Global.resources += n
-	if n > 0:
-		_quantity_change(0, true)
+func resources(n: int, resource_type: int = 0, dialogue: bool = false, response: int = 0, library: int = 1) -> void:
+	if resource_type == 0:
+		Global.resources += n
+	elif resource_type == 1:
+		Global.fuel += n
+	if n >= 0:
+		_quantity_change(resource_type, true)
 	else:
-		_quantity_change(0, false)
-	dialogue_set_up(1, response)
+		_quantity_change(resource_type, false)
+	if dialogue:
+		dialogue_set_up(library, response)
+
+
+func win_encounter() -> void:
+	resources(randi_range(1, 20))
+	resources(randi_range(0, 4), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
+
+
+func lose() -> void:
+	Global.playing = false
+	galaxy_map_showing = false
+	$GalaxyMap.hide()
+	action_menu_showing = false
+	$ShipActionMenu.hide()
+	dialogue_set_up(1, 3)
+
+
+func quit() -> void:
+	get_tree().quit()
+
+
+func restart() -> void:
+	Global.new_game()

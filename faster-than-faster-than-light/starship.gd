@@ -121,20 +121,25 @@ func begin_warp() -> void:
 	$JumpDelay.start(randf() * 2)
 
 
-func new_target() -> void:
+func new_target(ship: int) -> void:
 	# Choose a target
-	if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
-		target = main.get_node("HostileShips").get_child(0)
-	elif team == -1 and main.get_node("FriendlyShips").get_child_count() > 0:
-		target = main.get_node("FriendlyShips").get_children().pick_random()
-
+	if type == 1 or type == 3 or type == 5:
+		if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
+			target = main.get_node("HostileShips").get_child(ship)
+		elif team == -1 and main.get_node("FriendlyShips").get_child_count() > 0:
+			target = main.get_node("FriendlyShips").get_children().pick_random()
+	elif type == 4:
+		if team == -1 and main.get_node("HostileShips").get_child_count() > 0:
+			target = main.get_node("HostileShips").get_children().pick_random()
+		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0:
+			target = main.get_node("FriendlyShips").get_child(ship)
 
 # Find a way to ensure ships don't fire on the exact same frame
 func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
 	if weapon_info["Type"] == 0:
 		if target == null:
-			new_target()
+			new_target(0)
 		_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 

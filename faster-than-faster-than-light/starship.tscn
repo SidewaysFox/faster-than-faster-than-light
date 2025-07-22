@@ -25,7 +25,7 @@ autostart = true
 [node name="WeaponReload3" type="Timer" parent="."]
 
 [connection signal="timeout" from="JumpDelay" to="." method="_on_jump_delay_timeout"]
-[connection signal="timeout" from="TargetingDelay" to="." method="new_target"]
+[connection signal="timeout" from="TargetingDelay" to="." method="new_target" binds= [0]]
 [connection signal="timeout" from="WeaponReload1" to="." method="_weapon_fire" binds= [0]]
 [connection signal="timeout" from="WeaponReload2" to="." method="_weapon_fire" binds= [1]]
 [connection signal="timeout" from="WeaponReload3" to="." method="_weapon_fire" binds= [2]]

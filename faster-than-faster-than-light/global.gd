@@ -2,13 +2,15 @@ extends Node
 
 
 var starship: PackedScene = preload("res://starship.tscn")
+var dual_joysticks: bool = true
 var initilising: bool = true
+var playing: bool = true
 var resources: int = 0
 var fuel: int = 45
-var starting_fleet: Array[int] = [0,]
+var starting_fleet: Array[int] = [0, 1, 1, 1, 6, 6]
 var fleet: Array = []
 var jump_distance: float = 180.0
-var charge_rate: float = 2.5
+var charge_rate: float = 2.0
 var augmentations: Array = []
 var galaxy_data: Array = []
 var sector_count: int = 8
@@ -101,7 +103,7 @@ func _ready() -> void:
 	for s in sector_count:
 		for n in sector_system_count: # ID, position, sector, enemy presence
 			var enemy_presence: bool
-			if randi_range(1, 4) == 4:
+			if randi_range(1, 3) == 3:
 				enemy_presence = true
 			else:
 				enemy_presence = false
@@ -126,6 +128,25 @@ func _ready() -> void:
 		create_new_starship(ship)
 	
 	stats_update()
+
+
+func new_game() -> void:
+	get_tree().change_scene_to_file("res://space.tscn")
+	await get_tree().create_timer(0.1).timeout
+	initilising = true
+	playing = true
+	resources = 0
+	fuel = 45
+	fleet = []
+	jump_distance = 180.0
+	charge_rate = 2.0
+	augmentations = []
+	galaxy_data = []
+	visited_systems = []
+	unique_visits = 0
+	next_ship_id = -1
+	in_combat = false
+	_ready()
 
 
 func get_new_ship_id() -> int:

@@ -136,6 +136,7 @@ func _ready() -> void:
 	if Global.galaxy_data[Global.current_system]["enemy presence"]:
 		system_properties.append("enemy presence")
 		var enemy_fleet: Array = pirate_fleets[system_stage].pick_random()
+		enemy_fleet.shuffle()
 		for ship in enemy_fleet:
 			Global.create_enemy_ship(ship)
 	if star_proximity:
@@ -151,14 +152,21 @@ func _process(delta: float) -> void:
 	else:
 		%UserInterface.show()
 	
+	if Global.playing:
+		if Input.is_action_just_pressed("debug die"):
+			$FriendlyShips.get_child(0).hull = 0
+		
+		if $FriendlyShips.get_child(0).hull <= 0:
+			# Lose the game
+			Global.in_combat = false
+			%UserInterface.lose()
+	
 	if Global.in_combat:
 		warp_charge += Global.charge_rate * delta
-		if $FriendlyShips.get_child(0).hull <= 0:
-			Global.in_combat = false
-			# Lose the game
 		if $HostileShips.get_child_count() < 1:
-			Global.in_combat = false
 			# Win the encounter
+			Global.in_combat = false
+			%UserInterface.win_encounter()
 
 
 # Start warp animations
