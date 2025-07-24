@@ -7,7 +7,7 @@ var initilising: bool = true
 var playing: bool = true
 var resources: int = 0
 var fuel: int = 45
-var starting_fleet: Array[int] = [0, 1, 1, 1, 6, 6]
+var starting_fleet: Array[int] = [0, 1, 1, 6]
 var fleet: Array = []
 var jump_distance: float = 180.0
 var charge_rate: float = 2.0
@@ -131,6 +131,7 @@ func _ready() -> void:
 
 
 func new_game() -> void:
+	print("NEW GAME")
 	get_tree().change_scene_to_file("res://space.tscn")
 	await get_tree().create_timer(0.1).timeout
 	initilising = true
