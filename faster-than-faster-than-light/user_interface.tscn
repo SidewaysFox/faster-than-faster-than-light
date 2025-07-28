@@ -510,6 +510,7 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(800, 200)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f4522")
 
 [node name="GridContainer" type="GridContainer" parent="ShipActionMenu/Tabs/ActionFriendlyShips"]
@@ -633,6 +634,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(800, 200)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pe3dc")
 
 [node name="GridContainer" type="GridContainer" parent="ShipActionMenu/Tabs/ActionTargetShips"]
@@ -761,3 +763,20 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_font_sizes/font_size = 48
 text = "FPS: 60"
+
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0" to="." method="select_ship" binds= [0]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0" to="." method="hover_ship" binds= [0]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship1" to="." method="select_ship" binds= [1]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship1" to="." method="hover_ship" binds= [1]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship2" to="." method="select_ship" binds= [2]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship2" to="." method="hover_ship" binds= [2]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship3" to="." method="select_ship" binds= [3]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship3" to="." method="hover_ship" binds= [3]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship4" to="." method="select_ship" binds= [4]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship4" to="." method="hover_ship" binds= [4]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship5" to="." method="select_ship" binds= [5]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship5" to="." method="hover_ship" binds= [5]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship6" to="." method="select_ship" binds= [6]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship6" to="." method="hover_ship" binds= [6]]
+[connection signal="gui_input" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship7" to="." method="select_ship" binds= [7]]
+[connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship7" to="." method="hover_ship" binds= [7]]

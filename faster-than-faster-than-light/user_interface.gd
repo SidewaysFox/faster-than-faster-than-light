@@ -254,23 +254,24 @@ func _process(delta: float) -> void:
 	# Ship action menu stuff
 	if action_menu_showing:
 		$ShipActionMenu.show()
-		if Input.is_action_just_pressed("left1"):
-			hovered_ship -= 1
-		if Input.is_action_just_pressed("right1"):
-			hovered_ship += 1
-		if Input.is_action_just_pressed("down1"):
-			hovered_ship += 4
-		if Input.is_action_just_pressed("up1"):
-			hovered_ship -= 4
-		hovered_ship = clamp(hovered_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
-		if Input.is_action_just_pressed("left2"):
-			hovered_target -= 1
-		if Input.is_action_just_pressed("right2"):
-			hovered_target += 1
-		if Input.is_action_just_pressed("down2"):
-			hovered_target += 4
-		if Input.is_action_just_pressed("up2"):
-			hovered_target -= 4
+		if Global.joystick_control:
+			if Input.is_action_just_pressed("left1"):
+				hovered_ship -= 1
+			if Input.is_action_just_pressed("right1"):
+				hovered_ship += 1
+			if Input.is_action_just_pressed("down1"):
+				hovered_ship += 4
+			if Input.is_action_just_pressed("up1"):
+				hovered_ship -= 4
+			hovered_ship = clamp(hovered_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
+			if Input.is_action_just_pressed("left2"):
+				hovered_target -= 1
+			if Input.is_action_just_pressed("right2"):
+				hovered_target += 1
+			if Input.is_action_just_pressed("down2"):
+				hovered_target += 4
+			if Input.is_action_just_pressed("up2"):
+				hovered_target -= 4
 		for i in %ActionTargetShips/GridContainer.get_children():
 			i.hide()
 		for i in %ActionFriendlyShips/GridContainer.get_children():
@@ -298,7 +299,7 @@ func _process(delta: float) -> void:
 								stylebox.draw_center = false
 					box.show()
 					index += 1
-				if Input.is_action_just_pressed("A"):
+				if Input.is_action_just_pressed("A") and Global.joystick_control:
 					main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
 			else:
 				%ActionTargetShips/NoTargets.show()
@@ -335,7 +336,7 @@ func _process(delta: float) -> void:
 				stylebox.draw_center = false
 			box.show()
 			index += 1
-		if Input.is_action_just_pressed("1"):
+		if Input.is_action_just_pressed("1") and Global.joystick_control:
 			selected_ship = hovered_ship
 			targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
 			%Instruction/Label.text = targeting_options[targeting_mode]
@@ -429,6 +430,24 @@ func resources(n: int, resource_type: int = 0, dialogue: bool = false, response:
 		_quantity_change(resource_type, false)
 	if dialogue:
 		dialogue_set_up(library, response)
+
+
+func hover_ship(n: int) -> void:
+	hovered_ship = n
+
+
+func select_ship(event: InputEvent, n: int) -> void:
+	if event is InputEventMouseButton:
+		selected_ship = n
+		print(n)
+
+
+func hover_target(n: int) -> void:
+	hovered_target = n
+
+
+func select_target() -> void:
+	main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
 
 
 func win_encounter() -> void:
