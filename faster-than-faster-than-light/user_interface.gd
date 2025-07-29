@@ -169,20 +169,15 @@ func _process(delta: float) -> void:
 	# Check if the dialogue is showing:
 	if dialogue_showing:
 		# Move selection up/down
-		if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
-			current_dialogue_selection -= 1
-		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
-			current_dialogue_selection += 1
+		if Global.joystick_control:
+			if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
+				current_dialogue_selection -= 1
+			if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
+				current_dialogue_selection += 1
 		current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
 		# Select
-		if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select:
-			var args: Array = []
-			if len(option_results[current_dialogue_selection - 1]) > 1:
-				for i in len(option_results[current_dialogue_selection - 1]) - 1:
-					args.append(option_results[current_dialogue_selection - 1][i + 1])
-				callv(option_results[current_dialogue_selection - 1][0], args)
-			else:
-				call(option_results[current_dialogue_selection - 1][0])
+		if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select and Global.joystick_control:
+			select_dialogue(current_dialogue_selection)
 		# Appropriately colour the selected option
 		for i in max_option:
 			if i + 1 == current_dialogue_selection:
@@ -432,14 +427,28 @@ func resources(n: int, resource_type: int = 0, dialogue: bool = false, response:
 		dialogue_set_up(library, response)
 
 
+func hover_dialogue(n: int) -> void:
+	current_dialogue_selection = n
+
+
+func select_dialogue(n: int) -> void:
+	var args: Array = []
+	if len(option_results[n - 1]) > 1:
+		for i in len(option_results[n - 1]) - 1:
+			args.append(option_results[n - 1][i + 1])
+		callv(option_results[n - 1][0], args)
+	else:
+		call(option_results[n - 1][0])
+
+
 func hover_ship(n: int) -> void:
 	hovered_ship = n
 
 
-func select_ship(event: InputEvent, n: int) -> void:
-	if event is InputEventMouseButton:
-		selected_ship = n
-		print(n)
+func select_ship(n: int) -> void:
+	selected_ship = n
+	targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
+	%Instruction/Label.text = targeting_options[targeting_mode]
 
 
 func hover_target(n: int) -> void:
