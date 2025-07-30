@@ -66,6 +66,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"As your fleet exits its jump, you see two stars locked in each others' orbits. You spend a moment taking a deep breath, before returning to your duties on deck.",
 	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
 	],
+	[[2],
+	"Another peaceful system.",
+	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
+	],
 	[[2, "enemy presence"],
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
 	[["Get ready for combat.", ["close", true]]]
@@ -174,19 +178,19 @@ func _process(delta: float) -> void:
 				current_dialogue_selection -= 1
 			if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
 				current_dialogue_selection += 1
-		current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
-		# Select
-		if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select and Global.joystick_control:
-			select_dialogue(current_dialogue_selection)
-		# Appropriately colour the selected option
-		for i in max_option:
-			if i + 1 == current_dialogue_selection:
-				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
-			else:
-				%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+			current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
+			# Select
+			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select:
+				select_dialogue(current_dialogue_selection)
+			# Appropriately colour the selected option
+			for i in max_option:
+				if i + 1 == current_dialogue_selection:
+					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
+				else:
+					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 		%ChargeProgress/Label.text = "WAITING"
 	# Show or hide the galaxy map
-	elif (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and not action_menu_showing and main.warp_charge >= 100:
+	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)) and not action_menu_showing and main.warp_charge >= 100:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -199,7 +203,7 @@ func _process(delta: float) -> void:
 			%ChargeProgress/Label.text = "WARP CHARGING"
 		else:
 			%ChargeProgress/Label.text = "WARP CHARGED"
-		if (Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and not galaxy_map_showing:
+		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)) and not galaxy_map_showing:
 			action_menu_showing = not action_menu_showing
 	# Galaxy map stuff
 	if galaxy_map_showing:
@@ -225,7 +229,7 @@ func _process(delta: float) -> void:
 				n += 1
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
 			# Warping input
-			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
+			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
 				galaxy_map_showing = false
 				Global.in_combat = false
 				Global.fuel -= len(Global.fleet)
@@ -425,10 +429,6 @@ func resources(n: int, resource_type: int = 0, dialogue: bool = false, response:
 		_quantity_change(resource_type, false)
 	if dialogue:
 		dialogue_set_up(library, response)
-
-
-func hover_dialogue(n: int) -> void:
-	current_dialogue_selection = n
 
 
 func select_dialogue(n: int) -> void:
