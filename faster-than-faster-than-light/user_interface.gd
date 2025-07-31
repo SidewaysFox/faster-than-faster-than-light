@@ -16,6 +16,7 @@ var hovered_ship: int = 0
 var hovered_target: int = 0
 var selected_ship: int = 0
 var targeting_mode: int = 0
+var time_paused: bool = false
 
 var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
@@ -159,7 +160,7 @@ func _process(delta: float) -> void:
 	$FPS.text = "FPS: " + str(1 / delta)
 	
 	# Update fuel and resource UI elements
-	%ResourcesLabel.text = "RSRC: " + str(Global.resources)
+	%ResourcesLabel.text = "TECH: " + str(Global.resources)
 	%ResourcesLabel.add_theme_color_override("font_color", lerp(%ResourcesLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
 	%FuelLabel.text = "FUEL: " + str(Global.fuel)
 	%FuelLabel.add_theme_color_override("font_color", lerp(%FuelLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
@@ -198,6 +199,8 @@ func _process(delta: float) -> void:
 			else:
 				$GalaxyMap/Tokens.position.x = 45
 			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
+	elif Input.is_action_just_pressed("time pause") and not galaxy_map_showing:
+		time_paused = not time_paused
 	else:
 		if main.warp_charge < 100:
 			%ChargeProgress/Label.text = "WARP CHARGING"
@@ -205,8 +208,16 @@ func _process(delta: float) -> void:
 			%ChargeProgress/Label.text = "WARP CHARGED"
 		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)) and not galaxy_map_showing:
 			action_menu_showing = not action_menu_showing
+	if time_paused:
+		Engine.time_scale = lerp(Engine.time_scale, 0.0, 0.15)
+		$TimeIndicator.show()
+	else:
+		Engine.time_scale = lerp(Engine.time_scale, 1.0, 0.15)
+		$TimeIndicator.hide()
 	# Galaxy map stuff
 	if galaxy_map_showing:
+		time_paused = false
+		Engine.time_scale = 1.0
 		$GalaxyMap.show()
 		$GalaxyMapTitle.show()
 		# Left/right scrolling
@@ -230,6 +241,8 @@ func _process(delta: float) -> void:
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
 			# Warping input
 			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
+				Engine.time_scale = 0
+				time_paused = false
 				galaxy_map_showing = false
 				Global.in_combat = false
 				Global.fuel -= len(Global.fleet)
@@ -389,6 +402,7 @@ func _on_warp_in_dialogue_timeout() -> void:
 		if i[0] == main.system_properties:
 			possible_dialogues.append(warp_in_dialogue.find(i))
 	dialogue_set_up(0, possible_dialogues.pick_random())
+	time_paused = true
 
 
 # Called when either fuel or resources are spent or gained
@@ -439,6 +453,8 @@ func select_dialogue(n: int) -> void:
 		callv(option_results[n - 1][0], args)
 	else:
 		call(option_results[n - 1][0])
+	Engine.time_scale = 1.0
+	time_paused = false
 
 
 func hover_ship(n: int) -> void:

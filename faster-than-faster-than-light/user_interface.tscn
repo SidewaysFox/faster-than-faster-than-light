@@ -1,68 +1,7 @@
-[gd_scene load_steps=33 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=34 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxhmu"]
-bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.470588)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 96
-corner_radius_top_right = 16
-corner_radius_bottom_right = 96
-corner_radius_bottom_left = 16
-expand_margin_left = 40.0
-expand_margin_top = 40.0
-expand_margin_right = 40.0
-expand_margin_bottom = 40.0
-
-[sub_resource type="InputEventAction" id="InputEventAction_i7dvk"]
-action = &"option1"
-
-[sub_resource type="Shortcut" id="Shortcut_juc2q"]
-events = [SubResource("InputEventAction_i7dvk")]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7dvk"]
-bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.980392)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 48
-corner_radius_top_right = 48
-corner_radius_bottom_right = 48
-corner_radius_bottom_left = 48
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_juc2q"]
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(1, 0.313726, 0, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_i7dvk"]
-radius = 18.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jl8t"]
-bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.980392)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 48
-corner_radius_bottom_left = 48
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_up53h"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
@@ -103,6 +42,22 @@ corner_radius_top_left = 32
 corner_radius_top_right = 16
 corner_radius_bottom_right = 32
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6x3y2"]
+bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 16
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 16
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q287o"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
@@ -296,6 +251,67 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0.627451, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7dvk"]
+bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.980392)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 48
+corner_radius_top_right = 48
+corner_radius_bottom_right = 48
+corner_radius_bottom_left = 48
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_juc2q"]
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.313726, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i7dvk"]
+radius = 18.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jl8t"]
+bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.980392)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 48
+corner_radius_bottom_left = 48
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxhmu"]
+bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.470588)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 96
+corner_radius_top_right = 16
+corner_radius_bottom_right = 96
+corner_radius_bottom_left = 16
+expand_margin_left = 40.0
+expand_margin_top = 40.0
+expand_margin_right = 40.0
+expand_margin_bottom = 40.0
+
+[sub_resource type="InputEventAction" id="InputEventAction_i7dvk"]
+action = &"option1"
+
+[sub_resource type="Shortcut" id="Shortcut_juc2q"]
+events = [SubResource("InputEventAction_i7dvk")]
+
 [node name="UserInterface" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -305,150 +321,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_kxhmu")
 galaxy_map_token = ExtResource("2_i7dvk")
-
-[node name="Dialogue" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 300.0
-offset_top = 200.0
-offset_right = -300.0
-offset_bottom = -200.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_kxhmu")
-
-[node name="MarginContainer" type="MarginContainer" parent="Dialogue"]
-layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialogue/MarginContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="DialogueText" type="Label" parent="Dialogue/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(1190, 0)
-layout_mode = 2
-theme_override_constants/line_spacing = 8
-theme_override_font_sizes/font_size = 36
-text = "og dvvvhh hdp uih uh  puhpugouyguy gg ougouy guyyg ijh lhl hglg ougu  hdfh hsdfijsjdf hsdfhjsjkjfjsdlfj jhsdfh hsdfhkj hsdfjljhlfl uwlfl wgfl gl gg ouygs fuygwu egfluwy gfluwlufe auja fk jhalkjaj alj lkjh lkajhj ljk ljha lkja lkjb jl jk ladbflaheiao;woq  jnbjd"
-autowrap_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Dialogue/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_top = 30
-
-[node name="Options" type="VBoxContainer" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Option1" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
-shortcut_feedback = false
-shortcut_in_tooltip = false
-text = "OPTION1"
-flat = true
-alignment = 0
-autowrap_mode = 2
-
-[node name="Option2" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
-text = "OPTION2"
-flat = true
-alignment = 0
-autowrap_mode = 2
-
-[node name="Option3" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
-text = "OPTION3"
-flat = true
-alignment = 0
-autowrap_mode = 2
-
-[node name="Option4" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
-custom_minimum_size = Vector2(0, 80)
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
-text = "OPTION4"
-flat = true
-alignment = 0
-autowrap_mode = 2
-
-[node name="GalaxyMap" type="PanelContainer" parent="."]
-visible = false
-clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 360.0
-offset_top = 230.0
-offset_right = -360.0
-offset_bottom = -230.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_i7dvk")
-
-[node name="Tokens" type="Node2D" parent="GalaxyMap"]
-position = Vector2(45, 0)
-
-[node name="Cursor" type="Area2D" parent="GalaxyMap/Tokens"]
-unique_name_in_owner = true
-z_index = 3
-position = Vector2(-45, 0)
-collision_layer = 0
-collision_mask = 2
-
-[node name="Panel" type="Panel" parent="GalaxyMap/Tokens/Cursor"]
-custom_minimum_size = Vector2(25, 25)
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-pivot_offset = Vector2(20, 20)
-theme_override_styles/panel = SubResource("StyleBoxFlat_juc2q")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="GalaxyMap/Tokens/Cursor"]
-shape = SubResource("CircleShape2D_i7dvk")
-
-[node name="GalaxyMapTitle" type="Panel" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 400.0
-offset_top = 146.0
-offset_right = 800.0
-offset_bottom = 236.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_0jl8t")
-
-[node name="Label" type="Label" parent="GalaxyMapTitle"]
-layout_mode = 0
-offset_left = 50.0
-offset_top = 12.0
-offset_right = 351.0
-offset_bottom = 79.0
-theme_override_font_sizes/font_size = 48
-text = "GALAXY MAP"
 
 [node name="InfoTabs" type="MarginContainer" parent="."]
 layout_mode = 0
@@ -464,19 +336,21 @@ theme_override_constants/separation = 60
 [node name="Resources" type="PanelContainer" parent="InfoTabs/HBoxContainer"]
 custom_minimum_size = Vector2(280, 60)
 layout_mode = 2
+tooltip_text = "Currency, used to maintain and upgrade your fleet."
 theme_override_styles/panel = SubResource("StyleBoxFlat_up53h")
 
 [node name="ResourcesLabel" type="Label" parent="InfoTabs/HBoxContainer/Resources"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "RSRC: 0"
+text = "TECH: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Fuel" type="PanelContainer" parent="InfoTabs/HBoxContainer"]
 custom_minimum_size = Vector2(280, 60)
 layout_mode = 2
+tooltip_text = "Resource, used to power your fleet's warp drives."
 theme_override_styles/panel = SubResource("StyleBoxFlat_up53h")
 
 [node name="FuelLabel" type="Label" parent="InfoTabs/HBoxContainer/Fuel"]
@@ -491,6 +365,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(560, 80)
 layout_mode = 2
+tooltip_text = "Warp drive charging progress."
 theme_override_styles/background = SubResource("StyleBoxFlat_r3lf1")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hsgek")
 show_percentage = false
@@ -505,7 +380,86 @@ text = "WARP CHARGE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ControlTips" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ControlTips"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="ActionMenu" type="PanelContainer" parent="ControlTips/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6x3y2")
+
+[node name="Label" type="Label" parent="ControlTips/HBoxContainer/ActionMenu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GalaxyMap" type="PanelContainer" parent="ControlTips/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6x3y2")
+
+[node name="Label" type="Label" parent="ControlTips/HBoxContainer/GalaxyMap"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "M"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimeIndicator" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TimePaused" type="Label" parent="TimeIndicator"]
+layout_mode = 0
+offset_left = -208.0
+offset_right = 207.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 64
+text = "TIME PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PressSpace" type="Label" parent="TimeIndicator"]
+layout_mode = 0
+offset_left = -182.0
+offset_top = 88.0
+offset_right = 180.0
+offset_bottom = 133.0
+theme_override_font_sizes/font_size = 32
+text = "Press space to unpause"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="ShipActionMenu" type="VBoxContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -848,6 +802,157 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
+[node name="GalaxyMap" type="PanelContainer" parent="."]
+visible = false
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 360.0
+offset_top = 230.0
+offset_right = -360.0
+offset_bottom = -230.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i7dvk")
+
+[node name="Tokens" type="Node2D" parent="GalaxyMap"]
+position = Vector2(45, 0)
+
+[node name="Cursor" type="Area2D" parent="GalaxyMap/Tokens"]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(-45, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="Panel" type="Panel" parent="GalaxyMap/Tokens/Cursor"]
+custom_minimum_size = Vector2(25, 25)
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2(20, 20)
+theme_override_styles/panel = SubResource("StyleBoxFlat_juc2q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GalaxyMap/Tokens/Cursor"]
+shape = SubResource("CircleShape2D_i7dvk")
+
+[node name="GalaxyMapTitle" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 400.0
+offset_top = 146.0
+offset_right = 800.0
+offset_bottom = 236.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_0jl8t")
+
+[node name="Label" type="Label" parent="GalaxyMapTitle"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 12.0
+offset_right = 351.0
+offset_bottom = 79.0
+theme_override_font_sizes/font_size = 48
+text = "GALAXY MAP"
+
+[node name="Dialogue" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 300.0
+offset_top = 200.0
+offset_right = -300.0
+offset_bottom = -200.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kxhmu")
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialogue"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialogue/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DialogueText" type="Label" parent="Dialogue/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1190, 0)
+layout_mode = 2
+theme_override_constants/line_spacing = 8
+theme_override_font_sizes/font_size = 36
+text = "og dvvvhh hdp uih uh  puhpugouyguy gg ougouy guyyg ijh lhl hglg ougu  hdfh hsdfijsjdf hsdfhjsjkjfjsdlfj jhsdfh hsdfhkj hsdfjljhlfl uwlfl wgfl gl gg ouygs fuygwu egfluwy gfluwlufe auja fk jhalkjaj alj lkjh lkajhj ljk ljha lkja lkjb jl jk ladbflaheiao;woq  jnbjd"
+autowrap_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialogue/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 30
+
+[node name="Options" type="VBoxContainer" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Option1" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+shortcut = SubResource("Shortcut_juc2q")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+text = "OPTION1"
+flat = true
+alignment = 0
+autowrap_mode = 2
+
+[node name="Option2" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+shortcut = SubResource("Shortcut_juc2q")
+text = "OPTION2"
+flat = true
+alignment = 0
+autowrap_mode = 2
+
+[node name="Option3" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+shortcut = SubResource("Shortcut_juc2q")
+text = "OPTION3"
+flat = true
+alignment = 0
+autowrap_mode = 2
+
+[node name="Option4" type="Button" parent="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+shortcut = SubResource("Shortcut_juc2q")
+text = "OPTION4"
+flat = true
+alignment = 0
+autowrap_mode = 2
+
 [node name="ScreenFade" type="ColorRect" parent="."]
 visible = false
 z_index = 10
@@ -865,10 +970,6 @@ offset_bottom = 23.0
 theme_override_font_sizes/font_size = 48
 text = "FPS: 60"
 
-[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
-[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
-[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]
-[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option4" to="." method="select_dialogue" binds= [4]]
 [connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0/Button" to="." method="hover_ship" binds= [0]]
 [connection signal="pressed" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0/Button" to="." method="select_ship" binds= [0]]
 [connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship1/Button" to="." method="hover_ship" binds= [1]]
@@ -901,3 +1002,7 @@ text = "FPS: 60"
 [connection signal="pressed" from="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship6/Button" to="." method="select_target"]
 [connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship7/Button" to="." method="hover_target" binds= [7]]
 [connection signal="pressed" from="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship7/Button" to="." method="select_target"]
+[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
+[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
+[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]
+[connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option4" to="." method="select_dialogue" binds= [4]]
