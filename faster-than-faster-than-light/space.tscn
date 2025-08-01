@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
 [ext_resource type="PackedScene" uid="uid://b4sj2kgmpfsbh" path="res://user_interface.tscn" id="3_ulv8f"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="3_w5eul"]
-[ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg-stars.gdshader" id="4_ulv8f"]
+[ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg_stars.gdshader" id="4_ulv8f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
 render_priority = 0

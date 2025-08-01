@@ -171,6 +171,13 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
+	if Input.is_action_just_pressed("pause"):
+		print("pause")
+		$PauseMenu.show()
+		$PauseMenu/UnpauseTimer.start()
+		get_tree().paused = true
+	
+	
 	# Check if the dialogue is showing:
 	if dialogue_showing:
 		# Move selection up/down
