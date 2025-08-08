@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=17 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
@@ -21,10 +21,31 @@ height = 7000.0
 radial_segments = 8
 rings = 4
 
+[sub_resource type="Gradient" id="Gradient_ulv8f"]
+offsets = PackedFloat32Array(0, 0.412698, 0.702381, 0.904762, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.392857, 0.392857, 0.392857, 1, 0.606249, 0.606249, 0.606249, 1, 0.75533, 0.75533, 0.75533, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ulv8f"]
+frequency = 0.075
+fractal_gain = 1.5
+fractal_weighted_strength = 0.5
+domain_warp_amplitude = 31.81
+domain_warp_frequency = -0.09
+domain_warp_fractal_type = 2
+domain_warp_fractal_octaves = 10
+domain_warp_fractal_lacunarity = 6.53
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_w5eul"]
+generate_mipmaps = false
+seamless = true
+color_ramp = SubResource("Gradient_ulv8f")
+noise = SubResource("FastNoiseLite_ulv8f")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxlph"]
 albedo_color = Color(1, 0.470588, 0, 1)
 emission_enabled = true
 emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_w5eul")
 
 [sub_resource type="SphereMesh" id="SphereMesh_ulv8f"]
 material = SubResource("StandardMaterial3D_rxlph")
@@ -37,6 +58,7 @@ rings = 24
 albedo_color = Color(1, 0.470588, 0, 1)
 emission_enabled = true
 emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_w5eul")
 
 [sub_resource type="SphereMesh" id="SphereMesh_b5fhv"]
 material = SubResource("StandardMaterial3D_w5eul")
@@ -49,6 +71,7 @@ rings = 24
 albedo_color = Color(1, 0.470588, 0, 1)
 emission_enabled = true
 emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_w5eul")
 
 [sub_resource type="SphereMesh" id="SphereMesh_1vxpe"]
 material = SubResource("StandardMaterial3D_4fhbr")

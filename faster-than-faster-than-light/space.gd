@@ -10,6 +10,7 @@ var system_properties: Array = []
 var system_stage: String
 var star_proximity: bool = false
 var warp_charge: float = 0.0
+var bg_object_rotation: float = 5.0
 
 var pirate_fleets: Dictionary = {
 	"start": [
@@ -57,9 +58,6 @@ var pirate_fleets: Dictionary = {
 
 
 func _ready() -> void:
-	# TODO: tesselating noise map with shader
-	# TODO: add star glow
-	
 	# Spawn fleet
 	if not Global.initilising:
 		for ship in Global.fleet:
@@ -100,6 +98,8 @@ func _ready() -> void:
 		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 250)
 		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
 		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
+		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
+		$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
 		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
 			star_proximity = true
 	# Create nebulae
@@ -151,6 +151,9 @@ func _process(delta: float) -> void:
 		%UserInterface.hide()
 	else:
 		%UserInterface.show()
+	
+	for child in $Background.get_children():
+		child.rotation_degrees.y += bg_object_rotation * delta
 	
 	if Global.playing:
 		if Input.is_action_just_pressed("debug die"):
