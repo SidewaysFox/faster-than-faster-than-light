@@ -25,7 +25,7 @@ rings = 4
 offsets = PackedFloat32Array(0, 0.412698, 0.702381, 0.904762, 1)
 colors = PackedColorArray(0, 0, 0, 1, 0.392857, 0.392857, 0.392857, 1, 0.606249, 0.606249, 0.606249, 1, 0.75533, 0.75533, 0.75533, 1, 1, 1, 1, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_ulv8f"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_w5eul"]
 frequency = 0.075
 fractal_gain = 1.5
 fractal_weighted_strength = 0.5
@@ -39,29 +39,16 @@ domain_warp_fractal_lacunarity = 6.53
 generate_mipmaps = false
 seamless = true
 color_ramp = SubResource("Gradient_ulv8f")
-noise = SubResource("FastNoiseLite_ulv8f")
+noise = SubResource("FastNoiseLite_w5eul")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxlph"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5fhv"]
 albedo_color = Color(1, 0.470588, 0, 1)
 emission_enabled = true
 emission = Color(1, 0.470588, 0, 1)
 emission_texture = SubResource("NoiseTexture2D_w5eul")
 
 [sub_resource type="SphereMesh" id="SphereMesh_ulv8f"]
-material = SubResource("StandardMaterial3D_rxlph")
-radius = 100.0
-height = 200.0
-radial_segments = 48
-rings = 24
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5eul"]
-albedo_color = Color(1, 0.470588, 0, 1)
-emission_enabled = true
-emission = Color(1, 0.470588, 0, 1)
-emission_texture = SubResource("NoiseTexture2D_w5eul")
-
-[sub_resource type="SphereMesh" id="SphereMesh_b5fhv"]
-material = SubResource("StandardMaterial3D_w5eul")
+material = SubResource("StandardMaterial3D_b5fhv")
 radius = 100.0
 height = 200.0
 radial_segments = 48
@@ -73,8 +60,21 @@ emission_enabled = true
 emission = Color(1, 0.470588, 0, 1)
 emission_texture = SubResource("NoiseTexture2D_w5eul")
 
-[sub_resource type="SphereMesh" id="SphereMesh_1vxpe"]
+[sub_resource type="SphereMesh" id="SphereMesh_b5fhv"]
 material = SubResource("StandardMaterial3D_4fhbr")
+radius = 100.0
+height = 200.0
+radial_segments = 48
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1vxpe"]
+albedo_color = Color(1, 0.470588, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_w5eul")
+
+[sub_resource type="SphereMesh" id="SphereMesh_1vxpe"]
+material = SubResource("StandardMaterial3D_1vxpe")
 radius = 100.0
 height = 200.0
 radial_segments = 48

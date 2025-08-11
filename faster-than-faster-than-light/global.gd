@@ -96,6 +96,10 @@ var weapon_list: Array[Dictionary] = [
 
 
 func _ready() -> void:
+	pass
+
+
+func _establish() -> void:
 	# Establish the game
 	var sector: int = 0
 	var system_id: int = 0
@@ -148,7 +152,7 @@ func new_game() -> void:
 	unique_visits = 0
 	next_ship_id = -1
 	in_combat = false
-	_ready()
+	_establish()
 
 
 func get_new_ship_id() -> int:
