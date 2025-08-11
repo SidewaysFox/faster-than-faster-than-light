@@ -95,11 +95,19 @@ var weapon_list: Array[Dictionary] = [
 ]
 
 
-func _ready() -> void:
-	pass
-
-
-func _establish() -> void:
+func establish() -> void:
+	playing = true
+	resources = 0
+	fuel = 45
+	fleet = []
+	jump_distance = 180.0
+	charge_rate = 2.0
+	augmentations = []
+	galaxy_data = []
+	visited_systems = []
+	unique_visits = 0
+	next_ship_id = -1
+	in_combat = false
 	# Establish the game
 	var sector: int = 0
 	var system_id: int = 0
@@ -137,22 +145,8 @@ func _establish() -> void:
 
 func new_game() -> void:
 	print("NEW GAME")
-	get_tree().change_scene_to_file("res://space.tscn")
-	await get_tree().create_timer(0.1).timeout
 	initilising = true
-	playing = true
-	resources = 0
-	fuel = 45
-	fleet = []
-	jump_distance = 180.0
-	charge_rate = 2.0
-	augmentations = []
-	galaxy_data = []
-	visited_systems = []
-	unique_visits = 0
-	next_ship_id = -1
-	in_combat = false
-	_establish()
+	get_tree().change_scene_to_file("res://space.tscn")
 
 
 func get_new_ship_id() -> int:

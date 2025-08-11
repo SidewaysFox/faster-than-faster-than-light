@@ -143,6 +143,8 @@ var encounter_win_dialogue: Array = [
 func _ready() -> void:
 	$Dialogue.hide()
 	$ScreenFade.show()
+	if Global.initilising:
+		await main.setup_complete
 	# Generate visual galaxy map
 	for i in Global.galaxy_data:
 		var new_token: Node = galaxy_map_token.instantiate()

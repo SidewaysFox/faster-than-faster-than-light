@@ -56,10 +56,15 @@ var pirate_fleets: Dictionary = {
 	]
 }
 
+signal setup_complete
+
 
 func _ready() -> void:
-	# Spawn fleet
-	if not Global.initilising:
+	if Global.initilising:
+		Global.establish()
+		setup_complete.emit()
+	else:
+		# Spawn fleet
 		for ship in Global.fleet:
 			$FriendlyShips.add_child(ship.duplicate())
 	

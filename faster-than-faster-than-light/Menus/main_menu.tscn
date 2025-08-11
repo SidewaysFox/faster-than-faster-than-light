@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://bdn10xypgr4j0"]
+[gd_scene load_steps=17 format=3 uid="uid://bdn10xypgr4j0"]
 
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg_stars.gdshader" id="1_jf8mj"]
 [ext_resource type="Script" uid="uid://butvhv1xw41l0" path="res://Menus/background_gen.gd" id="1_p3jrs"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="2_at0u2"]
+[ext_resource type="Script" uid="uid://d4cneeyaj4hht" path="res://Menus/main_menu.gd" id="3_11gta"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_at0u2"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
@@ -101,13 +102,13 @@ bg_nebula = ExtResource("2_at0u2")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainMenu" type="Control" parent="CanvasLayer"]
-unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("3_11gta")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainMenu"]
 layout_mode = 1
@@ -142,13 +143,13 @@ vertical_alignment = 1
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/MainMenu/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 320
-theme_override_constants/margin_top = 60
-theme_override_constants/margin_bottom = 60
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_bottom = 80
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
-theme_override_constants/separation = 60
+theme_override_constants/separation = 95
 
 [node name="NewGame" type="PanelContainer" parent="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
@@ -176,20 +177,6 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 64
 action_mode = 0
 text = "CONTINUE GAME"
-flat = true
-
-[node name="Stats" type="PanelContainer" parent="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
-
-[node name="Button" type="Button" parent="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer/Stats"]
-layout_mode = 2
-theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 64
-action_mode = 0
-text = "STATS"
 flat = true
 
 [node name="Settings" type="PanelContainer" parent="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer"]
@@ -255,3 +242,9 @@ mesh = SubResource("SphereMesh_vxn86")
 [node name="MainStar3" type="MeshInstance3D" parent="Background"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_gn11b")
+
+[connection signal="pressed" from="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer/NewGame/Button" to="CanvasLayer/MainMenu" method="_on_new_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer/ContinueGame/Button" to="CanvasLayer/MainMenu" method="_on_new_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer/Settings/Button" to="CanvasLayer/MainMenu" method="_on_settings_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer/Credits/Button" to="CanvasLayer/MainMenu" method="_on_credits_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/HBoxContainer/MarginContainer2/VBoxContainer/Quit/Button" to="CanvasLayer/MainMenu" method="_on_quit_pressed"]

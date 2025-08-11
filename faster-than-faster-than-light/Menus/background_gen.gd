@@ -73,9 +73,9 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("debug quit"):
 		get_tree().quit()
 	if Input.is_action_pressed("hide ui"):
-		%MainMenu.hide()
+		$CanvasLayer.hide()
 	else:
-		%MainMenu.show()
+		$CanvasLayer.show()
 	
 	for child in $Background.get_children():
 		child.rotation_degrees.y += bg_object_rotation * delta

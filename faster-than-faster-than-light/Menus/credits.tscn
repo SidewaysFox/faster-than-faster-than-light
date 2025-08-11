@@ -1,0 +1,207 @@
+[gd_scene load_steps=19 format=3 uid="uid://l6qgi62pwv0w"]
+
+[ext_resource type="Script" uid="uid://butvhv1xw41l0" path="res://Menus/background_gen.gd" id="1_utxdh"]
+[ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="2_sw42x"]
+[ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg_stars.gdshader" id="3_jb58k"]
+[ext_resource type="Script" uid="uid://cj602blcrluox" path="res://Menus/credits.gd" id="3_sw42x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sw42x"]
+bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.470588)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 96
+corner_radius_top_right = 16
+corner_radius_bottom_right = 96
+corner_radius_bottom_left = 16
+expand_margin_left = 40.0
+expand_margin_top = 40.0
+expand_margin_right = 40.0
+expand_margin_bottom = 40.0
+
+[sub_resource type="InputEventAction" id="InputEventAction_i7dvk"]
+action = &"option1"
+
+[sub_resource type="Shortcut" id="Shortcut_jb58k"]
+events = [SubResource("InputEventAction_i7dvk")]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p3jrs"]
+render_priority = 0
+shader = ExtResource("3_jb58k")
+shader_parameter/bg_color = Color(0, 0, 0, 1)
+shader_parameter/seed = 1.0
+shader_parameter/prob = 1.0
+shader_parameter/size = 100.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_at0u2"]
+flip_faces = true
+radius = 3500.0
+height = 7000.0
+radial_segments = 8
+rings = 4
+
+[sub_resource type="Gradient" id="Gradient_ulv8f"]
+offsets = PackedFloat32Array(0, 0.412698, 0.702381, 0.904762, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.392857, 0.392857, 0.392857, 1, 0.606249, 0.606249, 0.606249, 1, 0.75533, 0.75533, 0.75533, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ulv8f"]
+frequency = 0.075
+fractal_gain = 1.5
+fractal_weighted_strength = 0.5
+domain_warp_amplitude = 31.81
+domain_warp_frequency = -0.09
+domain_warp_fractal_type = 2
+domain_warp_fractal_octaves = 10
+domain_warp_fractal_lacunarity = 6.53
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_11gta"]
+generate_mipmaps = false
+seamless = true
+color_ramp = SubResource("Gradient_ulv8f")
+noise = SubResource("FastNoiseLite_ulv8f")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxlph"]
+albedo_color = Color(1, 0.470588, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_11gta")
+
+[sub_resource type="SphereMesh" id="SphereMesh_cxdly"]
+material = SubResource("StandardMaterial3D_rxlph")
+radius = 100.0
+height = 200.0
+radial_segments = 48
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5eul"]
+albedo_color = Color(1, 0.470588, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_11gta")
+
+[sub_resource type="SphereMesh" id="SphereMesh_vxn86"]
+material = SubResource("StandardMaterial3D_w5eul")
+radius = 100.0
+height = 200.0
+radial_segments = 48
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4fhbr"]
+albedo_color = Color(1, 0.470588, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.470588, 0, 1)
+emission_texture = SubResource("NoiseTexture2D_11gta")
+
+[sub_resource type="SphereMesh" id="SphereMesh_gn11b"]
+material = SubResource("StandardMaterial3D_4fhbr")
+radius = 100.0
+height = 200.0
+radial_segments = 48
+rings = 24
+
+[node name="Credits" type="Node3D"]
+script = ExtResource("1_utxdh")
+bg_nebula = ExtResource("2_sw42x")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Credits" type="Control" parent="CanvasLayer"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_sw42x")
+
+[node name="Thing" type="PanelContainer" parent="CanvasLayer/Credits"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 300.0
+offset_top = 200.0
+offset_right = -300.0
+offset_bottom = -200.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sw42x")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Credits/Thing"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Credits/Thing/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DialogueText" type="Label" parent="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1190, 0)
+layout_mode = 2
+theme_override_constants/line_spacing = 8
+theme_override_font_sizes/font_size = 28
+text = "You tap the screen, and it proceeds to print a message:
+
+GAME DEVELOPED BY:
+BEN WHALEY
+
+MODELLING BY:
+JOE MITCHELL
+
+TESTED BY:
+HUNTER JONES, MICHAEL XUE"
+autowrap_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 30
+
+[node name="Options" type="VBoxContainer" parent="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Option1" type="Button" parent="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer/MarginContainer/Options"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+action_mode = 0
+shortcut = SubResource("Shortcut_jb58k")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+text = "1. Acknowledge the message and move on."
+flat = true
+alignment = 0
+autowrap_mode = 2
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 50, 100)
+current = true
+
+[node name="BGStars" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_p3jrs")
+mesh = SubResource("SphereMesh_at0u2")
+
+[node name="Background" type="Node3D" parent="."]
+
+[node name="MainStar1" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
+mesh = SubResource("SphereMesh_cxdly")
+
+[node name="MainStar2" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
+mesh = SubResource("SphereMesh_vxn86")
+
+[node name="MainStar3" type="MeshInstance3D" parent="Background"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
+mesh = SubResource("SphereMesh_gn11b")
+
+[connection signal="pressed" from="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="CanvasLayer/Credits" method="_on_back_pressed"]
