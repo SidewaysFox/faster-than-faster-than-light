@@ -4,6 +4,8 @@ extends Node
 var starship: PackedScene = preload("res://starship.tscn")
 var joystick_control: bool = false
 var dual_joysticks: bool = true
+var music_volume: float = 100.0
+var sfx_volume: float = 100.0
 var initilising: bool = true
 var playing: bool = true
 var resources: int = 0

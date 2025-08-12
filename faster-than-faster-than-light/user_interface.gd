@@ -143,6 +143,8 @@ var encounter_win_dialogue: Array = [
 func _ready() -> void:
 	$Dialogue.hide()
 	$ScreenFade.show()
+	%Gameplay/ControlMode.button_pressed = Global.joystick_control
+	%Gameplay/JoystickMode.button_pressed = Global.dual_joysticks
 	if Global.initilising:
 		await main.setup_complete
 	# Generate visual galaxy map

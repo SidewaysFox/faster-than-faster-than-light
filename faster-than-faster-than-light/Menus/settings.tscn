@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://clwuqcs44cl3l"]
+[gd_scene load_steps=20 format=3 uid="uid://clwuqcs44cl3l"]
 
 [ext_resource type="Script" uid="uid://butvhv1xw41l0" path="res://Menus/background_gen.gd" id="1_lpudm"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="2_fw4rw"]
@@ -16,6 +16,18 @@ corner_radius_top_left = 48
 corner_radius_top_right = 48
 corner_radius_bottom_right = 48
 corner_radius_bottom_left = 48
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boh0i"]
+bg_color = Color(0.0156863, 0.0313726, 0.0627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_poamj"]
 bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.980392)
@@ -149,6 +161,112 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lpudm")
 
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Settings/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Settings/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="Gameplay" type="VBoxContainer" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "GAMEPLAY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ControlMode" type="Button" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+action_mode = 0
+text = "CONTROL MODE: KEYBOARD/MOUSE"
+flat = true
+alignment = 0
+
+[node name="JoystickMode" type="Button" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+action_mode = 0
+text = "JOYSTICK MODE: DUAL"
+flat = true
+alignment = 0
+
+[node name="Audio" type="VBoxContainer" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "AUDIO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MusicVolume" type="HBoxContainer" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio/MusicVolume"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "MUSIC"
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio/MusicVolume"]
+custom_minimum_size = Vector2(360, 50)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxFlat_boh0i")
+value = 100.0
+scrollable = false
+
+[node name="Value" type="Label" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio/MusicVolume"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "100"
+
+[node name="SFXVolume" type="HBoxContainer" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio/SFXVolume"]
+custom_minimum_size = Vector2(76, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SFX"
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio/SFXVolume"]
+custom_minimum_size = Vector2(360, 50)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxFlat_boh0i")
+value = 100.0
+scrollable = false
+
+[node name="Value" type="Label" parent="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Audio/SFXVolume"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "100"
+
 [node name="SettingsTitle" type="Panel" parent="CanvasLayer/Settings"]
 layout_mode = 0
 offset_left = 400.0
@@ -216,4 +334,6 @@ mesh = SubResource("SphereMesh_vxn86")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_gn11b")
 
+[connection signal="pressed" from="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/ControlMode" to="CanvasLayer/Settings" method="_on_control_mode_pressed"]
+[connection signal="pressed" from="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/JoystickMode" to="CanvasLayer/Settings" method="_on_joystick_mode_pressed"]
 [connection signal="pressed" from="CanvasLayer/Settings/Quit/Button" to="CanvasLayer/Settings" method="_on_back_pressed"]
