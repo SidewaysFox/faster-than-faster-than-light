@@ -203,13 +203,7 @@ func _process(delta: float) -> void:
 		%ChargeProgress/Label.text = "WAITING"
 	# Show or hide the galaxy map
 	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)) and not action_menu_showing and main.warp_charge >= 100:
-		galaxy_map_showing = not galaxy_map_showing
-		if galaxy_map_showing:
-			if Global.galaxy_data[Global.current_system]["position"].x > 900:
-				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
-			else:
-				$GalaxyMap/Tokens.position.x = 45
-			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
+		_galaxy_map()
 	elif Input.is_action_just_pressed("time pause") and not galaxy_map_showing:
 		time_paused = not time_paused
 	else:
@@ -218,7 +212,7 @@ func _process(delta: float) -> void:
 		else:
 			%ChargeProgress/Label.text = "WARP CHARGED"
 		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)) and not galaxy_map_showing:
-			action_menu_showing = not action_menu_showing
+			_action_menu()
 	if time_paused:
 		Engine.time_scale = lerp(Engine.time_scale, 0.0, 0.15)
 		$TimeIndicator.show()
@@ -402,6 +396,20 @@ func dialogue_set_up(library: int, id: int) -> void:
 	$Dialogue.show()
 	dialogue_showing = true
 	ready_to_select = true
+
+
+func _galaxy_map() -> void:
+	galaxy_map_showing = not galaxy_map_showing
+	if galaxy_map_showing:
+		if Global.galaxy_data[Global.current_system]["position"].x > 900:
+			$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
+		else:
+			$GalaxyMap/Tokens.position.x = 45
+		%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
+
+
+func _action_menu() -> void:
+	action_menu_showing = not action_menu_showing
 
 
 # Small interval before showing the warp in dialogue
