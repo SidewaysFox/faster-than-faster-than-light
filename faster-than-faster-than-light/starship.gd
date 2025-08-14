@@ -58,6 +58,8 @@ var jump_mode: int = -1
 var jump_destination: float
 var warp_destination: float
 var spawn_location: Vector3
+var marker: StyleBoxFlat
+
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
 
@@ -68,12 +70,13 @@ func _ready() -> void:
 	new_mesh.type = alignment
 	add_child(new_mesh)
 	
+	marker = $Marker/Selection.get_theme_stylebox("panel")
+	
 	# Starting location based on team
 	if team != 0:
 		global_position = Vector3(-2000 * team, randf_range(-60, 60), randf_range(-100, 0))
 		rotation.y = (PI / 2) - ((PI * team) / 2)
 		
-		var marker = $Marker/Panel.get_theme_stylebox("panel")
 		if team == 1:
 			marker.border_color = Color.WHITE
 		else:
@@ -102,6 +105,19 @@ func _process(delta: float) -> void:
 	
 	if ui.action_menu_showing:
 		$Marker.show()
+		var hover_alpha: int
+		if ui.hovered_ship == get_index() and team == 1:
+			hover_alpha = 255
+		else:
+			hover_alpha = 160
+		if ui.selected_ship == get_index() and team == 1:
+			marker.border_color = Color8(0, 191, 255, hover_alpha)
+		else:
+			marker.border_color = Color8(255, 255, 255, hover_alpha)
+		if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
+			$Marker/Target.show()
+		else:
+			$Marker/Target.hide()
 	else:
 		$Marker.hide()
 	

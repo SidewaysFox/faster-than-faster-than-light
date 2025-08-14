@@ -329,10 +329,13 @@ func _process(delta: float) -> void:
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
-				if index == main.get_node("FriendlyShips").get_child(selected_ship).target.get_index():
-					stylebox.draw_center = true
-				else:
-					stylebox.draw_center = false
+				var friendly: Node = main.get_node("FriendlyShips").get_child(selected_ship)
+				if friendly != null:
+					if friendly.target != null:
+						if index == friendly.target.get_index():
+							stylebox.draw_center = true
+						else:
+							stylebox.draw_center = false
 				box.show()
 				index += 1
 		elif targeting_mode == 7:

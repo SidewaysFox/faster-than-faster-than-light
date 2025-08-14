@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cjxyia0bj1uuo"]
+[gd_scene load_steps=10 format=3 uid="uid://cjxyia0bj1uuo"]
 
 [ext_resource type="Script" uid="uid://ou4uilyxtgnd" path="res://starship.gd" id="1_ng4vp"]
 [ext_resource type="PackedScene" uid="uid://b7rwxfw7w8fbl" path="res://command_ship_mesh.tscn" id="2_86p3r"]
@@ -20,6 +20,19 @@ corner_radius_top_left = 24
 corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndcd6"]
+resource_local_to_scene = true
+draw_center = false
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 0.0784314, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="Starship" type="Node3D"]
 script = ExtResource("1_ng4vp")
@@ -48,13 +61,22 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("7_ndcd6")
 
-[node name="Panel" type="Panel" parent="Marker"]
+[node name="Selection" type="Panel" parent="Marker"]
 layout_mode = 1
 offset_left = -50.0
 offset_top = -50.0
 offset_right = 50.0
 offset_bottom = 50.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_w4b5x")
+
+[node name="Target" type="Panel" parent="Marker"]
+visible = false
+layout_mode = 1
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ndcd6")
 
 [connection signal="timeout" from="JumpDelay" to="." method="_on_jump_delay_timeout"]
 [connection signal="timeout" from="TargetingDelay" to="." method="new_target" binds= [0]]
