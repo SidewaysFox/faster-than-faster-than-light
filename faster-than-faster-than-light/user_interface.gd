@@ -176,7 +176,6 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
 	if Input.is_action_just_pressed("pause"):
-		print("pause")
 		$PauseMenu.show()
 		$PauseMenu/UnpauseTimer.start()
 		get_tree().paused = true
@@ -321,6 +320,7 @@ func _process(delta: float) -> void:
 			else:
 				%ActionTargetShips/NoTargets.show()
 		elif targeting_mode == 4:
+			%ActionTargetShips/NoTargets.hide()
 			for ship in main.get_node("FriendlyShips").get_children():
 				var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 				var stylebox: Resource = box.get_theme_stylebox("panel")

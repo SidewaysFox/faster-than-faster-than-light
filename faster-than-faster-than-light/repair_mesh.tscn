@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://ekalc2xvf8pl"]
+
+[ext_resource type="Script" uid="uid://dj2c17mgoq0wa" path="res://starship_mesh.gd" id="1_2fe3r"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2fe3r"]
+resource_local_to_scene = true
+size = Vector3(12, 3, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_deqbx"]
+resource_local_to_scene = true
+size = Vector3(10, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fb3fn"]
+resource_local_to_scene = true
+size = Vector3(10, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ii3d5"]
+resource_local_to_scene = true
+size = Vector3(4, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_77s1h"]
+resource_local_to_scene = true
+size = Vector3(10, 0.1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ng4vp"]
+resource_local_to_scene = true
+size = Vector3(8, 0.5, 0.1)
+
+[node name="FighterMesh" type="Node3D"]
+script = ExtResource("1_2fe3r")
+
+[node name="Hull0" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_2fe3r")
+
+[node name="WingRight1" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 3)
+mesh = SubResource("BoxMesh_deqbx")
+
+[node name="WingLeft1" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -3)
+mesh = SubResource("BoxMesh_fb3fn")
+
+[node name="EngineLeft1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -3)
+mesh = SubResource("BoxMesh_ii3d5")
+
+[node name="EngineRight1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 3)
+mesh = SubResource("BoxMesh_ii3d5")
+
+[node name="EngineCentre1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 0)
+mesh = SubResource("BoxMesh_ii3d5")
+
+[node name="HullAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_77s1h")
+
+[node name="WingRightAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 4)
+mesh = SubResource("BoxMesh_ng4vp")
+
+[node name="WingLeftAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -4)
+mesh = SubResource("BoxMesh_ng4vp")

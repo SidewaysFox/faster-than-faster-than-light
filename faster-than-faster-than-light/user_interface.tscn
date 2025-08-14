@@ -650,6 +650,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_pd2cl")
 
 [node name="Button" type="Button" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship4"]
 layout_mode = 2
+action_mode = 0
 flat = true
 
 [node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship4"]

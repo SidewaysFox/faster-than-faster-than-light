@@ -49,6 +49,7 @@ var total_hull_damage: int = 0
 
 # Variables
 @onready var main: Node = get_node("/root/Space")
+@onready var ui: Node = get_node("/root/Space/CanvasLayer/UserInterface")
 @export_category("Bugfixing")
 @export var hull: int # WHY DOES THIS NEED TO BE EXPORTED
 var target: Node
@@ -57,6 +58,8 @@ var jump_mode: int = -1
 var jump_destination: float
 var warp_destination: float
 var spawn_location: Vector3
+const REPAIR_TIME: float = 15.0
+const REPAIR_UPGRADE: float = 3.0
 
 
 func _ready() -> void:
@@ -69,6 +72,12 @@ func _ready() -> void:
 	if team != 0:
 		global_position = Vector3(-2000 * team, randf_range(-60, 60), randf_range(-100, 0))
 		rotation.y = (PI / 2) - ((PI * team) / 2)
+		
+		var marker = $Marker/Panel.get_theme_stylebox("panel")
+		if team == 1:
+			marker.border_color = Color.WHITE
+		else:
+			marker.border_color = Color.DARK_RED
 	else:
 		global_position = Vector3(randf_range(50, 50), randf_range(-25, 25), randf_range(-10, -150))
 		jumping = false
@@ -80,6 +89,9 @@ func _ready() -> void:
 		var index: int = 1
 		for weapon_id in weapons:
 			get_node("WeaponReload" + str(index)).wait_time = Global.weapon_list[weapon_id]["Reload time"]
+			index += 1
+	elif type == 4:
+		$RepairReload.wait_time = REPAIR_TIME - (level * REPAIR_UPGRADE)
 
 
 func _process(delta: float) -> void:
@@ -87,6 +99,11 @@ func _process(delta: float) -> void:
 		if team == 1:
 			Global.fleet.remove_at(_get_data_location())
 		queue_free()
+	
+	if ui.action_menu_showing:
+		$Marker.show()
+	else:
+		$Marker.hide()
 	
 	if type == 1:
 		# Start shooting!!!
@@ -96,6 +113,11 @@ func _process(delta: float) -> void:
 					get_node("WeaponReload" + str(i + 1)).start()
 		else:
 			$WeaponReload1.stop()
+	if type == 4 and target != null:
+		if target.hull < target.hull_strength and $RepairReload.is_stopped():
+			$RepairReload.start()
+		elif target.hull > target.hull_strength - 1:
+			$RepairReload.stop()
 	
 	# Do jumping animations
 	if jumping:
@@ -134,7 +156,7 @@ func new_target(ship: int) -> void:
 		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0:
 			target = main.get_node("FriendlyShips").get_child(ship)
 
-# Find a way to ensure ships don't fire on the exact same frame
+
 func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
 	if weapon_info["Type"] == 0:
@@ -158,3 +180,9 @@ func _get_data_location() -> int:
 			break
 		index += 1
 	return index
+
+
+func _repair() -> void:
+	if target == null:
+		new_target(0)
+	target.hull += 1
