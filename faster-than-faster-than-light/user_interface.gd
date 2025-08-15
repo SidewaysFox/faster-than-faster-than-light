@@ -45,19 +45,19 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(5, 15), 0, true, 0, 1]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(10, 25), 0, true, 0, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["dialogue_set_up", 1, 1]]]
+	[["Scrap what's left of the freighter hulls.", ["dialogue_set_up", 1, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(20, 40), 0, true, 2, 1]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(40, 80), 0, true, 2, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(3, 7), 1, true, 4, 1]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(4, 16), 1, true, 4, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1, "enemy presence"],
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
@@ -201,7 +201,7 @@ func _process(delta: float) -> void:
 					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 		%ChargeProgress/Label.text = "WAITING"
 	# Show or hide the galaxy map
-	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)) and not action_menu_showing and main.warp_charge >= 100:
+	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)):
 		_galaxy_map()
 	elif Input.is_action_just_pressed("time pause") and not galaxy_map_showing:
 		time_paused = not time_paused
@@ -402,13 +402,14 @@ func dialogue_set_up(library: int, id: int) -> void:
 
 
 func _galaxy_map() -> void:
-	galaxy_map_showing = not galaxy_map_showing
-	if galaxy_map_showing:
-		if Global.galaxy_data[Global.current_system]["position"].x > 900:
-			$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
-		else:
-			$GalaxyMap/Tokens.position.x = 45
-		%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
+	if not action_menu_showing and main.warp_charge >= 100:
+		galaxy_map_showing = not galaxy_map_showing
+		if galaxy_map_showing:
+			if Global.galaxy_data[Global.current_system]["position"].x > 900:
+				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
+			else:
+				$GalaxyMap/Tokens.position.x = 45
+			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
 
 
 func _action_menu() -> void:
@@ -498,8 +499,8 @@ func select_target() -> void:
 
 
 func win_encounter() -> void:
-	resources(randi_range(1, 20))
-	resources(randi_range(0, 4), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
+	resources(randi_range(5, 30))
+	resources(randi_range(1, 25), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
 
 
 func lose() -> void:

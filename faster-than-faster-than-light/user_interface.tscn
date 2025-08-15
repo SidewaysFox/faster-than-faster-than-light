@@ -667,6 +667,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_4g22y")
 
 [node name="Button" type="Button" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship5"]
 layout_mode = 2
+action_mode = 0
 flat = true
 
 [node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship5"]
@@ -683,6 +684,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_1kx6s")
 
 [node name="Button" type="Button" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship6"]
 layout_mode = 2
+action_mode = 0
 flat = true
 
 [node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship6"]
@@ -699,6 +701,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_aha7b")
 
 [node name="Button" type="Button" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship7"]
 layout_mode = 2
+action_mode = 0
 flat = true
 
 [node name="Code" type="Label" parent="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship7"]

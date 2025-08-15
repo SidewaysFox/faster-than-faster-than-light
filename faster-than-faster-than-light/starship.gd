@@ -186,7 +186,7 @@ func _new_projectile(form: int, damage: int) -> void:
 	new_projectile.starting_position = global_position
 	new_projectile.target = target
 	new_projectile.damage = damage
-	get_parent().get_parent().get_node("Projectiles").add_child(new_projectile)
+	main.get_node("Projectiles").add_child(new_projectile)
 
 
 func _get_data_location() -> int:
