@@ -500,6 +500,34 @@ action_mode = 0
 text = "GALAXY MAP (M)"
 flat = true
 
+[node name="PauseTime" type="PanelContainer" parent="ControlTips/VBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6x3y2")
+
+[node name="Button" type="Button" parent="ControlTips/VBoxContainer/PauseTime"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+text = "PAUSE TIME (SPACE)"
+flat = true
+
+[node name="PauseGame" type="PanelContainer" parent="ControlTips/VBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6x3y2")
+
+[node name="Button" type="Button" parent="ControlTips/VBoxContainer/PauseGame"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+text = "PAUSE GAME (ESC)"
+flat = true
+
 [node name="TimeIndicator" type="Control" parent="."]
 visible = false
 layout_mode = 1
@@ -1308,6 +1336,8 @@ text = "FPS: 60"
 
 [connection signal="pressed" from="ControlTips/VBoxContainer/ActionMenu/Button" to="." method="_action_menu"]
 [connection signal="pressed" from="ControlTips/VBoxContainer/GalaxyMap/Button" to="." method="_galaxy_map"]
+[connection signal="pressed" from="ControlTips/VBoxContainer/PauseTime/Button" to="." method="_time_pause"]
+[connection signal="pressed" from="ControlTips/VBoxContainer/PauseGame/Button" to="." method="_pause"]
 [connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0/Button" to="." method="hover_ship" binds= [0]]
 [connection signal="pressed" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship0/Button" to="." method="select_ship" binds= [0]]
 [connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionFriendlyShips/GridContainer/Ship1/Button" to="." method="hover_ship" binds= [1]]

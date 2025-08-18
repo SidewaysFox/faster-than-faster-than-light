@@ -176,9 +176,7 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
 	if Input.is_action_just_pressed("pause"):
-		$PauseMenu.show()
-		$PauseMenu/UnpauseTimer.start()
-		get_tree().paused = true
+		_pause()
 	
 	
 	# Check if the dialogue is showing:
@@ -203,8 +201,8 @@ func _process(delta: float) -> void:
 	# Show or hide the galaxy map
 	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)):
 		_galaxy_map()
-	elif Input.is_action_just_pressed("time pause") and not galaxy_map_showing:
-		time_paused = not time_paused
+	elif Input.is_action_just_pressed("time pause"):
+		_time_pause()
 	else:
 		if main.warp_charge < 100:
 			%ChargeProgress/Label.text = "WARP CHARGING"
@@ -414,6 +412,17 @@ func _galaxy_map() -> void:
 
 func _action_menu() -> void:
 	action_menu_showing = not action_menu_showing
+
+
+func _time_pause() -> void:
+	if not galaxy_map_showing:
+		time_paused = not time_paused
+
+
+func _pause() -> void:
+	$PauseMenu.show()
+	$PauseMenu/UnpauseTimer.start()
+	get_tree().paused = true
 
 
 # Small interval before showing the warp in dialogue
