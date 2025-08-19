@@ -97,7 +97,7 @@ func _ready() -> void:
 		$RepairReload.wait_time = REPAIR_TIME - (level * REPAIR_UPGRADE)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if hull <= 0:
 		if team == 1:
 			Global.fleet.remove_at(_get_data_location())

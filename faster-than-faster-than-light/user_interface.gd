@@ -178,6 +178,8 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("pause"):
 		_pause()
 	
+	if Input.is_action_just_pressed("hide controls"):
+		_hide_controls()
 	
 	# Check if the dialogue is showing:
 	if dialogue_showing:
@@ -423,6 +425,14 @@ func _pause() -> void:
 	$PauseMenu.show()
 	$PauseMenu/UnpauseTimer.start()
 	get_tree().paused = true
+
+
+func _hide_controls() -> void:
+	$ControlTips/VBoxContainer/Main.visible = not $ControlTips/VBoxContainer/Main.visible
+	if $ControlTips/VBoxContainer/Main.visible:
+		$ControlTips/VBoxContainer/HideControlTips/Button.text = "HIDE CONTROLS (H)"
+	else:
+		$ControlTips/VBoxContainer/HideControlTips/Button.text = "SHOW CONTROLS (H)"
 
 
 # Small interval before showing the warp in dialogue
