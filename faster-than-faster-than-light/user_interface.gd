@@ -145,7 +145,7 @@ func _ready() -> void:
 	$ScreenFade.show()
 	%Gameplay/ControlMode.button_pressed = Global.joystick_control
 	%Gameplay/JoystickMode.button_pressed = Global.dual_joysticks
-	if Global.initilising:
+	if Global.initialising:
 		await main.setup_complete
 	# Generate visual galaxy map
 	for i in Global.galaxy_data:
@@ -437,14 +437,17 @@ func _hide_controls() -> void:
 
 # Small interval before showing the warp in dialogue
 func _on_warp_in_dialogue_timeout() -> void:
-	# Search through options for the warp in dialogue and find which ones are
-	# appropriate for this system
-	var possible_dialogues: Array = []
-	for i in warp_in_dialogue:
-		if i[0] == main.system_properties:
-			possible_dialogues.append(warp_in_dialogue.find(i))
-	dialogue_set_up(0, possible_dialogues.pick_random())
-	time_paused = true
+	if Global.current_system in Global.visited_systems:
+		close(Global.galaxy_data[Global.current_system]["enemy presence"])
+	else:
+		# Search through options for the warp in dialogue and find which ones are
+		# appropriate for this system
+		var possible_dialogues: Array = []
+		for i in warp_in_dialogue:
+			if i[0] == main.system_properties:
+				possible_dialogues.append(warp_in_dialogue.find(i))
+		dialogue_set_up(0, possible_dialogues.pick_random())
+		time_paused = true
 
 
 # Called when either fuel or resources are spent or gained
@@ -520,6 +523,7 @@ func select_target() -> void:
 func win_encounter() -> void:
 	resources(randi_range(5, 30))
 	resources(randi_range(1, 25), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
+	Global.galaxy_data[Global.current_system]["enemy presence"] = false
 
 
 func lose() -> void:

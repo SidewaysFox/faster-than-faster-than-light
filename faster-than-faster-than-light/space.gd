@@ -64,9 +64,10 @@ signal setup_complete
 
 
 func _ready() -> void:
-	if Global.initilising:
+	if Global.initialising:
 		Global.establish()
 		setup_complete.emit()
+		Global.initialising = false
 	else:
 		# Spawn fleet
 		for ship in Global.fleet:
