@@ -23,6 +23,7 @@ var unique_visits: int = 0
 var joystick_sens: float = 1.5
 var next_ship_id: int = -1
 var in_combat: bool = false
+var controls_showing: bool = true
 
 const SECTOR_ROWS: int = 8
 const SECTOR_COLUMNS: int = 32

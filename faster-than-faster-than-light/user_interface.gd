@@ -153,6 +153,8 @@ func _ready() -> void:
 		new_token.id = i["id"]
 		new_token.position = i["position"]
 		$GalaxyMap/Tokens.add_child(new_token)
+	if not Global.controls_showing:
+		_hide_controls()
 
 
 func _process(delta: float) -> void:
@@ -431,8 +433,10 @@ func _hide_controls() -> void:
 	$ControlTips/VBoxContainer/Main.visible = not $ControlTips/VBoxContainer/Main.visible
 	if $ControlTips/VBoxContainer/Main.visible:
 		$ControlTips/VBoxContainer/HideControlTips/Button.text = "HIDE CONTROLS (H)"
+		Global.controls_showing = true
 	else:
 		$ControlTips/VBoxContainer/HideControlTips/Button.text = "SHOW CONTROLS (H)"
+		Global.controls_showing = false
 
 
 # Small interval before showing the warp in dialogue
