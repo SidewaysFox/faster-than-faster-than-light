@@ -12,7 +12,7 @@ var resources: int = 0
 var fuel: int = 45
 var starting_fleet: Array[int] = [0, 1, 1, 4]
 var fleet: Array = []
-var jump_distance: float = 180.0
+var jump_distance: float = 120.0
 var charge_rate: float = 2.0
 var augmentations: Array = []
 var galaxy_data: Array = []
@@ -186,10 +186,10 @@ func get_new_ship_id() -> int:
 
 # Update fleet stats
 func stats_update() -> void:
-	jump_distance = 100.0
+	jump_distance = 120.0
 	for ship in fleet:
 		if ship.type == 6:
-			jump_distance += 25 * ship.level
+			jump_distance += 20 * ship.level
 			charge_rate += ship.level
 
 

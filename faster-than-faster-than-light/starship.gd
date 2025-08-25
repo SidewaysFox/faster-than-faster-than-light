@@ -106,10 +106,16 @@ func _process(_delta: float) -> void:
 	if ui.action_menu_showing:
 		$Marker.show()
 		var hover_alpha: int
-		if ui.hovered_ship == get_index() and team == 1:
-			hover_alpha = 255
-		else:
-			hover_alpha = 160
+		if team == 1:
+			if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
+				hover_alpha = 255
+			else:
+				hover_alpha = 160
+		elif team == -1:
+			if ui.hovered_target == get_index() and ui.targeting_mode != 4:
+				hover_alpha = 255
+			else:
+				hover_alpha = 160
 		if ui.selected_ship == get_index() and team == 1:
 			marker.border_color = Color8(0, 191, 255, hover_alpha)
 		else:
@@ -118,6 +124,10 @@ func _process(_delta: float) -> void:
 			$Marker/Target.show()
 		else:
 			$Marker/Target.hide()
+		
+		$Marker/Name.text = "NAME: " + ship_name
+		$Marker/Type.text = "TYPE: " + ui.ship_codes[type]
+		$Marker/Hull.text = "HULL: " + str(hull)
 	else:
 		$Marker.hide()
 	
