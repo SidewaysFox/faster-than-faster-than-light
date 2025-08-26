@@ -114,18 +114,19 @@ func _ready() -> void:
 			star_proximity = true
 	# Create nebulae
 	var nebula_pos: Vector3
-	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
+	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
 	for i in randi_range(1, 22):
 		nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
-		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1))
+		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.05, 0.05))
+		nebula_colour.a = clamp(nebula_colour.a, 0.04, 0.2)
 		# Big or small nebula
 		if randi_range(0, 40) == 4: # Because I like the number 4
 			# Big
 			for j in randi_range(50, 300):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.05)
-				new_nebula.mesh.material.emission = Color(nebula_colour)
+				new_nebula.mesh.material.albedo_color = nebula_colour
+				new_nebula.mesh.material.emission = nebula_colour
 				new_nebula.mesh.radius = randf_range(20, 50)
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2
 				nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
@@ -135,8 +136,8 @@ func _ready() -> void:
 			for j in randi_range(1, 20):
 				var new_nebula = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.04)
-				new_nebula.mesh.material.emission = Color(nebula_colour)
+				new_nebula.mesh.material.albedo_color = nebula_colour
+				new_nebula.mesh.material.emission = nebula_colour
 				new_nebula.mesh.radius = randf_range(20, 50)
 				new_nebula.mesh.height = new_nebula.mesh.radius * 2
 				nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))

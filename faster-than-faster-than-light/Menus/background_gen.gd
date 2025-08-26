@@ -39,10 +39,11 @@ func _ready() -> void:
 		$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
 	# Create nebulae
 	var nebula_pos: Vector3
-	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
+	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
 	for i in randi_range(1, 25):
 		nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
-		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1))
+		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.05, 0.05))
+		nebula_colour.a = clamp(nebula_colour.a, 0.04, 0.2)
 		# Big or small nebula
 		if randi_range(0, 25) == 4: # Because I like the number 4
 			# Big

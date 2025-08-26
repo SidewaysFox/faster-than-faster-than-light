@@ -59,6 +59,7 @@ var jump_destination: float
 var warp_destination: float
 var spawn_location: Vector3
 var marker: StyleBoxFlat
+var status: int
 
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
@@ -103,7 +104,7 @@ func _process(_delta: float) -> void:
 			Global.fleet.remove_at(_get_data_location())
 		queue_free()
 	
-	if ui.action_menu_showing:
+	if ui.action_menu_showing and team == 1:
 		$Marker.show()
 		var hover_alpha: int
 		if team == 1:
@@ -120,14 +121,16 @@ func _process(_delta: float) -> void:
 			marker.border_color = Color8(0, 191, 255, hover_alpha)
 		else:
 			marker.border_color = Color8(255, 255, 255, hover_alpha)
-		if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
-			$Marker/Target.show()
-		else:
-			$Marker/Target.hide()
+		if ui.selected_ship < main.get_node("FriendlyShips").get_child_count():
+			if main.get_node("FriendlyShips").get_child(ui.selected_ship).target != null:
+				if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
+					$Marker/Target.show()
+				else:
+					$Marker/Target.hide()
 		
-		$Marker/Name.text = "NAME: " + ship_name
-		$Marker/Type.text = "TYPE: " + ui.ship_codes[type]
-		$Marker/Hull.text = "HULL: " + str(hull)
+		$Marker/Info/Name.text = "NAME: " + ship_name
+		$Marker/Info/Type.text = "TYPE: " + ui.ship_codes[type]
+		$Marker/Info/Hull.text = "HULL: " + str(hull)
 	else:
 		$Marker.hide()
 	

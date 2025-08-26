@@ -57,62 +57,65 @@ autostart = true
 [node name="Marker" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("7_ndcd6")
-
-[node name="Selection" type="Panel" parent="Marker"]
-layout_mode = 1
 offset_left = -50.0
 offset_top = -50.0
 offset_right = 50.0
 offset_bottom = 50.0
+script = ExtResource("7_ndcd6")
+
+[node name="Selection" type="Panel" parent="Marker"]
+layout_mode = 1
+offset_right = 100.0
+offset_bottom = 100.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_w4b5x")
 
 [node name="Target" type="Panel" parent="Marker"]
 visible = false
 layout_mode = 1
-offset_left = -40.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 90.0
+offset_bottom = 90.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ndcd6")
 
-[node name="Name" type="Label" parent="Marker"]
+[node name="Info" type="Control" parent="Marker"]
+anchors_preset = 0
+offset_left = 105.0
+offset_right = 205.0
+offset_bottom = 100.0
+
+[node name="Name" type="Label" parent="Marker/Info"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 0
-offset_left = 55.0
-offset_top = -50.0
-offset_right = 102.0
-offset_bottom = -27.0
+offset_right = 56.0
+offset_bottom = 25.0
 text = "NAME: "
 vertical_alignment = 1
 
-[node name="Type" type="Label" parent="Marker"]
+[node name="Type" type="Label" parent="Marker/Info"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 0
-offset_left = 55.0
-offset_top = -25.0
-offset_right = 102.0
+offset_top = 25.0
+offset_right = 47.0
+offset_bottom = 50.0
 text = "TYPE: "
 vertical_alignment = 1
 
-[node name="Hull" type="Label" parent="Marker"]
+[node name="Hull" type="Label" parent="Marker/Info"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 0
-offset_left = 55.0
-offset_right = 102.0
-offset_bottom = 25.0
+offset_top = 50.0
+offset_right = 50.0
+offset_bottom = 75.0
 text = "HULL: "
 vertical_alignment = 1
 
-[node name="Status" type="Label" parent="Marker"]
+[node name="Status" type="Label" parent="Marker/Info"]
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 0
-offset_left = 55.0
-offset_top = 25.0
-offset_right = 105.0
-offset_bottom = 50.0
+offset_top = 75.0
+offset_right = 90.0
+offset_bottom = 100.0
 text = "STATUS: OK"
 vertical_alignment = 1
 
