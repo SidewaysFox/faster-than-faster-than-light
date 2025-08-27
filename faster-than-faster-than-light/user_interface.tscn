@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=51 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -253,6 +253,90 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0.627451, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_81j6j"]
+bg_color = Color(0.313726, 0.313726, 0.313726, 0.627451)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0.627451, 0.627451, 0.627451)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0yi1w"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orulu"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sgdss"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l0e5w"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u65dh"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gd884"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a4b3d"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvmyh"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7dvk"]
 bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.980392)
 border_width_left = 6
@@ -489,6 +573,20 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 action_mode = 0
 text = "SHIP ACTION MENU (S)"
+flat = true
+
+[node name="InfoMenu" type="PanelContainer" parent="ControlTips/VBoxContainer/Main"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6x3y2")
+
+[node name="Button" type="Button" parent="ControlTips/VBoxContainer/Main/InfoMenu"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+text = "FLEET INFO MENU (I)"
 flat = true
 
 [node name="GalaxyMap" type="PanelContainer" parent="ControlTips/VBoxContainer/Main"]
@@ -760,7 +858,7 @@ vertical_alignment = 1
 
 [node name="Instruction" type="PanelContainer" parent="ShipActionMenu/Tabs"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 200)
+custom_minimum_size = Vector2(312, 200)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_q4f8x")
 
@@ -930,6 +1028,145 @@ text = "NO POTENTIAL TARGETS DETECTED"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="FleetInfoMenu" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(1400, 790)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -700.0
+offset_top = -398.0
+offset_right = 700.0
+offset_bottom = 398.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f4522")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FleetInfoMenu"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_81j6j")
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/Title"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "FLEET INFORMATION"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FleetInfoMenu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 696)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ShipSelection" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(464, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Ship0" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0yi1w")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship0"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_orulu")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship1"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sgdss")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l0e5w")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship4" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u65dh")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship5" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gd884")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship5"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship6" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_a4b3d")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship6"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
+
+[node name="Ship7" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_kvmyh")
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship7"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+action_mode = 0
+text = "CMND: SHIP NAME"
+flat = true
 
 [node name="GalaxyMap" type="PanelContainer" parent="."]
 visible = false
@@ -1354,6 +1591,7 @@ theme_override_font_sizes/font_size = 48
 text = "FPS: 60"
 
 [connection signal="pressed" from="ControlTips/VBoxContainer/Main/ActionMenu/Button" to="." method="_action_menu"]
+[connection signal="pressed" from="ControlTips/VBoxContainer/Main/InfoMenu/Button" to="." method="_info_menu"]
 [connection signal="pressed" from="ControlTips/VBoxContainer/Main/GalaxyMap/Button" to="." method="_galaxy_map"]
 [connection signal="pressed" from="ControlTips/VBoxContainer/Main/PauseTime/Button" to="." method="_time_pause"]
 [connection signal="pressed" from="ControlTips/VBoxContainer/Main/PauseGame/Button" to="." method="_pause"]
@@ -1390,6 +1628,22 @@ text = "FPS: 60"
 [connection signal="pressed" from="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship6/Button" to="." method="select_target"]
 [connection signal="mouse_entered" from="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship7/Button" to="." method="hover_target" binds= [7]]
 [connection signal="pressed" from="ShipActionMenu/Tabs/ActionTargetShips/GridContainer/Ship7/Button" to="." method="select_target"]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship0/Button" to="." method="hover_info" binds= [0]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship0/Button" to="." method="select_info" binds= [0]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship1/Button" to="." method="hover_info" binds= [1]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship1/Button" to="." method="select_info" binds= [1]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship2/Button" to="." method="hover_info" binds= [2]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship2/Button" to="." method="select_info" binds= [2]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship3/Button" to="." method="hover_info" binds= [3]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship3/Button" to="." method="select_info" binds= [3]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship4/Button" to="." method="hover_info" binds= [4]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship4/Button" to="." method="select_info" binds= [4]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship5/Button" to="." method="hover_info" binds= [5]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship5/Button" to="." method="select_info" binds= [5]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship6/Button" to="." method="hover_info" binds= [6]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship6/Button" to="." method="select_info" binds= [6]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship7/Button" to="." method="hover_info" binds= [7]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship7/Button" to="." method="select_info" binds= [7]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]

@@ -12,11 +12,14 @@ var ready_to_select: bool = false
 var current_dialogue_selection: int = 1
 var option_results: Array
 var action_menu_showing: bool = false
+var info_menu_showing: bool = false
 var hovered_ship: int = 0
 var hovered_target: int = 0
 var selected_ship: int = 0
 var targeting_mode: int = 0
 var time_paused: bool = false
+var hovered_at_info: int = 0
+var looking_at_info: int = 0
 
 var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
@@ -212,8 +215,10 @@ func _process(delta: float) -> void:
 			%ChargeProgress/Label.text = "WARP CHARGING"
 		else:
 			%ChargeProgress/Label.text = "WARP CHARGED"
-		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)) and not galaxy_map_showing:
+		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)) and not galaxy_map_showing and not info_menu_showing:
 			_action_menu()
+		if (((Input.is_action_just_pressed("3") or Input.is_action_just_pressed("C")) and Global.joystick_control) or (Input.is_action_just_pressed("info menu") and not Global.joystick_control)) and not galaxy_map_showing and not action_menu_showing:
+			_info_menu()
 	if time_paused:
 		Engine.time_scale = lerp(Engine.time_scale, 0.0, 0.15)
 		$TimeIndicator.show()
@@ -364,6 +369,29 @@ func _process(delta: float) -> void:
 			%Instruction/Label.text = targeting_options[targeting_mode]
 	else:
 		$ShipActionMenu.hide()
+	
+	if info_menu_showing:
+		$FleetInfoMenu.show()
+		var index: int = 0
+		var fleet_size = main.get_node("FriendlyShips").get_child_count()
+		for button in %ShipSelection.get_children():
+			var ship: Node
+			if index < fleet_size:
+				button.show()
+				var stylebox: Resource = button.get_theme_stylebox("panel")
+				if index == hovered_at_info:
+					stylebox.border_color = Color8(160, 100, 100)
+				else:
+					stylebox.border_color = Color8(160, 0, 0)
+				if index == looking_at_info:
+					stylebox.draw_center = true
+				else:
+					stylebox.draw_center = false
+			else:
+				button.hide()
+			index += 1
+	else:
+		$FleetInfoMenu.hide()
 
 # Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int) -> void:
@@ -427,6 +455,10 @@ func _pause() -> void:
 	$PauseMenu.show()
 	$PauseMenu/UnpauseTimer.start()
 	get_tree().paused = true
+
+
+func _info_menu() -> void:
+	info_menu_showing = not info_menu_showing
 
 
 func _hide_controls() -> void:
@@ -522,6 +554,14 @@ func hover_target(n: int) -> void:
 
 func select_target() -> void:
 	main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+
+
+func hover_info(n: int) -> void:
+	hovered_at_info = n
+
+
+func select_info(n: int) -> void:
+	looking_at_info = n
 
 
 func win_encounter() -> void:
