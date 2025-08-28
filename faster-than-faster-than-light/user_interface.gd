@@ -18,8 +18,9 @@ var hovered_target: int = 0
 var selected_ship: int = 0
 var targeting_mode: int = 0
 var time_paused: bool = false
-var hovered_at_info: int = 0
-var looking_at_info: int = 0
+var hovered_at_ship_info: int = 0
+var looking_at_ship_info: int = 0
+var info_showing: int = 0
 
 var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
@@ -379,11 +380,11 @@ func _process(delta: float) -> void:
 			if index < fleet_size:
 				button.show()
 				var stylebox: Resource = button.get_theme_stylebox("panel")
-				if index == hovered_at_info:
+				if index == hovered_at_ship_info:
 					stylebox.border_color = Color8(160, 100, 100)
 				else:
 					stylebox.border_color = Color8(160, 0, 0)
-				if index == looking_at_info:
+				if index == looking_at_ship_info:
 					stylebox.draw_center = true
 				else:
 					stylebox.draw_center = false
@@ -557,11 +558,11 @@ func select_target() -> void:
 
 
 func hover_info(n: int) -> void:
-	hovered_at_info = n
+	hovered_at_ship_info = n
 
 
 func select_info(n: int) -> void:
-	looking_at_info = n
+	looking_at_ship_info = n
 
 
 func win_encounter() -> void:

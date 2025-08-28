@@ -1,9 +1,10 @@
-[gd_scene load_steps=51 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=56 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
 [ext_resource type="Script" uid="uid://fvfvyfqfqd5l" path="res://pause_menu.gd" id="3_0jl8t"]
 [ext_resource type="Shader" uid="uid://cr3v1xc6ek346" path="res://pause_blur.gdshader" id="3_juc2q"]
+[ext_resource type="Script" uid="uid://ni1tc18aeun7" path="res://info_tab.gd" id="3_up53h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_up53h"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
@@ -329,6 +330,42 @@ border_width_bottom = 4
 border_color = Color(0.627451, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvmyh"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6e63"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bwll3"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxt2m"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42sjh"]
 bg_color = Color(0.627451, 0.313726, 0.313726, 1)
 draw_center = false
 border_width_left = 4
@@ -1168,6 +1205,192 @@ action_mode = 0
 text = "CMND: SHIP NAME"
 flat = true
 
+[node name="ShipInfoTabs" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(464, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="General" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+script = ExtResource("3_up53h")
+metadata/id = 0
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "GENERAL"
+flat = true
+
+[node name="Level" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bwll3")
+script = ExtResource("3_up53h")
+metadata/id = 1
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "LEVELING"
+flat = true
+
+[node name="Instructions" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_xxt2m")
+script = ExtResource("3_up53h")
+metadata/id = 2
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "INSTRUCTIONS"
+flat = true
+
+[node name="Miscellaneous" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_42sjh")
+script = ExtResource("3_up53h")
+metadata/id = 3
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "MISCELLANEOUS"
+flat = true
+
+[node name="Information" type="Control" parent="FleetInfoMenu/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(464, 0)
+layout_mode = 2
+
+[node name="General" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+visible = false
+layout_mode = 2
+offset_right = 464.0
+offset_bottom = 696.0
+theme_override_constants/separation = 0
+
+[node name="HullStrength" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/HullStrength"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "HULL STRENGTH: 6"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hull" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/Hull"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "CURRENT HULL: 6"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Agility" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/Agility"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "AGILITY: 20%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Status" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/Status"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "STATUS: OK"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Leveling" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+layout_mode = 2
+offset_right = 464.0
+offset_bottom = 696.0
+theme_override_constants/separation = 0
+
+[node name="CurrentLevel" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/CurrentLevel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "CURRENT LEVEL: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cost" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Cost"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "UPGRADE COST: 40 TECH"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Upgrade" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+action_mode = 0
+text = "UPGRADE SHIP"
+flat = true
+
+[node name="Specifications" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specifications"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "STATUS: OK"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="GalaxyMap" type="PanelContainer" parent="."]
 visible = false
 clip_contents = true
@@ -1644,6 +1867,18 @@ text = "FPS: 60"
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship6/Button" to="." method="select_info" binds= [6]]
 [connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship7/Button" to="." method="hover_info" binds= [7]]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipSelection/Ship7/Button" to="." method="select_info" binds= [7]]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General" method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General" method="_on_button_mouse_exited"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/General" method="_on_button_pressed"]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level" method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level" method="_on_button_mouse_exited"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Level" method="_on_button_pressed"]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions" method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions" method="_on_button_mouse_exited"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Instructions" method="_on_button_pressed"]
+[connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_mouse_exited"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_pressed"]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]
