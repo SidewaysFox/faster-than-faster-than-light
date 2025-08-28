@@ -61,6 +61,13 @@ var spawn_location: Vector3
 var marker: StyleBoxFlat
 var status: int
 
+var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "FALCON", "STORM", \
+		"BRAWN", "HAZE", "CRACKDOWN", "DART", "QUASAR", "PILGRIM", "LOCKDOWN", "GREATAXE", "NOVA", \
+		"DEADEYE", "DESTINY", "SCALAR", "VECTOR", "MATRIX", "GHOST", "PHANTOM", "OWL", "CRYSTAL", \
+		"VERMILLION", "PIKE", "SPEARHEAD", "BASIS", "ANGLER", "ESSENCE", "FULCRUM", "HALO", \
+		"ICHOR", "JET", "JEWEL", "KILO", "LANTERN", "MAESTRO", "OCULAR", "RAVEN", "PLACEBO", \
+		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO"]
+
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
 
@@ -72,6 +79,8 @@ func _ready() -> void:
 	add_child(new_mesh)
 	
 	marker = $Marker/Selection.get_theme_stylebox("panel")
+	
+	ship_name = possible_names.pop_at(randi_range(0, len(possible_names) - 1))
 	
 	# Starting location based on team
 	if team != 0:
