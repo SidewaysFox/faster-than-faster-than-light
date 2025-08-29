@@ -376,9 +376,10 @@ func _process(delta: float) -> void:
 		var index: int = 0
 		var fleet_size = main.get_node("FriendlyShips").get_child_count()
 		for button in %ShipSelection.get_children():
-			var ship: Node
 			if index < fleet_size:
+				var ship: Node = main.get_node("FriendlyShips").get_child(index)
 				button.show()
+				button.get_child(0).text = ship_codes[ship.type] + ": " + ship.ship_name.to_upper()
 				var stylebox: Resource = button.get_theme_stylebox("panel")
 				if index == hovered_at_ship_info:
 					stylebox.border_color = Color8(160, 100, 100)
@@ -386,6 +387,12 @@ func _process(delta: float) -> void:
 					stylebox.border_color = Color8(160, 0, 0)
 				if index == looking_at_ship_info:
 					stylebox.draw_center = true
+					%Information/General/HullStrength/Label.text = "HULL STRENGTH: " + str(ship.hull_strength)
+					%Information/General/Hull/Label.text = "CURRENT HULL: " + str(ship.hull)
+					%Information/General/Agility/Label.text = "AGILITY: " + str(ship.agility)
+					%Information/General/Status/Label.text = "STATUS: OK"
+					%Information/Leveling/CurrentLevel/Label.text = "CURRENT LEVEL: " + str(ship.level)
+					%Information/Leveling/Cost/Label.text = "UPGRADE COST: " + str(ship.upgrade_costs[ship.type][ship.level - 1])
 				else:
 					stylebox.draw_center = false
 			else:

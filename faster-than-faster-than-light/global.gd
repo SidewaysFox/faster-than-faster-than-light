@@ -35,11 +35,27 @@ const GMAP_BOT: float = 590.0
 var starship_base_stats: Array[Dictionary] = [
 	{
 		"Hull Strength": 20,
-		"Agility": 0.1,
+		"Agility": 0.05,
 	},
 	{
 		"Hull Strength": 6,
-		"Agility": 0.2,
+		"Agility": 0.1,
+	},
+	{
+		"Hull Strength": 5,
+		"Agility": 0.1,
+	},
+	{
+		"Hull Strength": 8,
+		"Agility": 0.05,
+	},
+	{
+		"Hull Strength": 5,
+		"Agility": 0.08,
+	},
+	{
+		"Hull Strength": 6,
+		"Agility": 0.1,
 	},
 	{
 		"Hull Strength": 5,
@@ -47,23 +63,7 @@ var starship_base_stats: Array[Dictionary] = [
 	},
 	{
 		"Hull Strength": 8,
-		"Agility": 0.15,
-	},
-	{
-		"Hull Strength": 6,
-		"Agility": 0.15,
-	},
-	{
-		"Hull Strength": 6,
-		"Agility": 0.25,
-	},
-	{
-		"Hull Strength": 8,
-		"Agility": 0.25,
-	},
-	{
-		"Hull Strength": 10,
-		"Agility": 0.12,
+		"Agility": 0.07,
 	},
 	{
 		"Hull Strength": 3,
@@ -71,8 +71,54 @@ var starship_base_stats: Array[Dictionary] = [
 	},
 	{
 		"Hull Strength": 3,
-		"Agility": 0.35,
+		"Agility": 0.4,
 	},
+]
+
+var upgrade_costs: Array = [
+	[85, 90],
+	[55, 90],
+	[50, 65],
+	[55, 90],
+	[45, 80],
+	[45, 60],
+	[45, 60],
+	[90, 95],
+	]
+
+var upgrade_specifications: Array = [
+	[
+		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 MODULE SLOT"],
+		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 MODULE SLOT"],
+	],
+	[
+		["+2 HULL STRENGTH", "+0.05 AGILITY", "+1 WEAPON SLOT"],
+		["+4 HULL STRENGTH", "+0.1 AGILITY", "+1 WEAPON SLOT"],
+	],
+	[
+		["+2 HULL STRENGTH", "+0.05 AGILITY", "+1 SHIELD LAYER"],
+		["+3 HULL STRENGTH", "+0.05 AGILITY", "+1 SHIELD LAYER"],
+	],
+	[
+		["+2 HULL STRENGTH", "+0.05 AGILITY", "LONGER STUN"],
+		["+5 HULL STRENGTH", "+0.05 AGILITY", "LONGER STUN"],
+	],
+	[
+		["+1 HULL STRENGTH", "+0.05 AGILITY", "FASTER REPAIR"],
+		["+2 HULL STRENGTH", "FASTER REPAIR", "+1 REPAIR"],
+	],
+	[
+		["+1 HULL STRENGTH", "+0.05 AGILITY", "+1 SCANNED SHIPS"],
+		["+1 HULL STRENGTH", "+0.1 AGILITY", "+1 SCANNED SHIPS"],
+	],
+	[
+		["+1 HULL STRENGTH", "+0.05 AGILITY", "INCREASED RANGE"],
+		["+2 HULL STRENGTH", "+0.05 AGILITY", "INCREASED RANGE"],
+	],
+	[
+		["+4 HULL STRENGTH", "+1 DRONE SLOT", "REPAIR DRONES"],
+		["+4 HULL STRENGTH", "+2 DRONE SLOTS", "NONE"],
+	],
 ]
 
 var weapon_list: Array[Dictionary] = [
@@ -81,21 +127,35 @@ var weapon_list: Array[Dictionary] = [
 		"Type": 0,
 		"Slots": 1,
 		"Damage": 1,
-		"Reload time": 7.0
+		"Reload time": 6.0
 	},
 	{
 		"Name": "Phasor 2",
 		"Type": 0,
 		"Slots": 2,
 		"Damage": 1,
-		"Reload time": 5.0
+		"Reload time": 4.0
 	},
 	{
 		"Name": "Phasor 3",
 		"Type": 0,
 		"Slots": 3,
 		"Damage": 1,
-		"Reload time": 3.0
+		"Reload time": 2.0
+	},
+	{
+		"Name": "Railgun",
+		"Type": 0,
+		"Slots": 3,
+		"Damage": 3,
+		"Reload time": 6.0
+	},
+	{
+		"Name": "Obliterator",
+		"Type": 0,
+		"Slots": 3,
+		"Damage": 10,
+		"Reload time": 12.0
 	},
 ]
 

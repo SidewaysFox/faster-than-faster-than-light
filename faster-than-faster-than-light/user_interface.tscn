@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=64 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -366,6 +366,78 @@ border_width_bottom = 4
 border_color = Color(0.627451, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42sjh"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wrhd"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t4b7x"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_heax1"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vs1a"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5bj5r"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2yj2g"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hli4u"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iw2er"]
 bg_color = Color(0.627451, 0.313726, 0.313726, 1)
 draw_center = false
 border_width_left = 4
@@ -1282,7 +1354,7 @@ theme_override_constants/separation = 0
 [node name="HullStrength" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
 metadata/id = 0
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/HullStrength"]
@@ -1295,7 +1367,7 @@ vertical_alignment = 1
 [node name="Hull" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_t4b7x")
 metadata/id = 0
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/Hull"]
@@ -1308,7 +1380,7 @@ vertical_alignment = 1
 [node name="Agility" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_heax1")
 metadata/id = 0
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/Agility"]
@@ -1321,7 +1393,7 @@ vertical_alignment = 1
 [node name="Status" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vs1a")
 metadata/id = 0
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/General/Status"]
@@ -1340,7 +1412,7 @@ theme_override_constants/separation = 0
 [node name="CurrentLevel" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5bj5r")
 metadata/id = 0
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/CurrentLevel"]
@@ -1353,7 +1425,7 @@ vertical_alignment = 1
 [node name="Cost" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_2yj2g")
 metadata/id = 0
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Cost"]
@@ -1364,30 +1436,165 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Upgrade" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
-custom_minimum_size = Vector2(0, 87)
+custom_minimum_size = Vector2(0, 174)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = "UPGRADE SHIP"
 flat = true
 
-[node name="Specifications" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect7" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect8" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect9" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect10" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect11" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect12" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="WhenUpgraded" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s6e63")
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
 metadata/id = 0
 
-[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specifications"]
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/WhenUpgraded"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "STATUS: OK"
+text = "WHEN UPGRADED:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Specification1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification1"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "ADDITIONAL WEAPON SLOT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Specification2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "INCREASED HULL STRENGTH"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Specification3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "INCREASED AGILITY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
