@@ -1404,6 +1404,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Leveling" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+visible = false
 layout_mode = 2
 offset_right = 464.0
 offset_bottom = 696.0
@@ -1559,6 +1560,19 @@ text = "WHEN UPGRADED:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Specification0" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification0"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "ADDITIONAL WEAPON SLOT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Specification1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
@@ -1568,7 +1582,7 @@ metadata/id = 0
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification1"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "ADDITIONAL WEAPON SLOT"
+text = "INCREASED HULL STRENGTH"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -1581,20 +1595,373 @@ metadata/id = 0
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "INCREASED HULL STRENGTH"
+text = "INCREASED AGILITY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Specification3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
-custom_minimum_size = Vector2(0, 87)
+[node name="Instructions" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
+offset_right = 464.0
+offset_bottom = 696.0
+theme_override_constants/separation = 0
+
+[node name="TakeAction" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
 
-[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Specification3"]
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "INCREASED AGILITY"
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+action_mode = 0
+text = "TAKE ACTION!"
+flat = true
+
+[node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect7" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect8" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect9" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect10" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect11" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect12" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="CeaseAction" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
+metadata/id = 0
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+action_mode = 0
+text = "CEASE ACTION!"
+flat = true
+
+[node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect7" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect8" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect9" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect10" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect11" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect12" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="Gap" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
+metadata/id = 0
+
+[node name="AbandonShip" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
+custom_minimum_size = Vector2(0, 174)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
+metadata/id = 0
+
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "ABANDON SHIP!"
+flat = true
+
+[node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect7" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect8" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect9" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect10" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect11" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(40, 10)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="ColorRect12" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+custom_minimum_size = Vector2(10, 40)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+color = Color(0.627451, 0, 0, 1)
+
+[node name="Misc" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+visible = false
+layout_mode = 2
+offset_right = 464.0
+offset_bottom = 696.0
+theme_override_constants/separation = 0
+
+[node name="RelatedStat" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/RelatedStat"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "WEAPON SLOTS: 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 

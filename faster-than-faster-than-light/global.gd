@@ -10,7 +10,7 @@ var initialising: bool = true
 var playing: bool = true
 var resources: int = 0
 var fuel: int = 45
-var starting_fleet: Array[int] = [0, 1, 1, 4]
+var starting_fleet: Array[int] = [0, 1, 1, 4, 6]
 var fleet: Array = []
 var jump_distance: float = 120.0
 var charge_rate: float = 2.0
@@ -121,42 +121,63 @@ var upgrade_specifications: Array = [
 	],
 ]
 
+var ship_actions: Array = [
+	["N/A", "N/A"],
+	["OPEN FIRE!", "CEASE FIRE!"],
+	["ACTIVATE SHIELDS!", "DEACTIVATE SHIELDS!"],
+	["ENGAGE ENEMIES!", "DISENGAGE!"],
+	["REPAIR BEAMS ON!", "REPAIR BEAMS OFF!"],
+	["SCANNERS ON!", "SCANNERS OFF!"],
+	["N/A", "N/A"],
+	["ACTIVATE DRONES!", "DEACTIVATE DRONES!"],
+]
+
 var weapon_list: Array[Dictionary] = [
 	{
-		"Name": "Phasor 1",
+		"Name": "PHASOR 1",
 		"Type": 0,
 		"Slots": 1,
 		"Damage": 1,
 		"Reload time": 6.0
 	},
 	{
-		"Name": "Phasor 2",
+		"Name": "PHASOR 2",
 		"Type": 0,
 		"Slots": 2,
 		"Damage": 1,
 		"Reload time": 4.0
 	},
 	{
-		"Name": "Phasor 3",
+		"Name": "PHASOR 3",
 		"Type": 0,
 		"Slots": 3,
 		"Damage": 1,
 		"Reload time": 2.0
 	},
 	{
-		"Name": "Railgun",
+		"Name": "RAILGUN",
 		"Type": 0,
 		"Slots": 3,
 		"Damage": 3,
 		"Reload time": 6.0
 	},
 	{
-		"Name": "Obliterator",
+		"Name": "OBLITERATOR",
 		"Type": 0,
 		"Slots": 3,
 		"Damage": 10,
 		"Reload time": 12.0
 	},
+]
+
+
+var fleet_inventory: Array = [
+	"PHASOR 1",
+	"PHASOR 1",
+	"",
+	"",
+	"",
+	"",
 ]
 
 
@@ -264,7 +285,6 @@ func new_system(system: int) -> void:
 
 func create_new_starship(type: int) -> void:
 	var new_ship: Node = starship.instantiate()
-	new_ship = starship.instantiate()
 	new_ship.id = get_new_ship_id()
 	new_ship.team = 1
 	new_ship.type = type
@@ -279,7 +299,7 @@ func create_new_starship(type: int) -> void:
 
 func create_enemy_ship(type: int) -> void:
 	var new_enemy: Node = starship.instantiate()
-	new_enemy.id = Global.get_new_ship_id()
+	new_enemy.id = get_new_ship_id()
 	new_enemy.team = -1
 	new_enemy.type = type
 	new_enemy.alignment = 3

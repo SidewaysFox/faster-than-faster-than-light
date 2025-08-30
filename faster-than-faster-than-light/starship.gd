@@ -60,13 +60,16 @@ var warp_destination: float
 var spawn_location: Vector3
 var marker: StyleBoxFlat
 var status: int
+var active: bool = true
 
 var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "FALCON", "STORM", \
 		"BRAWN", "HAZE", "CRACKDOWN", "DART", "QUASAR", "PILGRIM", "LOCKDOWN", "GREATAXE", "NOVA", \
 		"DEADEYE", "DESTINY", "SCALAR", "VECTOR", "MATRIX", "GHOST", "PHANTOM", "OWL", "CRYSTAL", \
 		"VERMILLION", "PIKE", "SPEARHEAD", "BASIS", "ANGLER", "ESSENCE", "FULCRUM", "HALO", \
 		"ICHOR", "JET", "JEWEL", "KILO", "LANTERN", "MAESTRO", "OCULAR", "RAVEN", "PLACEBO", \
-		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO"]
+		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO", "PULSAR", "ANDROMEDA", "WOLF", \
+		"FOX", "RANGER", "JUDICATOR", "TENSOR", "NEBULA", "GALAXY", "BASTION", "AEGIS", "TOTEM", \
+		"BULWARK", "PHALANX", "HERO", "SNAKE", "XENOLITH", "XEMA", "STALWART"]
 
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
@@ -143,19 +146,28 @@ func _process(_delta: float) -> void:
 	else:
 		$Marker.hide()
 	
-	if type == 1:
-		# Start shooting!!!
-		if Global.in_combat:
-			if $WeaponReload1.is_stopped():
+	if active:
+		if type == 1:
+			# Start shooting!!!
+			if Global.in_combat:
 				for i in len(weapons):
-					get_node("WeaponReload" + str(i + 1)).start()
-		else:
-			$WeaponReload1.stop()
-	if type == 4 and target != null:
-		if target.hull < target.hull_strength and $RepairReload.is_stopped():
-			$RepairReload.start()
-		elif target.hull > target.hull_strength - 1:
-			$RepairReload.stop()
+					var this_timer: Node = get_node("WeaponReload" + str(i + 1))
+					if this_timer.is_stopped():
+						this_timer.start()
+					if this_timer.paused:
+						this_timer.paused = false
+			else:
+				$WeaponReload1.stop()
+		if type == 4 and target != null:
+			if target.hull < target.hull_strength and $RepairReload.is_stopped():
+				$RepairReload.start()
+			elif target.hull >= target.hull_strength:
+				$RepairReload.stop()
+	else:
+		for num in len(weapons):
+			if get_node("WeaponReload" + str(num)).time_left < 0.1:
+				get_node("WeaponReload" + str(num)).paused = true
+		$RepairReload.stop()
 	
 	# Do jumping animations
 	if jumping:
@@ -203,8 +215,8 @@ func _weapon_fire(firing: int) -> void:
 		_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 
-func _new_projectile(form: int, damage: int) -> void:
-	var new_projectile: Node = projectiles[form].instantiate()
+func _new_projectile(projectile_type: int, damage: int) -> void:
+	var new_projectile: Node = projectiles[projectile_type].instantiate()
 	new_projectile.starting_position = global_position
 	new_projectile.target = target
 	new_projectile.damage = damage

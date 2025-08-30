@@ -389,12 +389,23 @@ func _process(delta: float) -> void:
 					stylebox.draw_center = true
 					%Information/General/HullStrength/Label.text = "HULL STRENGTH: " + str(ship.hull_strength)
 					%Information/General/Hull/Label.text = "CURRENT HULL: " + str(ship.hull)
-					%Information/General/Agility/Label.text = "AGILITY: " + str(ship.agility)
+					%Information/General/Agility/Label.text = "AGILITY: " + str(ship.agility * 100) + "%"
 					%Information/General/Status/Label.text = "STATUS: OK"
 					%Information/Leveling/CurrentLevel/Label.text = "CURRENT LEVEL: " + str(ship.level)
-					%Information/Leveling/Cost/Label.text = "UPGRADE COST: " + str(ship.upgrade_costs[ship.type][ship.level - 1])
+					%Information/Leveling/Cost/Label.text = "UPGRADE COST: " + str(Global.upgrade_costs[ship.type][ship.level - 1])
+					%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
+					%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
+					%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
+					%Information/Instructions/TakeAction/Button.text = Global.ship_actions[ship.type][0]
+					%Information/Instructions/CeaseAction/Button.text = Global.ship_actions[ship.type][1]
 				else:
 					stylebox.draw_center = false
+				
+				for tab in %Information.get_children():
+					if tab.get_index() == info_showing:
+						tab.show()
+					else:
+						tab.hide()
 			else:
 				button.hide()
 			index += 1
