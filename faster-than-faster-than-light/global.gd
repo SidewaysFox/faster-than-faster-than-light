@@ -172,12 +172,12 @@ var weapon_list: Array[Dictionary] = [
 
 
 var fleet_inventory: Array = [
-	"PHASOR 1",
-	"PHASOR 1",
-	"",
-	"",
-	"",
-	"",
+	["PHASOR 1", 0],
+	["PHASOR 1", 0],
+	["", 0],
+	["", 0],
+	["", 0],
+	["", 0],
 ]
 
 
@@ -202,7 +202,7 @@ func establish() -> void:
 	for row in SECTOR_ROWS:
 		for column in SECTOR_COLUMNS:
 			for index in randi_range(0, MAX_SECTOR_SYSTEMS):
-				var system_type: int = randi_range(0, 20)
+				var system_type: int = randi_range(0, 19)
 				var enemy_presence: bool = false
 				var shop_presence: bool = false
 				var quest_presence: bool = false
@@ -210,8 +210,6 @@ func establish() -> void:
 					enemy_presence = true
 				elif system_type == 11:
 					shop_presence = true
-				elif system_type == 10:
-					quest_presence = true
 				# Set up and store data
 				galaxy_data.append({
 					"id": system_id,

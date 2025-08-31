@@ -1606,6 +1606,19 @@ offset_right = 464.0
 offset_bottom = 696.0
 theme_override_constants/separation = 0
 
+[node name="Active" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/Active"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "CURRENTLY ACTIVE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="TakeAction" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
 custom_minimum_size = Vector2(0, 174)
 layout_mode = 2
@@ -1828,11 +1841,18 @@ size_flags_vertical = 0
 mouse_filter = 2
 color = Color(0.627451, 0, 0, 1)
 
-[node name="Gap" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
-custom_minimum_size = Vector2(0, 174)
+[node name="Warning" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
+custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/Warning"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "REMOVE SHIP FROM FLEET"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="AbandonShip" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions"]
 custom_minimum_size = Vector2(0, 174)
@@ -1946,7 +1966,6 @@ mouse_filter = 2
 color = Color(0.627451, 0, 0, 1)
 
 [node name="Misc" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
-visible = false
 layout_mode = 2
 offset_right = 464.0
 offset_bottom = 696.0
@@ -1961,7 +1980,20 @@ metadata/id = 0
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/RelatedStat"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "WEAPON SLOTS: 1"
+text = "EQUIPPED WEAPONS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RelatedStat2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/RelatedStat2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "OPEN SLOTS: 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -2453,6 +2485,9 @@ text = "FPS: 60"
 [connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_mouse_exited"]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_pressed"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction/Button" to="." method="ship_action" binds= [true]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction/Button" to="." method="ship_action" binds= [false]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip/Button" to="." method="abandon_ship"]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]

@@ -165,8 +165,8 @@ func _process(_delta: float) -> void:
 				$RepairReload.stop()
 	else:
 		for num in len(weapons):
-			if get_node("WeaponReload" + str(num)).time_left < 0.1:
-				get_node("WeaponReload" + str(num)).paused = true
+			if get_node("WeaponReload" + str(num + 1)).time_left < 0.1:
+				get_node("WeaponReload" + str(num + 1)).paused = true
 		$RepairReload.stop()
 	
 	# Do jumping animations

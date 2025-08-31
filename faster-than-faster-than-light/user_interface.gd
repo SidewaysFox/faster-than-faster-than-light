@@ -24,6 +24,7 @@ var info_showing: int = 0
 
 var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
+var active_text: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
 
 
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
@@ -396,6 +397,7 @@ func _process(delta: float) -> void:
 					%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
 					%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
 					%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
+					%Information/Instructions/Active/Label.text = active_text[int(ship.active)]
 					%Information/Instructions/TakeAction/Button.text = Global.ship_actions[ship.type][0]
 					%Information/Instructions/CeaseAction/Button.text = Global.ship_actions[ship.type][1]
 				else:
@@ -581,6 +583,14 @@ func hover_info(n: int) -> void:
 
 func select_info(n: int) -> void:
 	looking_at_ship_info = n
+
+
+func ship_action(activate: bool) -> void:
+	main.get_node("FriendlyShips").get_child(looking_at_ship_info).active = activate
+
+
+func abandon_ship() -> void:
+	main.get_node("FriendlyShips").get_child(looking_at_ship_info).hull = 0
 
 
 func win_encounter() -> void:
