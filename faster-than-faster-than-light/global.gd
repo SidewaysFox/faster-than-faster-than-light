@@ -77,7 +77,7 @@ var starship_base_stats: Array[Dictionary] = [
 
 var upgrade_costs: Array = [
 	[85, 90],
-	[55, 90],
+	[60, 95],
 	[50, 65],
 	[55, 90],
 	[45, 80],
@@ -133,51 +133,49 @@ var ship_actions: Array = [
 ]
 
 var weapon_list: Array[Dictionary] = [
-	{
+	{ # 0
 		"Name": "PHASOR 1",
 		"Type": 0,
-		"Slots": 1,
+		"Cost": 15,
 		"Damage": 1,
 		"Reload time": 6.0
 	},
-	{
+	{ # 1
 		"Name": "PHASOR 2",
 		"Type": 0,
-		"Slots": 2,
+		"Cost": 30,
 		"Damage": 1,
 		"Reload time": 4.0
 	},
-	{
+	{ # 2
 		"Name": "PHASOR 3",
 		"Type": 0,
-		"Slots": 3,
+		"Cost": 60,
 		"Damage": 1,
 		"Reload time": 2.0
 	},
-	{
+	{ # 3
 		"Name": "RAILGUN",
 		"Type": 0,
-		"Slots": 3,
+		"Cost": 55,
 		"Damage": 3,
 		"Reload time": 6.0
 	},
-	{
+	{ # 4
 		"Name": "OBLITERATOR",
 		"Type": 0,
-		"Slots": 3,
+		"Cost": 80,
 		"Damage": 10,
 		"Reload time": 12.0
 	},
 ]
 
+var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
 
 var fleet_inventory: Array = [
-	["PHASOR 1", 0],
-	["PHASOR 1", 0],
-	["", 0],
-	["", 0],
-	["", 0],
-	["", 0],
+	3,
+	1,
+	4,
 ]
 
 
@@ -205,7 +203,6 @@ func establish() -> void:
 				var system_type: int = randi_range(0, 19)
 				var enemy_presence: bool = false
 				var shop_presence: bool = false
-				var quest_presence: bool = false
 				if system_type >= 12:
 					enemy_presence = true
 				elif system_type == 11:

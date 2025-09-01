@@ -25,6 +25,7 @@ var info_showing: int = 0
 var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
 var active_text: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
+var misc_text: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
 
 
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
@@ -217,9 +218,9 @@ func _process(delta: float) -> void:
 			%ChargeProgress/Label.text = "WARP CHARGING"
 		else:
 			%ChargeProgress/Label.text = "WARP CHARGED"
-		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)) and not galaxy_map_showing and not info_menu_showing:
+		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)):
 			_action_menu()
-		if (((Input.is_action_just_pressed("3") or Input.is_action_just_pressed("C")) and Global.joystick_control) or (Input.is_action_just_pressed("info menu") and not Global.joystick_control)) and not galaxy_map_showing and not action_menu_showing:
+		if (((Input.is_action_just_pressed("3") or Input.is_action_just_pressed("C")) and Global.joystick_control) or (Input.is_action_just_pressed("info menu") and not Global.joystick_control)):
 			_info_menu()
 	if time_paused:
 		Engine.time_scale = lerp(Engine.time_scale, 0.0, 0.15)
@@ -400,6 +401,39 @@ func _process(delta: float) -> void:
 					%Information/Instructions/Active/Label.text = active_text[int(ship.active)]
 					%Information/Instructions/TakeAction/Button.text = Global.ship_actions[ship.type][0]
 					%Information/Instructions/CeaseAction/Button.text = Global.ship_actions[ship.type][1]
+					%Information/Misc/RelatedStat/Label.text = misc_text[ship.type]
+					for child in %MiscMenu.get_children():
+						child.hide()
+					if ship.type == 0:
+						%Information/Misc/RelatedStat2.show()
+						%MiscMenu/CommandShip.show()
+						%Information/Misc/RelatedStat2/Label.text = "INVENTORY SIZE: " + str(len(Global.fleet_inventory))
+						for child in %MiscMenu/CommandShip.get_children():
+							child.hide()
+						var child_index: int = 0
+						for item in Global.fleet_inventory:
+							%MiscMenu/CommandShip.get_child(child_index).show()
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Name").text = " ITEM: " + Global.weapon_list[item]["Name"]
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Type").text = " TYPE: WEAPON"
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Value").text = " VALUE: " + str(Global.weapon_list[item]["Cost"]) + " TECH"
+							child_index += 1
+					elif ship.type == 1:
+						%Information/Misc/RelatedStat2.show()
+						%MiscMenu/Fighter.show()
+						%Information/Misc/RelatedStat2/Label.text = "WEAPON SLOTS: " + str(len(ship.weapons))
+						for child in %MiscMenu/Fighter.get_children():
+							child.hide()
+						var child_index: int = 0
+						for weapon in ship.weapons:
+							%MiscMenu/Fighter.get_child(child_index).show()
+							%MiscMenu/Fighter.get_child(child_index + 1).show()
+							%MiscMenu/Fighter.get_child(child_index).get_node("HBoxContainer/Label").text = Global.weapon_list[weapon]["Name"]
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = " TYPE: " + str(Global.weapon_types[Global.weapon_list[weapon]["Type"]])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = " DAMAGE: " + str(Global.weapon_list[weapon]["Damage"])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").text = " RELOAD: " + str(Global.weapon_list[weapon]["Reload time"])
+							child_index += 2
+					else:
+						%Information/Misc/RelatedStat2.hide()
 				else:
 					stylebox.draw_center = false
 				
@@ -411,6 +445,7 @@ func _process(delta: float) -> void:
 			else:
 				button.hide()
 			index += 1
+		looking_at_ship_info = clampi(looking_at_ship_info, 0, main.get_node("FriendlyShips").get_child_count() - 1)
 	else:
 		$FleetInfoMenu.hide()
 
@@ -453,7 +488,7 @@ func dialogue_set_up(library: int, id: int) -> void:
 
 
 func _galaxy_map() -> void:
-	if not action_menu_showing and main.warp_charge >= 100:
+	if not action_menu_showing and not info_menu_showing and main.warp_charge >= 100:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -464,7 +499,8 @@ func _galaxy_map() -> void:
 
 
 func _action_menu() -> void:
-	action_menu_showing = not action_menu_showing
+	if not galaxy_map_showing and not info_menu_showing:
+		action_menu_showing = not action_menu_showing
 
 
 func _time_pause() -> void:
@@ -479,7 +515,8 @@ func _pause() -> void:
 
 
 func _info_menu() -> void:
-	info_menu_showing = not info_menu_showing
+	if not galaxy_map_showing and not action_menu_showing:
+		info_menu_showing = not info_menu_showing
 
 
 func _hide_controls() -> void:

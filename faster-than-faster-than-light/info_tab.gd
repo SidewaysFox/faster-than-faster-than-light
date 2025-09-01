@@ -5,7 +5,7 @@ extends PanelContainer
 @onready var id: int = get_meta("id")
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if ui.info_showing == id:
 		get_theme_stylebox("panel").draw_center = true
 	else:

@@ -1,10 +1,11 @@
-[gd_scene load_steps=64 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=65 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
 [ext_resource type="Script" uid="uid://fvfvyfqfqd5l" path="res://pause_menu.gd" id="3_0jl8t"]
 [ext_resource type="Shader" uid="uid://cr3v1xc6ek346" path="res://pause_blur.gdshader" id="3_juc2q"]
 [ext_resource type="Script" uid="uid://ni1tc18aeun7" path="res://info_tab.gd" id="3_up53h"]
+[ext_resource type="Script" uid="uid://ce27kdg4q1bat" path="res://misc_menu.gd" id="4_r3lf1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_up53h"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
@@ -1343,6 +1344,7 @@ flat = true
 unique_name_in_owner = true
 custom_minimum_size = Vector2(464, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="General" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
 visible = false
@@ -1993,8 +1995,410 @@ metadata/id = 0
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/RelatedStat2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "OPEN SLOTS: 1"
+text = "SLOTS: 1"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MiscMenu" type="Control" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("4_r3lf1")
+
+[node name="CommandShip" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu"]
+layout_mode = 0
+offset_right = 464.0
+offset_bottom = 522.0
+theme_override_constants/separation = 0
+
+[node name="Slot1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot1"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot1/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot1/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot1/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Slot2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot2"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot2/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot2/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot2/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Slot3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot3"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot3/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot3/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot3/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Slot4" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot4"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot4/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot4/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot4/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Slot5" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot5"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot5/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot5/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot5/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Slot6" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot6"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot6/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot6/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Value" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/CommandShip/Slot6/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Fighter" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 0
+
+[node name="Weapon1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer"]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "<"
+flat = true
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer"]
+custom_minimum_size = Vector2(366, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PHASOR 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer"]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = ">"
+flat = true
+
+[node name="WeaponStats1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats1"]
+layout_mode = 2
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats1/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats1/Labels"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats1/Labels"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Weapon2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer"]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "<"
+flat = true
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer"]
+custom_minimum_size = Vector2(366, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PHASOR 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer"]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = ">"
+flat = true
+
+[node name="WeaponStats2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2"]
+layout_mode = 2
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
+vertical_alignment = 1
+
+[node name="Weapon3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer"]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = "<"
+flat = true
+
+[node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer"]
+custom_minimum_size = Vector2(366, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PHASOR 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer"]
+custom_minimum_size = Vector2(45, 0)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+action_mode = 0
+text = ">"
+flat = true
+
+[node name="WeaponStats3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
+custom_minimum_size = Vector2(0, 87)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+metadata/id = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3"]
+layout_mode = 2
+
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " TYPE: LASER"
+vertical_alignment = 1
+
+[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/VBoxContainer"]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " DAMAGE: 1 hull"
+vertical_alignment = 1
+
+[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = " RELOAD: 6.0 seconds"
 vertical_alignment = 1
 
 [node name="GalaxyMap" type="PanelContainer" parent="."]
@@ -2488,6 +2892,12 @@ text = "FPS: 60"
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction/Button" to="." method="ship_action" binds= [true]]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction/Button" to="." method="ship_action" binds= [false]]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip/Button" to="." method="abandon_ship"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer/Left" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="left_button" binds= [0]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer/Right" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="right_button" binds= [0]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer/Left" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="left_button" binds= [1]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer/Right" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="right_button" binds= [1]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer/Left" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="left_button" binds= [2]]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer/Right" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="right_button" binds= [2]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]
