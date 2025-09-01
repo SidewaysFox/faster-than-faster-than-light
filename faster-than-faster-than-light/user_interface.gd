@@ -3,6 +3,7 @@ extends Control
 
 @onready var main: Node = get_node("/root/Space")
 @export var galaxy_map_token: PackedScene
+var intro_dialogue: bool = false
 var fade_mode: int = -1
 var cursor_speed: float = 250
 var galaxy_map_showing: bool = false
@@ -145,6 +146,12 @@ var encounter_win_dialogue: Array = [
 	],
 ]
 
+var intro_dialogues: Array = [
+	["You, as an Alliance fleet commander, have been tasked with a crucial mission: deliver a package of goods and weapons to an isolated Alliance navy, who are currently fighting against the rebel uprising. The region of space ahead is outside of policed Alliance territory and is rife with pirates and other threats. In the rush to respond to the sudden rebel presence, you were only able to mobilise a small squadron of starships.\nMake the delivery, and save millions of lives.\nThe rest is up to you.",
+	[["Let's go.", ["close", false]]]
+	],
+]
+
 
 func _ready() -> void:
 	$Dialogue.hide()
@@ -152,6 +159,7 @@ func _ready() -> void:
 	%Gameplay/ControlMode.button_pressed = Global.joystick_control
 	%Gameplay/JoystickMode.button_pressed = Global.dual_joysticks
 	if Global.initialising:
+		intro_dialogue = true
 		await main.setup_complete
 	# Generate visual galaxy map
 	for i in Global.galaxy_data:
@@ -482,13 +490,22 @@ func dialogue_set_up(library: int, id: int) -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + encounter_win_dialogue[id][1][i][0]
 			option_results.append(encounter_win_dialogue[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
+	# Intro dialogue
+	elif library == 3:
+		%DialogueText.text = intro_dialogues[id][0]
+		max_option = len(intro_dialogues[id][1])
+		# Options
+		for i in max_option:
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + intro_dialogues[id][1][i][0]
+			option_results.append(intro_dialogues[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).show()
 	$Dialogue.show()
 	dialogue_showing = true
 	ready_to_select = true
 
 
 func _galaxy_map() -> void:
-	if not action_menu_showing and not info_menu_showing and main.warp_charge >= 100:
+	if not action_menu_showing and not info_menu_showing and not dialogue_showing and main.warp_charge >= 100:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -499,7 +516,7 @@ func _galaxy_map() -> void:
 
 
 func _action_menu() -> void:
-	if not galaxy_map_showing and not info_menu_showing:
+	if not galaxy_map_showing and not info_menu_showing and not dialogue_showing:
 		action_menu_showing = not action_menu_showing
 
 
@@ -515,7 +532,7 @@ func _pause() -> void:
 
 
 func _info_menu() -> void:
-	if not galaxy_map_showing and not action_menu_showing:
+	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing:
 		info_menu_showing = not info_menu_showing
 
 
@@ -532,7 +549,12 @@ func _hide_controls() -> void:
 # Small interval before showing the warp in dialogue
 func _on_warp_in_dialogue_timeout() -> void:
 	if Global.current_system in Global.visited_systems:
-		close(Global.galaxy_data[Global.current_system]["enemy presence"])
+		if intro_dialogue:
+			dialogue_set_up(3, 0)
+			time_paused = true
+			intro_dialogue = false
+		else:
+			close(Global.galaxy_data[Global.current_system]["enemy presence"])
 	else:
 		# Search through options for the warp in dialogue and find which ones are
 		# appropriate for this system
