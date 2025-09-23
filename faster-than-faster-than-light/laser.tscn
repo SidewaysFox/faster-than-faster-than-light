@@ -1,6 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://8ym1jdmse5dp"]
+[gd_scene load_steps=7 format=3 uid="uid://8ym1jdmse5dp"]
 
 [ext_resource type="Script" uid="uid://qbpdiw6aremf" path="res://laser.gd" id="1_fn5yt"]
+[ext_resource type="PackedScene" uid="uid://dfykucgb0io6p" path="res://missed.tscn" id="2_g6b45"]
+[ext_resource type="Script" uid="uid://durcs1y3k5et3" path="res://laser_ui.gd" id="3_g6b45"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oes6l"]
 radius = 0.6
@@ -21,6 +23,7 @@ height = 6.0
 monitoring = false
 monitorable = false
 script = ExtResource("1_fn5yt")
+missed_ui = ExtResource("2_g6b45")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -36,5 +39,12 @@ autostart = true
 
 [node name="Point" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1000)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_g6b45")
 
 [connection signal="timeout" from="AutoFree" to="." method="_on_auto_free_timeout"]

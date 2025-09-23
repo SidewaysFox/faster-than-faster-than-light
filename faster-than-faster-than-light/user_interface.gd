@@ -22,6 +22,8 @@ var time_paused: bool = false
 var hovered_at_ship_info: int = 0
 var looking_at_ship_info: int = 0
 var info_showing: int = 0
+var warping = false
+var prev_mouse_pos: Vector2
 
 var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
@@ -39,7 +41,7 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[["Let's not wait around. Charge up the warp drives.", ["close", false]]]
 	],
 	[[1],
-	"Although this system is devoid of anything of particular interest to your fleet, you can't help but remain apprehensive about your task and the rebel fleet chasing you. In these distant reaches of space, it feels like everything wants you dead.",
+	"Although this system is devoid of anything of particular interest to your fleet, you can't help but remain apprehensive about your important task. In these distant reaches of space, it feels like everything wants you dead.",
 	[["Play some cards with your crew to ease your nerves while you wait for the warp drives to charge.", ["close", false]], ["Remain alone for the time being.", ["close", false]]]
 	],
 	[[1],
@@ -215,6 +217,11 @@ func _process(delta: float) -> void:
 					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
 				else:
 					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+		else:
+			# Check for numerical inputs
+			for i in max_option:
+				if Input.is_action_just_pressed(str(i + 1)):
+					%Options.get_node("Option" + str(i + 1)).emit_signal("pressed")
 		%ChargeProgress/Label.text = "WAITING"
 	# Show or hide the galaxy map
 	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)):
@@ -242,12 +249,16 @@ func _process(delta: float) -> void:
 		Engine.time_scale = 1.0
 		$GalaxyMap.show()
 		$GalaxyMapTitle.show()
+		$GalaxyMapControls.show()
 		# Left/right scrolling
 		if Input.is_action_pressed("right2"):
 			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2"):
 			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
 		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")).normalized() * cursor_speed * Global.joystick_sens * delta
+		# Move the map cursor if the mouse is detected to be moving
+		if get_global_mouse_position() != prev_mouse_pos and not Global.joystick_control:
+			%Cursor.global_position = get_global_mouse_position()
 		# Cursor snapping
 		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
 			var in_warp_range: bool = false
@@ -263,7 +274,8 @@ func _process(delta: float) -> void:
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
 			# Warping input
 			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
-				Engine.time_scale = 0
+				Engine.time_scale = 1.0
+				warping = true
 				time_paused = false
 				galaxy_map_showing = false
 				Global.in_combat = false
@@ -285,6 +297,7 @@ func _process(delta: float) -> void:
 		# Not showing
 		$GalaxyMap.hide()
 		$GalaxyMapTitle.hide()
+		$GalaxyMapControls.hide()
 	# Ship action menu stuff
 	if action_menu_showing:
 		$ShipActionMenu.show()
@@ -456,6 +469,8 @@ func _process(delta: float) -> void:
 		looking_at_ship_info = clampi(looking_at_ship_info, 0, main.get_node("FriendlyShips").get_child_count() - 1)
 	else:
 		$FleetInfoMenu.hide()
+	
+	prev_mouse_pos = get_global_mouse_position()
 
 # Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int) -> void:
@@ -505,7 +520,7 @@ func dialogue_set_up(library: int, id: int) -> void:
 
 
 func _galaxy_map() -> void:
-	if not action_menu_showing and not info_menu_showing and not dialogue_showing and main.warp_charge >= 100:
+	if not action_menu_showing and not info_menu_showing and not dialogue_showing and main.warp_charge >= 100 and not warping:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -653,8 +668,10 @@ func abandon_ship() -> void:
 
 
 func win_encounter() -> void:
-	resources(randi_range(5, 30))
-	resources(randi_range(1, 25), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
+	# Tech
+	resources(randi_range(8, 32))
+	# Fuel
+	resources(randi_range(2, 8 * len(Global.fleet)), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
 	Global.galaxy_data[Global.current_system]["enemy presence"] = false
 
 

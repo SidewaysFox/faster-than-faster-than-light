@@ -9,7 +9,7 @@ var sfx_volume: float = 100.0
 var initialising: bool = true
 var playing: bool = true
 var resources: int = 0
-var fuel: int = 45
+var fuel: int = 80
 var starting_fleet: Array[int] = [0, 1, 1, 4, 6]
 var fleet: Array = []
 var jump_distance: float = 120.0
@@ -132,6 +132,16 @@ var ship_actions: Array = [
 	["ACTIVATE DRONES!", "DEACTIVATE DRONES!"],
 ]
 
+var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "FALCON", "STORM", \
+		"BRAWN", "HAZE", "CRACKDOWN", "DART", "QUASAR", "PILGRIM", "LOCKDOWN", "GREATAXE", "NOVA", \
+		"DEADEYE", "DESTINY", "SCALAR", "VECTOR", "MATRIX", "GHOST", "PHANTOM", "OWL", "CRYSTAL", \
+		"VERMILLION", "PIKE", "SPEARHEAD", "BASIS", "ANGLER", "ESSENCE", "FULCRUM", "HALO", \
+		"ICHOR", "JET", "JEWEL", "KILO", "LANTERN", "MAESTRO", "OCULAR", "RAVEN", "PLACEBO", \
+		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO", "PULSAR", "ANDROMEDA", "WOLF", \
+		"FOX", "RANGER", "JUDICATOR", "TENSOR", "NEBULA", "GALAXY", "BASTION", "AEGIS", "TOTEM", \
+		"BULWARK", "PHALANX", "HERO", "SNAKE", "XENOLITH", "XEMA", "STALWART", "HORIZON", \
+		"BAILIFF", "STALLION", "ANACONDA", "WYVERN", "WHALE"]
+
 var weapon_list: Array[Dictionary] = [
 	{ # 0
 		"Name": "PHASOR 1",
@@ -181,8 +191,8 @@ var fleet_inventory: Array = [
 
 func establish() -> void:
 	playing = true
-	resources = 0
-	fuel = 45
+	resources = 25
+	fuel = 80
 	fleet = []
 	jump_distance = 180.0
 	charge_rate = 2.0
@@ -203,9 +213,9 @@ func establish() -> void:
 				var system_type: int = randi_range(0, 19)
 				var enemy_presence: bool = false
 				var shop_presence: bool = false
-				if system_type >= 12:
+				if system_type >= 9:
 					enemy_presence = true
-				elif system_type == 11:
+				elif system_type == 8:
 					shop_presence = true
 				# Set up and store data
 				galaxy_data.append({

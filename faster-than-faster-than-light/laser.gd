@@ -1,13 +1,15 @@
 extends Area3D
 
 
-const SPEED: float = 250.0
+@export var missed_ui: PackedScene
 var starting_position: Vector3
 var target: Node
 var target_pos: Vector3
 var movement_target: Vector3
 var damage: int
 var missed: bool = false
+
+const SPEED: float = 250.0
 
 
 func _ready() -> void:
@@ -25,6 +27,7 @@ func _process(delta: float) -> void:
 			queue_free()
 		else:
 			missed = true
+			$Control.add_child(missed_ui.instantiate())
 
 
 func _on_auto_free_timeout() -> void:

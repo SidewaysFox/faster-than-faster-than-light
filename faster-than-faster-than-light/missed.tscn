@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfykucgb0io6p"]
+
+[ext_resource type="Script" uid="uid://bxn7xx7wpwsp4" path="res://missed.gd" id="1_w0vig"]
+
+[node name="Missed" type="Control"]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w0vig")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = -87.0
+offset_top = -33.0
+offset_right = 87.0
+offset_bottom = 34.0
+theme_override_font_sizes/font_size = 48
+text = "MISSED"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

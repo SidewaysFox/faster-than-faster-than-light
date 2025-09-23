@@ -62,16 +62,6 @@ var marker: StyleBoxFlat
 var status: int
 var active: bool = true
 
-var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "FALCON", "STORM", \
-		"BRAWN", "HAZE", "CRACKDOWN", "DART", "QUASAR", "PILGRIM", "LOCKDOWN", "GREATAXE", "NOVA", \
-		"DEADEYE", "DESTINY", "SCALAR", "VECTOR", "MATRIX", "GHOST", "PHANTOM", "OWL", "CRYSTAL", \
-		"VERMILLION", "PIKE", "SPEARHEAD", "BASIS", "ANGLER", "ESSENCE", "FULCRUM", "HALO", \
-		"ICHOR", "JET", "JEWEL", "KILO", "LANTERN", "MAESTRO", "OCULAR", "RAVEN", "PLACEBO", \
-		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO", "PULSAR", "ANDROMEDA", "WOLF", \
-		"FOX", "RANGER", "JUDICATOR", "TENSOR", "NEBULA", "GALAXY", "BASTION", "AEGIS", "TOTEM", \
-		"BULWARK", "PHALANX", "HERO", "SNAKE", "XENOLITH", "XEMA", "STALWART", "HORIZON", \
-		"BAILIFF", "STALLION", "ANACONDA", "WYVERN", "WHALE"]
-
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
 
@@ -84,7 +74,8 @@ func _ready() -> void:
 	
 	marker = $Marker/Selection.get_theme_stylebox("panel")
 	
-	ship_name = possible_names.pop_at(randi_range(0, len(possible_names) - 1))
+	if ship_name == "Starship":
+		ship_name = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
 	
 	# Starting location based on team
 	if team != 0:
@@ -119,6 +110,9 @@ func _process(_delta: float) -> void:
 	
 	if ui.action_menu_showing and team == 1:
 		$Marker.show()
+		$Marker/Reload1.hide()
+		$Marker/Reload2.hide()
+		$Marker/Reload3.hide()
 		var hover_alpha: int
 		if team == 1:
 			if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
@@ -157,6 +151,9 @@ func _process(_delta: float) -> void:
 						this_timer.start()
 					if this_timer.paused:
 						this_timer.paused = false
+					if ui.action_menu_showing:
+						get_node("Marker/Reload" + str(i + 1)).show()
+					get_node("Marker/Reload" + str(i + 1) + "/ProgressBar").value = 100 - ((this_timer.time_left / this_timer.wait_time) * 100)
 			else:
 				$WeaponReload1.stop()
 		if type == 4 and target != null:

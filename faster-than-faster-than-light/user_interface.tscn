@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=63 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -501,12 +501,6 @@ expand_margin_left = 40.0
 expand_margin_top = 40.0
 expand_margin_right = 40.0
 expand_margin_bottom = 40.0
-
-[sub_resource type="InputEventAction" id="InputEventAction_i7dvk"]
-action = &"option1"
-
-[sub_resource type="Shortcut" id="Shortcut_juc2q"]
-events = [SubResource("InputEventAction_i7dvk")]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0jl8t"]
 shader = ExtResource("3_juc2q")
@@ -1140,6 +1134,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="FleetInfoMenu" type="PanelContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(1400, 790)
 layout_mode = 1
 anchors_preset = 8
@@ -2402,7 +2397,6 @@ text = " RELOAD: 6.0 seconds"
 vertical_alignment = 1
 
 [node name="GalaxyMap" type="PanelContainer" parent="."]
-visible = false
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -2439,7 +2433,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_juc2q")
 shape = SubResource("CircleShape2D_i7dvk")
 
 [node name="GalaxyMapTitle" type="Panel" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 400.0
 offset_top = 146.0
@@ -2455,6 +2448,26 @@ offset_right = 351.0
 offset_bottom = 79.0
 theme_override_font_sizes/font_size = 48
 text = "GALAXY MAP"
+
+[node name="GalaxyMapControls" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 844.0
+offset_right = 800.0
+offset_bottom = 934.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_0jl8t")
+
+[node name="Label" type="Label" parent="GalaxyMapControls"]
+layout_mode = 0
+offset_top = 6.0
+offset_right = 400.0
+offset_bottom = 84.0
+theme_override_font_sizes/font_size = 14
+text = "WASD/Mouse - Move cursor
+Arrow keys - Scroll map
+Space/LMB - Initiate warp"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Dialogue" type="PanelContainer" parent="."]
 visible = false
@@ -2505,7 +2518,6 @@ theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
 shortcut_feedback = false
 shortcut_in_tooltip = false
 text = "OPTION1"
@@ -2520,7 +2532,8 @@ theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
+shortcut_feedback = false
+shortcut_in_tooltip = false
 text = "OPTION2"
 flat = true
 alignment = 0
@@ -2533,7 +2546,8 @@ theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
+shortcut_feedback = false
+shortcut_in_tooltip = false
 text = "OPTION3"
 flat = true
 alignment = 0
@@ -2546,7 +2560,8 @@ theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 action_mode = 0
-shortcut = SubResource("Shortcut_juc2q")
+shortcut_feedback = false
+shortcut_in_tooltip = false
 text = "OPTION4"
 flat = true
 alignment = 0

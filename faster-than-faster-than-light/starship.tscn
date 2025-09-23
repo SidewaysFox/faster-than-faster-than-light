@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cjxyia0bj1uuo"]
+[gd_scene load_steps=12 format=3 uid="uid://cjxyia0bj1uuo"]
 
 [ext_resource type="Script" uid="uid://ou4uilyxtgnd" path="res://starship.gd" id="1_ng4vp"]
 [ext_resource type="PackedScene" uid="uid://b7rwxfw7w8fbl" path="res://command_ship_mesh.tscn" id="2_86p3r"]
@@ -33,6 +33,25 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3nnsc"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w3rac"]
+bg_color = Color(1, 0.313726, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="Starship" type="Node3D"]
 script = ExtResource("1_ng4vp")
@@ -117,6 +136,80 @@ offset_top = 75.0
 offset_right = 90.0
 offset_bottom = 100.0
 text = "STATUS: OK"
+vertical_alignment = 1
+
+[node name="Reload1" type="Control" parent="Marker"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ProgressBar" type="ProgressBar" parent="Marker/Reload1"]
+layout_mode = 0
+offset_left = -30.0
+offset_right = -10.0
+offset_bottom = 100.0
+theme_override_styles/background = SubResource("StyleBoxFlat_3nnsc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_w3rac")
+fill_mode = 3
+show_percentage = false
+
+[node name="Label" type="Label" parent="Marker/Reload1"]
+layout_mode = 0
+offset_left = -30.0
+offset_top = -23.0
+offset_right = -10.0
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Reload2" type="Control" parent="Marker"]
+anchors_preset = 0
+offset_left = -30.0
+offset_right = 10.0
+offset_bottom = 40.0
+
+[node name="ProgressBar" type="ProgressBar" parent="Marker/Reload2"]
+layout_mode = 0
+offset_left = -30.0
+offset_right = -10.0
+offset_bottom = 100.0
+theme_override_styles/background = SubResource("StyleBoxFlat_3nnsc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_w3rac")
+fill_mode = 3
+show_percentage = false
+
+[node name="Label" type="Label" parent="Marker/Reload2"]
+layout_mode = 0
+offset_left = -30.0
+offset_top = -23.0
+offset_right = -10.0
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Reload3" type="Control" parent="Marker"]
+anchors_preset = 0
+offset_left = -60.0
+offset_right = -20.0
+offset_bottom = 40.0
+
+[node name="ProgressBar" type="ProgressBar" parent="Marker/Reload3"]
+layout_mode = 0
+offset_left = -30.0
+offset_right = -10.0
+offset_bottom = 100.0
+theme_override_styles/background = SubResource("StyleBoxFlat_3nnsc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_w3rac")
+fill_mode = 3
+show_percentage = false
+
+[node name="Label" type="Label" parent="Marker/Reload3"]
+layout_mode = 0
+offset_left = -30.0
+offset_top = -23.0
+offset_right = -10.0
+text = "3"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="timeout" from="JumpDelay" to="." method="_on_jump_delay_timeout"]
