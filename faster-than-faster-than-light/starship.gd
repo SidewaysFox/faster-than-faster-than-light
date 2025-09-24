@@ -61,6 +61,7 @@ var spawn_location: Vector3
 var marker: StyleBoxFlat
 var status: int
 var active: bool = true
+var shield_layers: int
 
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
@@ -98,6 +99,8 @@ func _ready() -> void:
 		for weapon_id in weapons:
 			get_node("WeaponReload" + str(index)).wait_time = Global.weapon_list[weapon_id]["Reload time"]
 			index += 1
+	elif type == 2:
+		shield_layers = level
 	elif type == 4:
 		$RepairReload.wait_time = REPAIR_TIME - (level * REPAIR_UPGRADE)
 
@@ -156,7 +159,19 @@ func _process(_delta: float) -> void:
 					get_node("Marker/Reload" + str(i + 1) + "/ProgressBar").value = 100 - ((this_timer.time_left / this_timer.wait_time) * 100)
 			else:
 				$WeaponReload1.stop()
+		if type == 2:
+			if shield_layers < level:
+				if $ShieldReload.is_stopped():
+					$ShieldReload.start()
+				if ui.action_menu_showing:
+					$Marker/Reload1.show()
+				$Marker/Reload1/ProgressBar.value = 100 - (($ShieldReload.time_left / $ShieldReload.wait_time) * 100)
+			else:
+				$ShieldReload.stop()
 		if type == 4 and target != null:
+			if ui.action_menu_showing:
+				$Marker/Reload1.show()
+			$Marker/Reload1/ProgressBar.value = 100 - (($RepairReload.time_left / $RepairReload.wait_time) * 100)
 			if target.hull < target.hull_strength and $RepairReload.is_stopped():
 				$RepairReload.start()
 			elif target.hull >= target.hull_strength:
@@ -234,3 +249,8 @@ func _repair() -> void:
 	if target == null:
 		new_target(0)
 	target.hull += 1
+
+
+func _shield_up() -> void:
+	shield_layers += 1
+	shield_layers = clampi(shield_layers, 0, level)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://cjxyia0bj1uuo"]
+[gd_scene load_steps=13 format=3 uid="uid://cjxyia0bj1uuo"]
 
 [ext_resource type="Script" uid="uid://ou4uilyxtgnd" path="res://starship.gd" id="1_ng4vp"]
 [ext_resource type="PackedScene" uid="uid://b7rwxfw7w8fbl" path="res://command_ship_mesh.tscn" id="2_86p3r"]
 [ext_resource type="PackedScene" uid="uid://bj55jmmx5j5ur" path="res://fighter_mesh.tscn" id="2_wpmgm"]
+[ext_resource type="PackedScene" uid="uid://bqrkhxgh7f2qp" path="res://shield_mesh.tscn" id="4_3nnsc"]
 [ext_resource type="PackedScene" uid="uid://dtmka8h8pyslt" path="res://relay_mesh.tscn" id="4_deqbx"]
 [ext_resource type="PackedScene" uid="uid://ekalc2xvf8pl" path="res://repair_mesh.tscn" id="4_w4b5x"]
 [ext_resource type="PackedScene" uid="uid://8ym1jdmse5dp" path="res://laser.tscn" id="5_fb3fn"]
@@ -55,7 +56,7 @@ corner_radius_bottom_left = 5
 
 [node name="Starship" type="Node3D"]
 script = ExtResource("1_ng4vp")
-meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), null, null, ExtResource("4_w4b5x"), null, ExtResource("4_deqbx"), null, null, null])
+meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), null, ExtResource("4_w4b5x"), null, ExtResource("4_deqbx"), null, null, null])
 projectiles = Array[PackedScene]([ExtResource("5_fb3fn")])
 
 [node name="JumpDelay" type="Timer" parent="."]
@@ -70,6 +71,10 @@ autostart = true
 [node name="WeaponReload2" type="Timer" parent="."]
 
 [node name="WeaponReload3" type="Timer" parent="."]
+
+[node name="ShieldReload" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
 
 [node name="RepairReload" type="Timer" parent="."]
 
@@ -217,4 +222,5 @@ vertical_alignment = 1
 [connection signal="timeout" from="WeaponReload1" to="." method="_weapon_fire" binds= [0]]
 [connection signal="timeout" from="WeaponReload2" to="." method="_weapon_fire" binds= [1]]
 [connection signal="timeout" from="WeaponReload3" to="." method="_weapon_fire" binds= [2]]
+[connection signal="timeout" from="ShieldReload" to="." method="_shield_up"]
 [connection signal="timeout" from="RepairReload" to="." method="_repair"]
