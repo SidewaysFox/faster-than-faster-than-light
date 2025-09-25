@@ -3,7 +3,6 @@ extends Area3D
 
 @onready var main: Node = get_node("/root/Space")
 @export var missed_ui: PackedScene
-@export var blocked_ui: PackedScene
 var starting_position: Vector3
 var target: Node
 var target_pos: Vector3
@@ -42,7 +41,7 @@ func _process(delta: float) -> void:
 					new_missed.global_position = $Control.global_position
 					main.add_child(new_missed)
 					queue_free()
-		if target.agility < randf():
+		if target.agility < randf() and not is_queued_for_deletion():
 			target.hull -= damage
 			queue_free()
 		else:

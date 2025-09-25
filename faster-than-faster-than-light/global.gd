@@ -10,7 +10,7 @@ var initialising: bool = true
 var playing: bool = true
 var resources: int = 0
 var fuel: int = 80
-var starting_fleet: Array[int] = [0, 1, 1, 2, 4, 6]
+var starting_fleet: Array[int] = [0, 1, 1, 2, 3, 4, 6]
 var fleet: Array = []
 var jump_distance: float = 120.0
 var charge_rate: float = 2.0
@@ -140,7 +140,11 @@ var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "
 		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO", "PULSAR", "ANDROMEDA", "WOLF", \
 		"FOX", "RANGER", "JUDICATOR", "TENSOR", "NEBULA", "GALAXY", "BASTION", "AEGIS", "TOTEM", \
 		"BULWARK", "PHALANX", "HERO", "SNAKE", "XENOLITH", "XEMA", "STALWART", "HORIZON", \
-		"BAILIFF", "STALLION", "ANACONDA", "WYVERN", "WHALE"]
+		"BAILIFF", "STALLION", "ANACONDA", "WYVERN", "WHALE", "MOLE", "BASKEMTBALL", "CLAW", \
+		"DUKE", "ASTRA", "EAGLE", "ALTUS", "ATLAS", "BREVIS", "CELER", "CLAM", "DEFENESTRATOR", \
+		"MUSCLE", "BARNACLE", "CANINE", "WHIRLWIND", "TORNADO", "TYPHOON", "REVEREND", "TOME", \
+		"HAWK", "NARWHAL", "SCIMITAR", "EXIMUS", "SHOCKWAVE", "BUCCANEER", "CUTLASS", "GLADIUS", \
+		"SABRE", "KATANA", "MACE", "TALWAR", "SCOURGE", "SPIKE", "BULLPUP", "YUKON"]
 
 var weapon_list: Array[Dictionary] = [
 	{ # 0
@@ -178,6 +182,34 @@ var weapon_list: Array[Dictionary] = [
 		"Damage": 10,
 		"Reload time": 12.0
 	},
+	{ # 5
+		"Name": "COILGUN 1",
+		"Type": 1,
+		"Cost": 15,
+		"Damage": 1,
+		"Reload time": 6.0
+	},
+	{ # 6
+		"Name": "COILGUN 2",
+		"Type": 1,
+		"Cost": 30,
+		"Damage": 1,
+		"Reload time": 4.0
+	},
+	{ # 7
+		"Name": "COILGUN 3",
+		"Type": 1,
+		"Cost": 60,
+		"Damage": 1,
+		"Reload time": 2.0
+	},
+	{
+		"Name": "GMAT AUTOCOIL",
+		"Type": 1,
+		"Cost": 250,
+		"Damage": 1,
+		"Reload time": 0.1
+	},
 ]
 
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
@@ -186,6 +218,9 @@ var fleet_inventory: Array = [
 	3,
 	1,
 	4,
+	5,
+	6,
+	8,
 ]
 
 

@@ -62,6 +62,7 @@ var marker: StyleBoxFlat
 var status: int
 var active: bool = true
 var shield_layers: int
+var attacked: bool = false
 
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
@@ -144,7 +145,7 @@ func _process(_delta: float) -> void:
 	else:
 		$Marker.hide()
 	
-	if active:
+	if active and not attacked:
 		if type == 1:
 			# Start shooting!!!
 			if Global.in_combat:
@@ -168,6 +169,12 @@ func _process(_delta: float) -> void:
 				$Marker/Reload1/ProgressBar.value = 100 - (($ShieldReload.time_left / $ShieldReload.wait_time) * 100)
 			else:
 				$ShieldReload.stop()
+		if type == 3 and $InfiltratingProcess.is_stopped():
+			if Global.in_combat:
+				if $InfiltrateReload.is_stopped():
+					$InfiltrateReload.start()
+			else:
+				$InfiltrateReload.stop()
 		if type == 4 and target != null:
 			if ui.action_menu_showing:
 				$Marker/Reload1.show()
@@ -181,6 +188,8 @@ func _process(_delta: float) -> void:
 			if get_node("WeaponReload" + str(num + 1)).time_left < 0.1:
 				get_node("WeaponReload" + str(num + 1)).paused = true
 		$RepairReload.stop()
+		$ShieldReload.stop()
+		$InfiltrateReload.stop()
 	
 	# Do jumping animations
 	if jumping:
@@ -203,6 +212,7 @@ func begin_warp() -> void:
 	Global.fleet[index].hull = hull
 	Global.fleet[index].agility = agility
 	Global.fleet[index].weapons = weapons
+	Global.fleet[index].active = active
 	$JumpDelay.start(randf() * 2)
 
 
@@ -221,14 +231,15 @@ func new_target(ship: int) -> void:
 
 
 func _weapon_fire(firing: int) -> void:
+	print(ship_name + " FIRE")
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
-	if weapon_info["Type"] == 0:
-		if target == null:
-			new_target(0)
-		_new_projectile(weapon_info["Type"], weapon_info["Damage"])
+	if target == null:
+		new_target(0)
+	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 
 func _new_projectile(projectile_type: int, damage: int) -> void:
+	print(projectile_type)
 	var new_projectile: Node = projectiles[projectile_type].instantiate()
 	new_projectile.starting_position = global_position
 	new_projectile.target = target
@@ -254,3 +265,14 @@ func _repair() -> void:
 func _shield_up() -> void:
 	shield_layers += 1
 	shield_layers = clampi(shield_layers, 0, level)
+
+
+func _on_infiltrate_reload_timeout() -> void:
+	if target == null:
+		new_target(0)
+	target.attacked = true
+	target.get_node("UnderAttack").start()
+
+
+func _on_under_attack_timeout() -> void:
+	attacked = false

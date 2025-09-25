@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cjxyia0bj1uuo"]
+[gd_scene load_steps=15 format=3 uid="uid://cjxyia0bj1uuo"]
 
 [ext_resource type="Script" uid="uid://ou4uilyxtgnd" path="res://starship.gd" id="1_ng4vp"]
 [ext_resource type="PackedScene" uid="uid://b7rwxfw7w8fbl" path="res://command_ship_mesh.tscn" id="2_86p3r"]
@@ -7,7 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://dtmka8h8pyslt" path="res://relay_mesh.tscn" id="4_deqbx"]
 [ext_resource type="PackedScene" uid="uid://ekalc2xvf8pl" path="res://repair_mesh.tscn" id="4_w4b5x"]
 [ext_resource type="PackedScene" uid="uid://8ym1jdmse5dp" path="res://laser.tscn" id="5_fb3fn"]
+[ext_resource type="PackedScene" uid="uid://d1b5i1m4aoy5a" path="res://infiltration_mesh.tscn" id="5_w3rac"]
 [ext_resource type="Script" uid="uid://4wla3nr3yud7" path="res://marker.gd" id="7_ndcd6"]
+[ext_resource type="PackedScene" uid="uid://b8oaffc6b0div" path="res://physical_proj.tscn" id="9_ndpil"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w4b5x"]
 resource_local_to_scene = true
@@ -56,8 +58,8 @@ corner_radius_bottom_left = 5
 
 [node name="Starship" type="Node3D"]
 script = ExtResource("1_ng4vp")
-meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), null, ExtResource("4_w4b5x"), null, ExtResource("4_deqbx"), null, null, null])
-projectiles = Array[PackedScene]([ExtResource("5_fb3fn")])
+meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), ExtResource("5_w3rac"), ExtResource("4_w4b5x"), null, ExtResource("4_deqbx"), null, null, null])
+projectiles = Array[PackedScene]([ExtResource("5_fb3fn"), ExtResource("9_ndpil")])
 
 [node name="JumpDelay" type="Timer" parent="."]
 one_shot = true
@@ -74,6 +76,18 @@ autostart = true
 
 [node name="ShieldReload" type="Timer" parent="."]
 wait_time = 10.0
+one_shot = true
+
+[node name="InfiltrateReload" type="Timer" parent="."]
+wait_time = 16.0
+one_shot = true
+
+[node name="InfiltratingProcess" type="Timer" parent="."]
+wait_time = 6.0
+one_shot = true
+
+[node name="UnderAttack" type="Timer" parent="."]
+wait_time = 6.0
 one_shot = true
 
 [node name="RepairReload" type="Timer" parent="."]
@@ -223,4 +237,6 @@ vertical_alignment = 1
 [connection signal="timeout" from="WeaponReload2" to="." method="_weapon_fire" binds= [1]]
 [connection signal="timeout" from="WeaponReload3" to="." method="_weapon_fire" binds= [2]]
 [connection signal="timeout" from="ShieldReload" to="." method="_shield_up"]
+[connection signal="timeout" from="InfiltrateReload" to="." method="_on_infiltrate_reload_timeout"]
+[connection signal="timeout" from="UnderAttack" to="." method="_on_under_attack_timeout"]
 [connection signal="timeout" from="RepairReload" to="." method="_repair"]

@@ -648,7 +648,8 @@ func hover_target(n: int) -> void:
 
 
 func select_target() -> void:
-	main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+	if main.get_node("FriendlyShips").get_child(selected_ship) != null:
+		main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
 
 
 func hover_info(n: int) -> void:
@@ -660,7 +661,8 @@ func select_info(n: int) -> void:
 
 
 func ship_action(activate: bool) -> void:
-	main.get_node("FriendlyShips").get_child(looking_at_ship_info).active = activate
+	if main.get_node("FriendlyShips").get_child(looking_at_ship_info) != null:
+		main.get_node("FriendlyShips").get_child(looking_at_ship_info).active = activate
 
 
 func abandon_ship() -> void:
