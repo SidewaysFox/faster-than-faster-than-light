@@ -27,3 +27,5 @@ func _on_timer_timeout() -> void:
 		$Range.hide()
 		if Global.visited_systems.has(id):
 			$ColorRect.color = Color(1, 1, 0)
+	if Global.galaxy_data[id]["shop presence"]:
+		$ShopIndicator.show()

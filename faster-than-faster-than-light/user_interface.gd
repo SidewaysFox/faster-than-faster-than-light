@@ -14,6 +14,7 @@ var current_dialogue_selection: int = 1
 var option_results: Array
 var action_menu_showing: bool = false
 var info_menu_showing: bool = false
+var shop_showing: bool = false
 var hovered_ship: int = 0
 var hovered_target: int = 0
 var selected_ship: int = 0
@@ -24,12 +25,24 @@ var looking_at_ship_info: int = 0
 var info_showing: int = 0
 var warping = false
 var prev_mouse_pos: Vector2
+var item_catalogue = [0, 0, 0, 0]
+var ship_catalogue = [[1, "ship name", "desc"], [1, "ship name", "desc"], [1, "ship name", "desc"]]
 
-var ship_codes: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
-var targeting_options: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
-var active_text: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
-var misc_text: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
+var SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
+var TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
+var ACTIVE_TEXT: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
+var MISC_TEXT: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
 
+var shop_ship_descriptions: Array[String] = [
+	"A ship fresh from the foundry, a fitted with all the latest technologies. The crew seem eager for hire.",
+	"Well used, but still reliable, this ship has seen better days - and wants to see more.",
+	"A ship fresh from the foundry, but the crew don't seem that willing to put their lives on the line this early.",
+	"An ancient model. Although it's been very thoroughly cleaned and maintained, you can't help but wonder how it's still going.",
+	"Looks like it was born yesterday. You don't know how a ship could be \"born\", nor do you want to find out.",
+	"This ship, although a commonly used model, seems to have been filled with personality by one of its more arty crews.",
+	"It looks to be a very capable ship, but it has definitely been blown up and put back together before.",
+	"Still has the original dealer's credentials on it. You have no idea how this dealer got hold of the ship.",
+]
 
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[1],
@@ -62,15 +75,19 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(40, 80), 0, true, 2, 1]], ["Leave it alone for now.", ["close", false]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(25, 40), 0, true, 2, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(4, 16), 1, true, 4, 1]], ["Leave it alone for now.", ["close", false]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(3, 16), 1, true, 4, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1, "enemy presence"],
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
 	[["Get ready for combat.", ["close", true]]]
+	],
+	[[1, "shop presence"],
+	"As your fleet exits warp, you're set on edge as you're hailed by a lone starship.\n\"Hello! Nice to see a friendly face around here. Care to see my wares?\"\nYou ease up - they seem harmless enough.",
+	[["Return friendly communications.", ["close", false]]]
 	],
 	[[2],
 	"As your fleet exits its jump, you see two stars locked in each others' orbits. You spend a moment taking a deep breath, before returning to your duties on deck.",
@@ -84,6 +101,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
 	[["Get ready for combat.", ["close", true]]]
 	],
+	[[2, "shop presence"],
+	"As your fleet exits warp, you're set on edge as you're hailed by a lone starship.\n\"Hello! Nice to see a friendly face around here. Care to see my wares?\"\nYou ease up - they seem harmless enough.",
+	[["Return friendly communications.", ["close", false]]]
+	],
 	[[3],
 	"As your fleet exits its jump, you are surprised to find you and your fleet amongst a trinary star system, a rare sight for anyone not part of the navy.",
 	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
@@ -91,6 +112,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[3, "enemy presence"],
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet - in a trinary system too! We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
 	[["Get ready for combat.", ["close", true]]]
+	],
+	[[3, "shop presence"],
+	"As your fleet exits warp, you're set on edge as you're hailed by a lone starship.\n\"Hello! Nice to see a friendly face around here. It's quite an attractive spot but I still don't get much traffic through here. Care to see my wares?\"\nYou ease up - they seem harmless enough.",
+	[["Return friendly communications.", ["close", false]]]
 	],
 	[[1, "star proximity"],
 	"As you exit warp, you realise you've ended up dangerously close to this system's star. Your ships could be in danger if you linger for too long.",
@@ -100,6 +125,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
 	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
 	],
+	[[1, "shop presence", "star proximity"],
+	"As your fleet exits warp, you're set on edge as you're hailed by a lone starship, close to the nearby star.\n\"Ho, there! I'm a travelling merchant - I can shield us from the star, if you're willing to take a gander at what I have.\"\nYou decide it could be worth a look.",
+	[["Return friendly communications.", ["close", false]]]
+	],
 	[[2, "star proximity"],
 	"The binary system of stars you've just warped into makes it hard to miss the fact that you've come in far too close for comfort to one of them.",
 	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close", false]]]
@@ -108,6 +137,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
 	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
 	],
+	[[2, "shop presence", "star proximity"],
+	"As your fleet exits warp, you're set on edge as you're hailed by a lone starship, close to the nearby star.\n\"Ho, there! I'm a travelling merchant - I can shield us from the star, if you're willing to take a gander at what I have.\"\nYou decide it could be worth a look.",
+	[["Return friendly communications.", ["close", false]]]
+	],
 	[[3, "star proximity"],
 	"You find yourself and your fleet in a trinary system, but your close proximity to one of the stars unfortunately means you cannot affort to take in the view.",
 	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close", false]]]
@@ -115,6 +148,10 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[3, "enemy presence", "star proximity"],
 	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
 	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
+	],
+	[[3, "shop presence", "star proximity"],
+	"As your fleet exits warp, you're set on edge as you're hailed by a lone starship, close to the nearby star.\n\"Ho, there! I'm a travelling merchant - I can shield us from the star, if you're willing to take a gander at what I have.\"\nYou decide it could be worth a look.",
+	[["Return friendly communications.", ["close", false]]]
 	],
 ]
 
@@ -226,6 +263,8 @@ func _process(delta: float) -> void:
 	# Show or hide the galaxy map
 	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)):
 		_galaxy_map()
+	elif Input.is_action_just_pressed("shop") and not Global.joystick_control:
+		_shop()
 	elif Input.is_action_just_pressed("time pause"):
 		_time_pause()
 	else:
@@ -332,7 +371,7 @@ func _process(delta: float) -> void:
 				for ship in main.get_node("HostileShips").get_children():
 					var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 					var stylebox: Resource = box.get_theme_stylebox("panel")
-					box.get_node("Code").text = ship_codes[ship.type]
+					box.get_node("Code").text = SHIP_CODES[ship.type]
 					if index == hovered_target:
 						stylebox.border_color = Color8(100, 100, 160)
 					else:
@@ -355,7 +394,7 @@ func _process(delta: float) -> void:
 			for ship in main.get_node("FriendlyShips").get_children():
 				var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 				var stylebox: Resource = box.get_theme_stylebox("panel")
-				box.get_node("Code").text = ship_codes[ship.type]
+				box.get_node("Code").text = SHIP_CODES[ship.type]
 				if index == hovered_target:
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
@@ -375,7 +414,7 @@ func _process(delta: float) -> void:
 		for ship in main.get_node("FriendlyShips").get_children():
 			var box: Node = %ActionFriendlyShips/GridContainer.get_child(index)
 			var stylebox: Resource = box.get_theme_stylebox("panel")
-			box.get_node("Code").text = ship_codes[ship.type]
+			box.get_node("Code").text = SHIP_CODES[ship.type]
 			box.set_meta("type", ship.type)
 			if index == hovered_ship:
 				stylebox.border_color = Color8(160, 100, 100)
@@ -390,7 +429,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("1") and Global.joystick_control:
 			selected_ship = hovered_ship
 			targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
-			%Instruction/Label.text = targeting_options[targeting_mode]
+			%Instruction/Label.text = TARGETING_OPTIONS[targeting_mode]
 	else:
 		$ShipActionMenu.hide()
 	
@@ -402,7 +441,7 @@ func _process(delta: float) -> void:
 			if index < fleet_size:
 				var ship: Node = main.get_node("FriendlyShips").get_child(index)
 				button.show()
-				button.get_child(0).text = ship_codes[ship.type] + ": " + ship.ship_name.to_upper()
+				button.get_child(0).text = SHIP_CODES[ship.type] + ": " + ship.ship_name.to_upper()
 				var stylebox: Resource = button.get_theme_stylebox("panel")
 				if index == hovered_at_ship_info:
 					stylebox.border_color = Color8(160, 100, 100)
@@ -419,10 +458,10 @@ func _process(delta: float) -> void:
 					%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
 					%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
 					%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
-					%Information/Instructions/Active/Label.text = active_text[int(ship.active)]
+					%Information/Instructions/Active/Label.text = ACTIVE_TEXT[int(ship.active)]
 					%Information/Instructions/TakeAction/Button.text = Global.ship_actions[ship.type][0]
 					%Information/Instructions/CeaseAction/Button.text = Global.ship_actions[ship.type][1]
-					%Information/Misc/RelatedStat/Label.text = misc_text[ship.type]
+					%Information/Misc/RelatedStat/Label.text = MISC_TEXT[ship.type]
 					for child in %MiscMenu.get_children():
 						child.hide()
 					if ship.type == 0:
@@ -435,7 +474,7 @@ func _process(delta: float) -> void:
 						for item in Global.fleet_inventory:
 							%MiscMenu/CommandShip.get_child(child_index).show()
 							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Name").text = " ITEM: " + Global.weapon_list[item]["Name"]
-							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Type").text = " TYPE: WEAPON"
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Type").text = " TYPE: " + Global.weapon_types[Global.weapon_list[item]["Type"]]
 							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Value").text = " VALUE: " + str(Global.weapon_list[item]["Cost"]) + " TECH"
 							child_index += 1
 					elif ship.type == 1:
@@ -469,6 +508,68 @@ func _process(delta: float) -> void:
 		looking_at_ship_info = clampi(looking_at_ship_info, 0, main.get_node("FriendlyShips").get_child_count() - 1)
 	else:
 		$FleetInfoMenu.hide()
+	
+	if shop_showing:
+		$Shop.show()
+		
+		# Item buying UI
+		for child in %ItemBuy.get_children():
+			if child.get_index() > 0:
+				child.hide()
+		var child_index: int = 1
+		for item in item_catalogue:
+			%ItemBuy.get_child(child_index).show()
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + Global.weapon_list[item]["Name"]
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + Global.weapon_types[Global.weapon_list[item]["Type"]]
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Damage").text = " DAMAGE: " + str(Global.weapon_list[item]["Damage"]) + " HULL"
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Reload").text = " RELOAD: " + str(Global.weapon_list[item]["Reload time"]) + " SECONDS"
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Value").text = " VALUE: " + str(Global.weapon_list[item]["Cost"]) + " TECH"
+			%ItemBuy.get_child(child_index).get_node("Row/Col2/Text").text = Global.weapon_list[item]["Description"]
+			child_index += 1
+		
+		# Item selling UI
+		for child in %ItemSell.get_children():
+			if child.get_index() > 0:
+				child.hide()
+		child_index = 1
+		for item in Global.fleet_inventory:
+			%ItemSell.get_child(child_index).show()
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + Global.weapon_list[item]["Name"]
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + Global.weapon_types[Global.weapon_list[item]["Type"]]
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Value").text = " SELL VALUE: " + str((ceil(Global.weapon_list[item]["Cost"]) / 2)) + " TECH"
+			%ItemSell.get_child(child_index).get_node("Row/Col2/Damage").text = " DAMAGE: " + str(Global.weapon_list[item]["Damage"]) + " HULL"
+			%ItemSell.get_child(child_index).get_node("Row/Col2/Reload").text = " RELOAD: " + str(Global.weapon_list[item]["Reload time"]) + " SECONDS"
+			child_index += 1
+		
+		# Ship buying UI
+		for child in %ShipBuy.get_children():
+			if child.get_index() > 0:
+				child.hide()
+		child_index = 1
+		for ship in ship_catalogue:
+			%ShipBuy.get_child(child_index).show()
+			%ShipBuy.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + ship[1]
+			%ShipBuy.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + SHIP_CODES[ship[0]]
+			%ShipBuy.get_child(child_index).get_node("Row/Col1/Value").text = " VALUE: " + str(Global.starship_base_stats[ship[0]]["Cost"]) + " TECH"
+			%ShipBuy.get_child(child_index).get_node("Row/Col2/Text").text = ship[2]
+			child_index += 1
+		
+		# Ship selling UI
+		for child in %ShipSell.get_children():
+			if child.get_index() > 0:
+				child.hide()
+		child_index = 1
+		for ship in main.get_node("FriendlyShips").get_children():
+			if ship.type == 0:
+				continue
+			%ShipSell.get_child(child_index).show()
+			%ShipSell.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + ship.ship_name
+			%ShipSell.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + SHIP_CODES[ship.type]
+			%ShipSell.get_child(child_index).get_node("Row/Col2/Level").text = " LEVEL: " + str(ship.level)
+			%ShipSell.get_child(child_index).get_node("Row/Col2/Value").text = " SELL VALUE: " + str((ceil(Global.starship_base_stats[ship.type]["Cost"]) / 2) * ship.level) + " TECH"
+			child_index += 1
+	else:
+		$Shop.hide()
 	
 	prev_mouse_pos = get_global_mouse_position()
 
@@ -520,7 +621,7 @@ func dialogue_set_up(library: int, id: int) -> void:
 
 
 func _galaxy_map() -> void:
-	if not action_menu_showing and not info_menu_showing and not dialogue_showing and main.warp_charge >= 100 and not warping:
+	if not action_menu_showing and not info_menu_showing and not dialogue_showing and not shop_showing and main.warp_charge >= 100 and not warping:
 		galaxy_map_showing = not galaxy_map_showing
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
@@ -531,7 +632,7 @@ func _galaxy_map() -> void:
 
 
 func _action_menu() -> void:
-	if not galaxy_map_showing and not info_menu_showing and not dialogue_showing:
+	if not galaxy_map_showing and not info_menu_showing and not dialogue_showing and not shop_showing:
 		action_menu_showing = not action_menu_showing
 
 
@@ -547,8 +648,25 @@ func _pause() -> void:
 
 
 func _info_menu() -> void:
-	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing:
+	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing and not shop_showing:
 		info_menu_showing = not info_menu_showing
+
+
+func _on_shop_setup_timeout() -> void:
+	# Set up the shop, if there is one
+	if "shop presence" in main.system_properties:
+		$ControlTips/VBoxContainer/Main/AccessShop.show()
+		for item in len(item_catalogue):
+			item_catalogue[item] = randi_range(0, len(Global.weapon_list) - 1)
+		for ship in len(ship_catalogue):
+			ship_catalogue[ship][0] = randi_range(1, 7)
+			ship_catalogue[ship][1] = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
+			ship_catalogue[ship][2] = shop_ship_descriptions.pick_random()
+
+
+func _shop() -> void:
+	if not galaxy_map_showing and not action_menu_showing and not info_menu_showing and not dialogue_showing and "shop presence" in main.system_properties:
+		shop_showing = not shop_showing
 
 
 func _hide_controls() -> void:
@@ -559,6 +677,16 @@ func _hide_controls() -> void:
 	else:
 		$ControlTips/VBoxContainer/HideControlTips/Button.text = "SHOW CONTROLS (H)"
 		Global.controls_showing = false
+
+
+func _item_shop() -> void:
+	$Shop/VBoxContainer/HBoxContainer/ShipShop.hide()
+	$Shop/VBoxContainer/HBoxContainer/ItemShop.show()
+
+
+func _ship_shop() -> void:
+	$Shop/VBoxContainer/HBoxContainer/ItemShop.hide()
+	$Shop/VBoxContainer/HBoxContainer/ShipShop.show()
 
 
 # Small interval before showing the warp in dialogue
@@ -640,7 +768,7 @@ func hover_ship(n: int) -> void:
 func select_ship(n: int) -> void:
 	selected_ship = n
 	targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
-	%Instruction/Label.text = targeting_options[targeting_mode]
+	%Instruction/Label.text = TARGETING_OPTIONS[targeting_mode]
 
 
 func hover_target(n: int) -> void:

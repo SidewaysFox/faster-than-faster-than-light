@@ -31,6 +31,8 @@ const SECTOR_SIZE: Vector2 = Vector2(100, 70)
 const MAX_SECTOR_SYSTEMS: int = 3
 const GMAP_TOP: float = 30.0
 const GMAP_BOT: float = 590.0
+const ENEMY_THRESHOLD: int = 9
+const SHOP_THRESHOLD: int = 8
 
 var starship_base_stats: Array[Dictionary] = [
 	{
@@ -40,30 +42,37 @@ var starship_base_stats: Array[Dictionary] = [
 	{
 		"Hull Strength": 6,
 		"Agility": 0.1,
+		"Cost": 60
 	},
 	{
 		"Hull Strength": 5,
 		"Agility": 0.1,
+		"Cost": 45
 	},
 	{
 		"Hull Strength": 8,
 		"Agility": 0.05,
+		"Cost": 40
 	},
 	{
 		"Hull Strength": 5,
 		"Agility": 0.08,
+		"Cost": 50
 	},
 	{
 		"Hull Strength": 6,
 		"Agility": 0.1,
+		"Cost": 30
 	},
 	{
 		"Hull Strength": 5,
 		"Agility": 0.2,
+		"Cost": 35
 	},
 	{
 		"Hull Strength": 8,
 		"Agility": 0.07,
+		"Cost": 75
 	},
 	{
 		"Hull Strength": 3,
@@ -152,75 +161,80 @@ var weapon_list: Array[Dictionary] = [
 		"Type": 0,
 		"Cost": 15,
 		"Damage": 1,
-		"Reload time": 6.0
+		"Reload time": 6.0,
+		"Description": "A weak laser weapon, able to do a little bit of damage."
 	},
 	{ # 1
 		"Name": "PHASOR 2",
 		"Type": 0,
 		"Cost": 30,
 		"Damage": 1,
-		"Reload time": 4.0
+		"Reload time": 4.0,
+		"Description": "Faster than the previous model, capable of easily dealing with weaker threats."
 	},
 	{ # 2
 		"Name": "PHASOR 3",
 		"Type": 0,
 		"Cost": 60,
 		"Damage": 1,
-		"Reload time": 2.0
+		"Reload time": 2.0,
+		"Description": "A strong laser weapon which can quickly take out most enemies."
 	},
 	{ # 3
 		"Name": "RAILGUN",
 		"Type": 0,
 		"Cost": 55,
 		"Damage": 3,
-		"Reload time": 6.0
+		"Reload time": 6.0,
+		"Description": "A high damage but somewhat slow reloading laser weapon."
 	},
 	{ # 4
 		"Name": "OBLITERATOR",
 		"Type": 0,
 		"Cost": 80,
 		"Damage": 10,
-		"Reload time": 12.0
+		"Reload time": 12.0,
+		"Description": "Very slow reload, but can tear most ships to shreds when it hits."
 	},
 	{ # 5
 		"Name": "COILGUN 1",
 		"Type": 1,
 		"Cost": 15,
 		"Damage": 1,
-		"Reload time": 6.0
+		"Reload time": 6.0,
+		"Description": "A weak projectile weapon, sacrificing accuracy for the ability to avoid shields."
 	},
 	{ # 6
 		"Name": "COILGUN 2",
 		"Type": 1,
 		"Cost": 30,
 		"Damage": 1,
-		"Reload time": 4.0
+		"Reload time": 4.0,
+		"Description": "Stronger than the first model and able to make light work of defensive starships."
 	},
 	{ # 7
 		"Name": "COILGUN 3",
 		"Type": 1,
 		"Cost": 60,
 		"Damage": 1,
-		"Reload time": 2.0
+		"Reload time": 2.0,
+		"Description": "A very powerful weapon, bombarding enemies with fast firing projectiles."
 	},
 	{
 		"Name": "GMAT AUTOCOIL",
 		"Type": 1,
-		"Cost": 250,
+		"Cost": 400,
 		"Damage": 1,
-		"Reload time": 0.1
+		"Reload time": 0.2,
+		"Description": "The latest tech only used by elite fighters. Will make your fleet virtually unstoppable."
 	},
 ]
 
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
 
-var fleet_inventory: Array = [
+var fleet_inventory: Array = [ # Stores the weapon ID
+	0,
 	3,
-	1,
-	4,
-	5,
-	6,
-	8,
 ]
 
 
@@ -248,16 +262,17 @@ func establish() -> void:
 				var system_type: int = randi_range(0, 19)
 				var enemy_presence: bool = false
 				var shop_presence: bool = false
-				if system_type >= 9:
+				if system_type >= ENEMY_THRESHOLD:
 					enemy_presence = true
-				elif system_type == 8:
+				elif system_type < ENEMY_THRESHOLD and system_type >= SHOP_THRESHOLD:
 					shop_presence = true
 				# Set up and store data
 				galaxy_data.append({
 					"id": system_id,
 					"position": Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y)),
 					"sector": column,
-					"enemy presence": enemy_presence
+					"enemy presence": enemy_presence,
+					"shop presence": shop_presence,
 				})
 				system_id += 1
 			sector += 1

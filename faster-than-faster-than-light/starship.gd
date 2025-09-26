@@ -76,8 +76,10 @@ func _ready() -> void:
 	
 	marker = $Marker/Selection.get_theme_stylebox("panel")
 	
-	if ship_name == "Starship":
+	if ship_name == "Starship" and team == 1:
 		ship_name = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
+	elif team != 1:
+		ship_name = "PIRATE"
 	
 	# Starting location based on team
 	if team != 0:
@@ -140,7 +142,7 @@ func _process(_delta: float) -> void:
 					$Marker/Target.hide()
 		
 		$Marker/Info/Name.text = "NAME: " + ship_name
-		$Marker/Info/Type.text = "TYPE: " + ui.ship_codes[type]
+		$Marker/Info/Type.text = "TYPE: " + ui.SHIP_CODES[type]
 		$Marker/Info/Hull.text = "HULL: " + str(hull)
 	else:
 		$Marker.hide()

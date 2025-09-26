@@ -32,6 +32,41 @@ offset_top = -3.0
 offset_right = 3.0
 offset_bottom = 3.0
 
+[node name="ShopIndicator" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect3" type="ColorRect" parent="ShopIndicator"]
+z_index = 2
+offset_left = 5.0
+offset_top = -6.0
+offset_right = 6.0
+offset_bottom = 6.0
+
+[node name="ColorRect4" type="ColorRect" parent="ShopIndicator"]
+z_index = 2
+offset_left = -6.0
+offset_top = -6.0
+offset_right = -5.0
+offset_bottom = 6.0
+
+[node name="ColorRect5" type="ColorRect" parent="ShopIndicator"]
+z_index = 2
+offset_left = -6.0
+offset_top = -6.0
+offset_right = 6.0
+offset_bottom = -5.0
+
+[node name="ColorRect6" type="ColorRect" parent="ShopIndicator"]
+z_index = 2
+offset_left = -6.0
+offset_top = 5.0
+offset_right = 6.0
+offset_bottom = 6.0
+
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true

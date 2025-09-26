@@ -150,6 +150,8 @@ func _ready() -> void:
 		enemy_fleet.shuffle()
 		for ship in enemy_fleet:
 			Global.create_enemy_ship(ship)
+	if Global.galaxy_data[Global.current_system]["shop presence"]:
+		system_properties.append("shop presence")
 	if star_proximity:
 		system_properties.append("star proximity")
 
