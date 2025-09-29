@@ -10,11 +10,11 @@ var initialising: bool = true
 var playing: bool = true
 var resources: int = 0
 var fuel: int = 80
-var starting_fleet: Array[int] = [0, 1, 1, 2, 3, 4, 6]
+var starting_fleet: Array[int] = [0, 1, 4, 4, 4, 6]
 var fleet: Array = []
-var jump_distance: float = 120.0
+var max_inventory: int = 4
+var jump_distance: float = 140.0
 var charge_rate: float = 2.0
-var augmentations: Array = []
 var galaxy_data: Array = []
 var current_system: int
 var system_position: Vector2
@@ -97,8 +97,8 @@ var upgrade_costs: Array = [
 
 var upgrade_specifications: Array = [
 	[
-		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 MODULE SLOT"],
-		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 MODULE SLOT"],
+		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 INVENTORY SLOT"],
+		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 INVENTORY SLOT"],
 	],
 	[
 		["+2 HULL STRENGTH", "+0.05 AGILITY", "+1 WEAPON SLOT"],
@@ -109,16 +109,16 @@ var upgrade_specifications: Array = [
 		["+3 HULL STRENGTH", "+0.05 AGILITY", "+1 SHIELD LAYER"],
 	],
 	[
-		["+2 HULL STRENGTH", "+0.05 AGILITY", "LONGER STUN"],
-		["+5 HULL STRENGTH", "+0.05 AGILITY", "LONGER STUN"],
+		["+2 HULL STRENGTH", "+0.05 AGILITY", "FASTER RECHARGE"],
+		["+5 HULL STRENGTH", "+0.05 AGILITY", "FASTER RECHARGE"],
 	],
 	[
 		["+1 HULL STRENGTH", "+0.05 AGILITY", "FASTER REPAIR"],
 		["+2 HULL STRENGTH", "FASTER REPAIR", "+1 REPAIR"],
 	],
 	[
-		["+1 HULL STRENGTH", "+0.05 AGILITY", "+1 SCANNED SHIPS"],
-		["+1 HULL STRENGTH", "+0.1 AGILITY", "+1 SCANNED SHIPS"],
+		["+1 HULL STRENGTH", "+0.05 AGILITY", "+ SCANNER RADIUS"],
+		["+1 HULL STRENGTH", "+0.1 AGILITY", "+ SCANNER RADIUS"],
 	],
 	[
 		["+1 HULL STRENGTH", "+0.05 AGILITY", "INCREASED RANGE"],
@@ -156,7 +156,7 @@ var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "
 		"SABRE", "KATANA", "MACE", "TALWAR", "SCOURGE", "SPIKE", "BULLPUP", "YUKON"]
 
 var weapon_list: Array[Dictionary] = [
-	{ # 0
+	{
 		"Name": "PHASOR 1",
 		"Type": 0,
 		"Cost": 15,
@@ -164,7 +164,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 6.0,
 		"Description": "A weak laser weapon, able to do a little bit of damage."
 	},
-	{ # 1
+	{
 		"Name": "PHASOR 2",
 		"Type": 0,
 		"Cost": 30,
@@ -172,7 +172,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 4.0,
 		"Description": "Faster than the previous model, capable of easily dealing with weaker threats."
 	},
-	{ # 2
+	{
 		"Name": "PHASOR 3",
 		"Type": 0,
 		"Cost": 60,
@@ -180,7 +180,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 2.0,
 		"Description": "A strong laser weapon which can quickly take out most enemies."
 	},
-	{ # 3
+	{
 		"Name": "RAILGUN",
 		"Type": 0,
 		"Cost": 55,
@@ -188,15 +188,15 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 6.0,
 		"Description": "A high damage but somewhat slow reloading laser weapon."
 	},
-	{ # 4
+	{
 		"Name": "OBLITERATOR",
 		"Type": 0,
 		"Cost": 80,
 		"Damage": 10,
-		"Reload time": 12.0,
+		"Reload time": 18.0,
 		"Description": "Very slow reload, but can tear most ships to shreds when it hits."
 	},
-	{ # 5
+	{
 		"Name": "COILGUN 1",
 		"Type": 1,
 		"Cost": 15,
@@ -204,7 +204,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 6.0,
 		"Description": "A weak projectile weapon, sacrificing accuracy for the ability to avoid shields."
 	},
-	{ # 6
+	{
 		"Name": "COILGUN 2",
 		"Type": 1,
 		"Cost": 30,
@@ -212,7 +212,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 4.0,
 		"Description": "Stronger than the first model and able to make light work of defensive starships."
 	},
-	{ # 7
+	{
 		"Name": "COILGUN 3",
 		"Type": 1,
 		"Cost": 60,
@@ -233,19 +233,21 @@ var weapon_list: Array[Dictionary] = [
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
 
 var fleet_inventory: Array = [ # Stores the weapon ID
-	0,
-	3,
+	2,
+	2,
+	2,
+	2,
 ]
 
 
 func establish() -> void:
 	playing = true
-	resources = 25
+	resources = 600
 	fuel = 80
 	fleet = []
-	jump_distance = 180.0
+	max_inventory = 4
+	jump_distance = 140.0
 	charge_rate = 2.0
-	augmentations = []
 	galaxy_data = []
 	visited_systems = []
 	unique_visits = 0
@@ -322,10 +324,11 @@ func get_new_ship_id() -> int:
 
 # Update fleet stats
 func stats_update() -> void:
-	jump_distance = 120.0
+	jump_distance = 140.0
+	charge_rate = 2.0
 	for ship in fleet:
 		if ship.type == 6:
-			jump_distance += 20 * ship.level
+			jump_distance += 20.0 * ship.level
 			charge_rate += ship.level
 
 
@@ -338,12 +341,13 @@ func new_system(system: int) -> void:
 	current_system = system
 
 
-func create_new_starship(type: int) -> void:
+func create_new_starship(type: int, ship_name: String = "Starship") -> void:
 	var new_ship: Node = starship.instantiate()
 	new_ship.id = get_new_ship_id()
 	new_ship.team = 1
 	new_ship.type = type
 	new_ship.alignment = 0
+	new_ship.ship_name = ship_name
 	new_ship.level = 1
 	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_ship.hull = starship_base_stats[type]["Hull Strength"]

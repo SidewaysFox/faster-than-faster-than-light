@@ -27,6 +27,7 @@ var warping = false
 var prev_mouse_pos: Vector2
 var item_catalogue = [0, 0, 0, 0]
 var ship_catalogue = [[1, "ship name", "desc"], [1, "ship name", "desc"], [1, "ship name", "desc"]]
+var hovered_shop_button: int = 0
 
 var SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
 var TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
@@ -454,10 +455,24 @@ func _process(delta: float) -> void:
 					%Information/General/Agility/Label.text = "AGILITY: " + str(ship.agility * 100) + "%"
 					%Information/General/Status/Label.text = "STATUS: OK"
 					%Information/Leveling/CurrentLevel/Label.text = "CURRENT LEVEL: " + str(ship.level)
-					%Information/Leveling/Cost/Label.text = "UPGRADE COST: " + str(Global.upgrade_costs[ship.type][ship.level - 1])
-					%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
-					%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
-					%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
+					if ship.level < 3 and not Global.in_combat:
+						%Information/Leveling/Cost/Label.text = "UPGRADE COST: " + str(Global.upgrade_costs[ship.type][ship.level - 1])
+						%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
+						%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
+						%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
+						%Information/Leveling/Cost.show()
+						%Information/Leveling/Upgrade.show()
+						%Information/Leveling/WhenUpgraded.show()
+						%Information/Leveling/Specification0.show()
+						%Information/Leveling/Specification1.show()
+						%Information/Leveling/Specification2.show()
+					else:
+						%Information/Leveling/Cost.hide()
+						%Information/Leveling/Upgrade.hide()
+						%Information/Leveling/WhenUpgraded.hide()
+						%Information/Leveling/Specification0.hide()
+						%Information/Leveling/Specification1.hide()
+						%Information/Leveling/Specification2.hide()
 					%Information/Instructions/Active/Label.text = ACTIVE_TEXT[int(ship.active)]
 					%Information/Instructions/TakeAction/Button.text = Global.ship_actions[ship.type][0]
 					%Information/Instructions/CeaseAction/Button.text = Global.ship_actions[ship.type][1]
@@ -467,7 +482,7 @@ func _process(delta: float) -> void:
 					if ship.type == 0:
 						%Information/Misc/RelatedStat2.show()
 						%MiscMenu/CommandShip.show()
-						%Information/Misc/RelatedStat2/Label.text = "INVENTORY SIZE: " + str(len(Global.fleet_inventory))
+						%Information/Misc/RelatedStat2/Label.text = "INVENTORY CAPACITY: " + str(Global.max_inventory)
 						for child in %MiscMenu/CommandShip.get_children():
 							child.hide()
 						var child_index: int = 0
@@ -480,7 +495,7 @@ func _process(delta: float) -> void:
 					elif ship.type == 1:
 						%Information/Misc/RelatedStat2.show()
 						%MiscMenu/Fighter.show()
-						%Information/Misc/RelatedStat2/Label.text = "WEAPON SLOTS: " + str(len(ship.weapons))
+						%Information/Misc/RelatedStat2/Label.text = "WEAPON SLOTS: " + str(ship.level)
 						for child in %MiscMenu/Fighter.get_children():
 							child.hide()
 						var child_index: int = 0
@@ -514,8 +529,14 @@ func _process(delta: float) -> void:
 		
 		# Item buying UI
 		for child in %ItemBuy.get_children():
-			if child.get_index() > 0:
+			var index: int = child.get_index()
+			if index > 0:
 				child.hide()
+				var stylebox: Resource = child.get_theme_stylebox("panel")
+				if index == hovered_shop_button:
+					stylebox.border_color = Color8(160, 100, 100)
+				else:
+					stylebox.border_color = Color8(160, 0, 0)
 		var child_index: int = 1
 		for item in item_catalogue:
 			%ItemBuy.get_child(child_index).show()
@@ -529,8 +550,14 @@ func _process(delta: float) -> void:
 		
 		# Item selling UI
 		for child in %ItemSell.get_children():
-			if child.get_index() > 0:
+			var index: int = child.get_index()
+			if index > 0:
 				child.hide()
+				var stylebox: Resource = child.get_theme_stylebox("panel")
+				if index + %ItemBuy.get_child_count() == hovered_shop_button:
+					stylebox.border_color = Color8(100, 100, 160)
+				else:
+					stylebox.border_color = Color8(0, 0, 160)
 		child_index = 1
 		for item in Global.fleet_inventory:
 			%ItemSell.get_child(child_index).show()
@@ -543,8 +570,14 @@ func _process(delta: float) -> void:
 		
 		# Ship buying UI
 		for child in %ShipBuy.get_children():
-			if child.get_index() > 0:
+			var index: int = child.get_index()
+			if index > 0:
 				child.hide()
+				var stylebox: Resource = child.get_theme_stylebox("panel")
+				if index == hovered_shop_button:
+					stylebox.border_color = Color8(160, 100, 100)
+				else:
+					stylebox.border_color = Color8(160, 0, 0)
 		child_index = 1
 		for ship in ship_catalogue:
 			%ShipBuy.get_child(child_index).show()
@@ -556,8 +589,14 @@ func _process(delta: float) -> void:
 		
 		# Ship selling UI
 		for child in %ShipSell.get_children():
-			if child.get_index() > 0:
+			var index: int = child.get_index()
+			if index > 0:
 				child.hide()
+				var stylebox: Resource = child.get_theme_stylebox("panel")
+				if index + %ShipBuy.get_child_count() == hovered_shop_button:
+					stylebox.border_color = Color8(100, 100, 160)
+				else:
+					stylebox.border_color = Color8(0, 0, 160)
 		child_index = 1
 		for ship in main.get_node("FriendlyShips").get_children():
 			if ship.type == 0:
@@ -650,6 +689,77 @@ func _pause() -> void:
 func _info_menu() -> void:
 	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing and not shop_showing:
 		info_menu_showing = not info_menu_showing
+
+
+func upgrade_ship() -> void:
+	var ship: Node = main.get_node("FriendlyShips").get_child(looking_at_ship_info)
+	var price: int = Global.upgrade_costs[ship.type][ship.level - 1]
+	if Global.resources >= price:
+		resources(-price)
+		# I can't really think of a good, efficient and easily editable way to do this
+		if ship.type == 0:
+			ship.hull_strength += 5
+			ship.hull += 5
+			ship.agility += 0.05
+			Global.max_inventory += 1
+		elif ship.type == 1:
+			if ship.level == 1:
+				ship.hull_strength += 2
+				ship.hull += 2
+				ship.agility += 0.05
+			elif ship.level == 2:
+				ship.hull_strength += 4
+				ship.hull += 4
+				ship.agility += 0.1
+			ship.weapons.append(0)
+		elif ship.type == 2:
+			ship.agility += 0.05
+			if ship.level == 1:
+				ship.hull_strength += 2
+				ship.hull += 2
+			elif ship.level == 2:
+				ship.hull_strength += 3
+				ship.hull += 3
+		elif ship.type == 3:
+			ship.agility += 0.05
+			if ship.level == 1:
+				ship.hull_strength += 2
+				ship.hull += 2
+			elif ship.level == 2:
+				ship.hull_strength += 5
+				ship.hull += 5
+		elif ship.type == 4:
+			if ship.level == 1:
+				ship.hull_strength += 1
+				ship.hull += 1
+				ship.agility += 0.05
+			elif ship.level == 2:
+				ship.hull_strength += 2
+				ship.hull += 2
+		elif ship.type == 5:
+			ship.hull_strength += 1
+			ship.hull += 1
+			if ship.level == 1:
+				ship.agility += 0.05
+			elif ship.level == 2:
+				ship.agility += 0.1
+		elif ship.type == 6:
+			ship.agility += 0.05
+			if ship.level == 1:
+				ship.hull_strength += 1
+				ship.hull += 1
+			elif ship.level == 2:
+				ship.hull_strength += 2
+				ship.hull += 2
+		elif ship.type == 7:
+			ship.hull_strength += 4
+			ship.hull += 4
+			if ship.level == 1:
+				ship.drone_slots.append(0)
+			elif ship.level == 2:
+				ship.drone_slots.append_array([0, 0])
+		ship.level += 1
+		ship.stats_update()
 
 
 func _on_shop_setup_timeout() -> void:
@@ -788,6 +898,35 @@ func select_info(n: int) -> void:
 	looking_at_ship_info = n
 
 
+func hover_shop(n: int) -> void:
+	hovered_shop_button = n
+
+
+func buy_item(n: int) -> void:
+	var price: int = Global.weapon_list[item_catalogue[n]]["Cost"]
+	if len(Global.fleet_inventory) < Global.max_inventory and Global.resources >= price:
+		resources(-price)
+		Global.fleet_inventory.append(item_catalogue.pop_at(n))
+
+
+func sell_item(n: int) -> void:
+	resources(ceil(Global.weapon_list[Global.fleet_inventory.pop_at(n)]["Cost"] / 2), 0)
+
+
+func buy_ship(n: int) -> void:
+	var price: int = Global.starship_base_stats[ship_catalogue[n][0]]["Cost"]
+	if len(Global.fleet) < 8 and Global.resources >= price:
+		resources(-price)
+		Global.create_new_starship(ship_catalogue[n][0], ship_catalogue[n][1])
+		ship_catalogue.remove_at(n)
+
+
+func sell_ship(n: int) -> void:
+	var sold_ship: Node = main.get_node("FriendlyShips").get_child(n)
+	resources((ceil(Global.starship_base_stats[sold_ship.type]["Cost"]) / 2) * sold_ship.level, 0)
+	sold_ship.hull = 0
+
+
 func ship_action(activate: bool) -> void:
 	if main.get_node("FriendlyShips").get_child(looking_at_ship_info) != null:
 		main.get_node("FriendlyShips").get_child(looking_at_ship_info).active = activate
@@ -801,7 +940,7 @@ func win_encounter() -> void:
 	# Tech
 	resources(randi_range(8, 32))
 	# Fuel
-	resources(randi_range(2, 8 * len(Global.fleet)), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
+	resources(randi_range(3, 4 * len(Global.fleet) - 1), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
 	Global.galaxy_data[Global.current_system]["enemy presence"] = false
 
 

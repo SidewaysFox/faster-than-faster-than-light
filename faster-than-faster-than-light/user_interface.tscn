@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=86 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -468,6 +468,42 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.627451, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8d62i"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ow8y"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dmmcw"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ltrnm"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wmy2v"]
 bg_color = Color(0, 0.313726, 0.627451, 1)
 draw_center = false
@@ -477,7 +513,142 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0.627451, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8d62i"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7x8bb"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_caicv"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j0sjl"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5nqfq"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ja2hr"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mfdol"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fmgxe"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8gm50"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_38xjk"]
+bg_color = Color(0.627451, 0.313726, 0.313726, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.627451, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iqvtj"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4ucpr"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7orrd"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0v5os"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0y0nd"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_15sdr"]
+bg_color = Color(0, 0.313726, 0.627451, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0.627451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tsuqu"]
 bg_color = Color(0, 0.313726, 0.627451, 1)
 draw_center = false
 border_width_left = 4
@@ -1455,7 +1626,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Leveling" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
-visible = false
 layout_mode = 2
 offset_right = 464.0
 offset_bottom = 696.0
@@ -2017,6 +2187,7 @@ mouse_filter = 2
 color = Color(0.627451, 0, 0, 1)
 
 [node name="Misc" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+visible = false
 layout_mode = 2
 offset_right = 464.0
 offset_bottom = 696.0
@@ -2358,24 +2529,24 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
 metadata/id = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2"]
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2"]
 layout_mode = 2
 
-[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/VBoxContainer"]
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/Labels"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = " TYPE: LASER"
 vertical_alignment = 1
 
-[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/VBoxContainer"]
+[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/Labels"]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = " DAMAGE: 1 hull"
 vertical_alignment = 1
 
-[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/VBoxContainer"]
+[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats2/Labels"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
@@ -2426,24 +2597,24 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
 metadata/id = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3"]
+[node name="Labels" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3"]
 layout_mode = 2
 
-[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/VBoxContainer"]
+[node name="Type" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/Labels"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = " TYPE: LASER"
 vertical_alignment = 1
 
-[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/VBoxContainer"]
+[node name="Damage" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/Labels"]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = " DAMAGE: 1 hull"
 vertical_alignment = 1
 
-[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/VBoxContainer"]
+[node name="Reload" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/WeaponStats3/Labels"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
@@ -2451,6 +2622,7 @@ text = " RELOAD: 6.0 seconds"
 vertical_alignment = 1
 
 [node name="Shop" type="PanelContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(1400, 790)
 layout_mode = 1
 anchors_preset = 8
@@ -2520,7 +2692,6 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="ItemShop" type="Control" parent="Shop/VBoxContainer/HBoxContainer"]
-visible = false
 layout_mode = 2
 
 [node name="ItemBuy" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop"]
@@ -2547,7 +2718,7 @@ vertical_alignment = 1
 [node name="Slot1" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy"]
 custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1"]
@@ -2557,11 +2728,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -2601,6 +2774,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -2620,7 +2794,7 @@ autowrap_mode = 2
 [node name="Slot2" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy"]
 custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5ow8y")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2"]
@@ -2630,11 +2804,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -2674,6 +2850,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -2693,7 +2870,7 @@ autowrap_mode = 2
 [node name="Slot3" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy"]
 custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_dmmcw")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3"]
@@ -2703,11 +2880,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -2747,6 +2926,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -2766,7 +2946,7 @@ autowrap_mode = 2
 [node name="Slot4" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy"]
 custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ltrnm")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4"]
@@ -2776,11 +2956,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -2820,6 +3002,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -2861,7 +3044,7 @@ vertical_alignment = 1
 [node name="Slot1" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell"]
 custom_minimum_size = Vector2(0, 103)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_7x8bb")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1"]
@@ -2871,11 +3054,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -2901,6 +3086,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Damage" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1/Row/Col2"]
 custom_minimum_size = Vector2(0, 23)
@@ -2919,7 +3105,7 @@ vertical_alignment = 1
 [node name="Slot2" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell"]
 custom_minimum_size = Vector2(0, 103)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_caicv")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2"]
@@ -2929,11 +3115,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -2959,6 +3147,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Damage" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2/Row/Col2"]
 custom_minimum_size = Vector2(0, 23)
@@ -2977,7 +3166,7 @@ vertical_alignment = 1
 [node name="Slot3" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell"]
 custom_minimum_size = Vector2(0, 103)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_j0sjl")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3"]
@@ -2987,11 +3176,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3017,6 +3208,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Damage" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3/Row/Col2"]
 custom_minimum_size = Vector2(0, 23)
@@ -3035,7 +3227,7 @@ vertical_alignment = 1
 [node name="Slot4" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell"]
 custom_minimum_size = Vector2(0, 103)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5nqfq")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4"]
@@ -3045,11 +3237,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3075,6 +3269,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Damage" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4/Row/Col2"]
 custom_minimum_size = Vector2(0, 23)
@@ -3093,7 +3288,7 @@ vertical_alignment = 1
 [node name="Slot5" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell"]
 custom_minimum_size = Vector2(0, 102)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ja2hr")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5"]
@@ -3103,11 +3298,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3133,6 +3330,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Damage" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5/Row/Col2"]
 custom_minimum_size = Vector2(0, 23)
@@ -3151,7 +3349,7 @@ vertical_alignment = 1
 [node name="Slot6" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell"]
 custom_minimum_size = Vector2(0, 102)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_mfdol")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6"]
@@ -3161,11 +3359,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3191,6 +3391,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Damage" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6/Row/Col2"]
 custom_minimum_size = Vector2(0, 23)
@@ -3207,6 +3408,7 @@ text = " RELOAD: 6.0 SECONDS"
 vertical_alignment = 1
 
 [node name="ShipShop" type="Control" parent="Shop/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="ShipBuy" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop"]
@@ -3233,7 +3435,7 @@ vertical_alignment = 1
 [node name="Slot1" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy"]
 custom_minimum_size = Vector2(0, 205)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_fmgxe")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1"]
@@ -3243,11 +3445,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3273,6 +3477,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3292,7 +3497,7 @@ autowrap_mode = 2
 [node name="Slot2" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy"]
 custom_minimum_size = Vector2(0, 205)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8gm50")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2"]
@@ -3302,11 +3507,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3332,6 +3539,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3351,7 +3559,7 @@ autowrap_mode = 2
 [node name="Slot3" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy"]
 custom_minimum_size = Vector2(0, 206)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4wrhd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_38xjk")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3"]
@@ -3361,11 +3569,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3391,6 +3601,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Desc" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3432,7 +3643,7 @@ vertical_alignment = 1
 [node name="Slot1" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_iqvtj")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1"]
@@ -3442,11 +3653,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3465,6 +3678,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3483,7 +3697,7 @@ vertical_alignment = 1
 [node name="Slot2" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_4ucpr")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2"]
@@ -3493,11 +3707,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3516,6 +3732,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3534,7 +3751,7 @@ vertical_alignment = 1
 [node name="Slot3" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_7orrd")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3"]
@@ -3544,11 +3761,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3567,6 +3786,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3585,7 +3805,7 @@ vertical_alignment = 1
 [node name="Slot4" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_0v5os")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4"]
@@ -3595,11 +3815,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3618,6 +3840,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3636,7 +3859,7 @@ vertical_alignment = 1
 [node name="Slot5" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_0y0nd")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5"]
@@ -3646,11 +3869,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3669,6 +3894,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3687,7 +3913,7 @@ vertical_alignment = 1
 [node name="Slot6" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_15sdr")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6"]
@@ -3697,11 +3923,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3720,6 +3948,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -3738,7 +3967,7 @@ vertical_alignment = 1
 [node name="Slot7" type="PanelContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tsuqu")
 metadata/id = 0
 
 [node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7"]
@@ -3748,11 +3977,13 @@ flat = true
 
 [node name="Row" type="HBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="Col1" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Name" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7/Row/Col1"]
 custom_minimum_size = Vector2(0, 24)
@@ -3771,6 +4002,7 @@ vertical_alignment = 1
 [node name="Col2" type="VBoxContainer" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7/Row"]
 custom_minimum_size = Vector2(344, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Level" type="Label" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7/Row/Col2"]
 custom_minimum_size = Vector2(0, 24)
@@ -4302,6 +4534,7 @@ autostart = true
 [connection signal="mouse_entered" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_mouse_exited"]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous/Button" to="FleetInfoMenu/VBoxContainer/HBoxContainer/ShipInfoTabs/Miscellaneous" method="_on_button_pressed"]
+[connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade/Button" to="." method="upgrade_ship"]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction/Button" to="." method="ship_action" binds= [true]]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction/Button" to="." method="ship_action" binds= [false]]
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip/Button" to="." method="abandon_ship"]
@@ -4313,6 +4546,46 @@ autostart = true
 [connection signal="pressed" from="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer/Right" to="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu" method="right_button" binds= [2]]
 [connection signal="pressed" from="Shop/VBoxContainer/TopTab/ItemButton/Button" to="." method="_item_shop"]
 [connection signal="pressed" from="Shop/VBoxContainer/TopTab/ShipButton/Button" to="." method="_ship_shop"]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1/Button" to="." method="hover_shop" binds= [1]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1/Button" to="." method="buy_item" binds= [0]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2/Button" to="." method="hover_shop" binds= [2]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2/Button" to="." method="buy_item" binds= [1]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3/Button" to="." method="hover_shop" binds= [3]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3/Button" to="." method="buy_item" binds= [2]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4/Button" to="." method="hover_shop" binds= [4]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4/Button" to="." method="buy_item" binds= [3]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1/Button" to="." method="hover_shop" binds= [6]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1/Button" to="." method="sell_item" binds= [0]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2/Button" to="." method="hover_shop" binds= [7]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2/Button" to="." method="sell_item" binds= [1]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3/Button" to="." method="hover_shop" binds= [8]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3/Button" to="." method="sell_item" binds= [2]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4/Button" to="." method="hover_shop" binds= [9]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4/Button" to="." method="sell_item" binds= [3]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5/Button" to="." method="hover_shop" binds= [10]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5/Button" to="." method="sell_item" binds= [4]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6/Button" to="." method="hover_shop" binds= [11]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6/Button" to="." method="sell_item" binds= [5]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1/Button" to="." method="hover_shop" binds= [1]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1/Button" to="." method="buy_ship" binds= [0]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2/Button" to="." method="hover_shop" binds= [2]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2/Button" to="." method="buy_ship" binds= [1]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3/Button" to="." method="hover_shop" binds= [3]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3/Button" to="." method="buy_ship" binds= [2]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1/Button" to="." method="hover_shop" binds= [5]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1/Button" to="." method="sell_ship" binds= [1]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2/Button" to="." method="hover_shop" binds= [6]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2/Button" to="." method="sell_ship" binds= [2]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3/Button" to="." method="hover_shop" binds= [7]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3/Button" to="." method="sell_ship" binds= [3]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4/Button" to="." method="hover_shop" binds= [8]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4/Button" to="." method="sell_ship" binds= [4]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5/Button" to="." method="hover_shop" binds= [9]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5/Button" to="." method="sell_ship" binds= [5]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6/Button" to="." method="hover_shop" binds= [10]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6/Button" to="." method="sell_ship" binds= [6]]
+[connection signal="mouse_entered" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7/Button" to="." method="hover_shop" binds= [11]]
+[connection signal="pressed" from="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7/Button" to="." method="sell_ship" binds= [7]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="." method="select_dialogue" binds= [1]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option2" to="." method="select_dialogue" binds= [2]]
 [connection signal="pressed" from="Dialogue/MarginContainer/VBoxContainer/MarginContainer/Options/Option3" to="." method="select_dialogue" binds= [3]]

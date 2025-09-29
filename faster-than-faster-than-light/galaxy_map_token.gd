@@ -11,6 +11,7 @@ var panel_right: float = 1555.0
 func _process(delta: float) -> void:
 	# Spin
 	rotation_degrees += rotation_rate * delta
+	$Range.scale = Vector2.ONE * (Global.jump_distance / 100.0)
 
 
 # This is slightly delayed instead of being on the _ready() function so that it
@@ -20,7 +21,6 @@ func _on_timer_timeout() -> void:
 	if id == Global.current_system:
 		$ColorRect2.show()
 		Global.system_position = position
-		$Range.scale = Vector2.ONE * (Global.jump_distance / 100.0)
 		$Range.show()
 	else:
 		$ColorRect2.hide()

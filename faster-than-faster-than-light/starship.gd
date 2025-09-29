@@ -37,6 +37,8 @@ class_name Starship extends Node3D
 @export var agility: float
 ## The starship's currently active weapons
 @export var weapons: Array[int] = [0]
+## The starship's available drone slots
+@export var drone_slots: Array[int] = [1]
 @export_category("Misc")
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
@@ -64,6 +66,8 @@ var active: bool = true
 var shield_layers: int
 var attacked: bool = false
 
+const INFILTRATE_RECHARGE: float = 16.0
+const INFILTRATE_UPGRADE: float = 3.5
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
 
@@ -104,6 +108,8 @@ func _ready() -> void:
 			index += 1
 	elif type == 2:
 		shield_layers = level
+	elif type == 3:
+		$InfiltrateReload.wait_time = INFILTRATE_RECHARGE - (level * INFILTRATE_UPGRADE)
 	elif type == 4:
 		$RepairReload.wait_time = REPAIR_TIME - (level * REPAIR_UPGRADE)
 
@@ -162,6 +168,8 @@ func _process(_delta: float) -> void:
 					get_node("Marker/Reload" + str(i + 1) + "/ProgressBar").value = 100 - ((this_timer.time_left / this_timer.wait_time) * 100)
 			else:
 				$WeaponReload1.stop()
+				$WeaponReload2.stop()
+				$WeaponReload3.stop()
 		if type == 2:
 			if shield_layers < level:
 				if $ShieldReload.is_stopped():
@@ -205,8 +213,7 @@ func _on_jump_delay_timeout() -> void:
 	jump_mode += 1
 
 
-func begin_warp() -> void:
-	# Update fleet data
+func stats_update() -> void:
 	var index: int = _get_data_location()
 	Global.fleet[index].ship_name = ship_name
 	Global.fleet[index].level = level
@@ -215,6 +222,12 @@ func begin_warp() -> void:
 	Global.fleet[index].agility = agility
 	Global.fleet[index].weapons = weapons
 	Global.fleet[index].active = active
+	Global.stats_update()
+
+
+func begin_warp() -> void:
+	# Update fleet data
+	stats_update()
 	$JumpDelay.start(randf() * 2)
 
 
@@ -233,15 +246,15 @@ func new_target(ship: int) -> void:
 
 
 func _weapon_fire(firing: int) -> void:
-	print(ship_name + " FIRE")
+	print(ship_name + " FIRES WEAPON " + str(firing))
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
+	print(target)
 	if target == null:
 		new_target(0)
 	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 
 func _new_projectile(projectile_type: int, damage: int) -> void:
-	print(projectile_type)
 	var new_projectile: Node = projectiles[projectile_type].instantiate()
 	new_projectile.starting_position = global_position
 	new_projectile.target = target
@@ -261,7 +274,11 @@ func _get_data_location() -> int:
 func _repair() -> void:
 	if target == null:
 		new_target(0)
-	target.hull += 1
+	if level < 3:
+		target.hull += 1
+	else:
+		target.hull += 2
+	target.hull = clampi(target.hull, 0, target.hull_strength)
 
 
 func _shield_up() -> void:
