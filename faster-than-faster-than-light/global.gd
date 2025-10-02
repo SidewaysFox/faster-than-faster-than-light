@@ -10,11 +10,12 @@ var initialising: bool = true
 var playing: bool = true
 var resources: int = 0
 var fuel: int = 80
-var starting_fleet: Array[int] = [0, 1, 4, 4, 4, 6]
+var starting_fleet: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
 var fleet: Array = []
 var max_inventory: int = 4
 var jump_distance: float = 140.0
 var charge_rate: float = 2.0
+var crit_chance: float = 0.0
 var galaxy_data: Array = []
 var current_system: int
 var system_position: Vector2
@@ -117,8 +118,8 @@ var upgrade_specifications: Array = [
 		["+2 HULL STRENGTH", "FASTER REPAIR", "+1 REPAIR"],
 	],
 	[
-		["+1 HULL STRENGTH", "+0.05 AGILITY", "+ SCANNER RADIUS"],
-		["+1 HULL STRENGTH", "+0.1 AGILITY", "+ SCANNER RADIUS"],
+		["+1 HULL STRENGTH", "+0.05 AGILITY", "+5% CRIT CHANCE"],
+		["+1 HULL STRENGTH", "+0.1 AGILITY", "+5% CRIT CHANCE"],
 	],
 	[
 		["+1 HULL STRENGTH", "+0.05 AGILITY", "INCREASED RANGE"],
@@ -233,10 +234,7 @@ var weapon_list: Array[Dictionary] = [
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
 
 var fleet_inventory: Array = [ # Stores the weapon ID
-	2,
-	2,
-	2,
-	2,
+	
 ]
 
 
@@ -247,6 +245,7 @@ func establish() -> void:
 	fleet = []
 	max_inventory = 4
 	jump_distance = 140.0
+	crit_chance = 0.0
 	charge_rate = 2.0
 	galaxy_data = []
 	visited_systems = []
@@ -326,7 +325,10 @@ func get_new_ship_id() -> int:
 func stats_update() -> void:
 	jump_distance = 140.0
 	charge_rate = 2.0
+	crit_chance = 0.0
 	for ship in fleet:
+		if ship.type == 5:
+			crit_chance += 0.05 * ship.level
 		if ship.type == 6:
 			jump_distance += 20.0 * ship.level
 			charge_rate += ship.level

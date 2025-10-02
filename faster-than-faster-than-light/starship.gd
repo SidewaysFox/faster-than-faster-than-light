@@ -65,6 +65,7 @@ var status: int
 var active: bool = true
 var shield_layers: int
 var attacked: bool = false
+var scanned: bool = false
 
 const INFILTRATE_RECHARGE: float = 16.0
 const INFILTRATE_UPGRADE: float = 3.5
@@ -120,38 +121,40 @@ func _process(_delta: float) -> void:
 			Global.fleet.remove_at(_get_data_location())
 		queue_free()
 	
-	if ui.action_menu_showing and team == 1:
-		$Marker.show()
-		$Marker/Reload1.hide()
-		$Marker/Reload2.hide()
-		$Marker/Reload3.hide()
-		var hover_alpha: int
-		if team == 1:
-			if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
-				hover_alpha = 255
-			else:
-				hover_alpha = 160
-		elif team == -1:
-			if ui.hovered_target == get_index() and ui.targeting_mode != 4:
-				hover_alpha = 255
-			else:
-				hover_alpha = 160
-		if ui.selected_ship == get_index() and team == 1:
-			marker.border_color = Color8(0, 191, 255, hover_alpha)
+	var hover_alpha: int
+	$Marker/Reload1.hide()
+	$Marker/Reload2.hide()
+	$Marker/Reload3.hide()
+	if team == 1:
+		if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
+			hover_alpha = 255
 		else:
-			marker.border_color = Color8(255, 255, 255, hover_alpha)
-		if ui.selected_ship < main.get_node("FriendlyShips").get_child_count():
-			if main.get_node("FriendlyShips").get_child(ui.selected_ship).target != null:
-				if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
-					$Marker/Target.show()
-				else:
-					$Marker/Target.hide()
-		
-		$Marker/Info/Name.text = "NAME: " + ship_name
-		$Marker/Info/Type.text = "TYPE: " + ui.SHIP_CODES[type]
-		$Marker/Info/Hull.text = "HULL: " + str(hull)
+			hover_alpha = 160
+	elif team == -1:
+		if ui.hovered_target == get_index() and ui.targeting_mode != 4:
+			hover_alpha = 255
+		else:
+			hover_alpha = 160
+	if ui.selected_ship == get_index() and team == 1:
+		marker.border_color = Color8(0, 191, 255, hover_alpha)
+	else:
+		marker.border_color = Color8(255, 255, 255, hover_alpha)
+	if ui.selected_ship < main.get_node("FriendlyShips").get_child_count():
+		if main.get_node("FriendlyShips").get_child(ui.selected_ship).target != null:
+			if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
+				$Marker/Target.show()
+			else:
+				$Marker/Target.hide()
+	$Marker/Info/Name.text = "NAME: " + ship_name
+	$Marker/Info/Type.text = "TYPE: " + ui.SHIP_CODES[type]
+	$Marker/Info/Hull.text = "HULL: " + str(hull)
+	
+	if ui.action_menu_showing and (team == 1 or scanned):
+		$Marker.show()
 	else:
 		$Marker.hide()
+	
+	scanned = false
 	
 	if active and not attacked:
 		if type == 1:
@@ -193,6 +196,10 @@ func _process(_delta: float) -> void:
 				$RepairReload.start()
 			elif target.hull >= target.hull_strength:
 				$RepairReload.stop()
+		if type == 5 and Global.in_combat:
+			if target == null:
+				new_target()
+			target.scanned = true
 	else:
 		for num in len(weapons):
 			if get_node("WeaponReload" + str(num + 1)).time_left < 0.1:
@@ -231,7 +238,7 @@ func begin_warp() -> void:
 	$JumpDelay.start(randf() * 2)
 
 
-func new_target(ship: int) -> void:
+func new_target(ship: int = 0) -> void:
 	# Choose a target
 	if type == 1 or type == 3 or type == 5:
 		if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
@@ -250,7 +257,7 @@ func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
 	print(target)
 	if target == null:
-		new_target(0)
+		new_target()
 	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 
@@ -273,7 +280,7 @@ func _get_data_location() -> int:
 
 func _repair() -> void:
 	if target == null:
-		new_target(0)
+		new_target()
 	if level < 3:
 		target.hull += 1
 	else:
@@ -288,7 +295,7 @@ func _shield_up() -> void:
 
 func _on_infiltrate_reload_timeout() -> void:
 	if target == null:
-		new_target(0)
+		new_target()
 	target.attacked = true
 	target.get_node("UnderAttack").start()
 

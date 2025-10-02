@@ -1,0 +1,85 @@
+[gd_scene load_steps=12 format=3 uid="uid://bdo7iuweolhl0"]
+
+[ext_resource type="Script" uid="uid://dj2c17mgoq0wa" path="res://starship_mesh.gd" id="1_6si2h"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_6si2h"]
+resource_local_to_scene = true
+size = Vector3(9, 2, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m2ayx"]
+albedo_color = Color(0.156863, 0.156863, 0.156863, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_av6ap"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_m2ayx")
+size = Vector3(8, 3, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xk6d5"]
+resource_local_to_scene = true
+size = Vector3(6, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_to7y7"]
+resource_local_to_scene = true
+size = Vector3(6, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_813ad"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_m2ayx")
+size = Vector3(8, 3, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aq5na"]
+resource_local_to_scene = true
+size = Vector3(6, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cdbqh"]
+resource_local_to_scene = true
+size = Vector3(6, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aqxbm"]
+resource_local_to_scene = true
+size = Vector3(16, 1, 6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4liei"]
+resource_local_to_scene = true
+size = Vector3(16, 1, 6)
+
+[node name="ScannerMesh" type="Node3D"]
+script = ExtResource("1_6si2h")
+
+[node name="Hull0" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_6si2h")
+
+[node name="HullTop2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("BoxMesh_av6ap")
+
+[node name="HullTopRightAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.5)
+mesh = SubResource("BoxMesh_xk6d5")
+
+[node name="HullTopLeftAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.5)
+mesh = SubResource("BoxMesh_to7y7")
+
+[node name="HullBot2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+mesh = SubResource("BoxMesh_813ad")
+
+[node name="HullBotRightAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.75, 0.5)
+mesh = SubResource("BoxMesh_aq5na")
+
+[node name="HullBotLeftAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.75, -0.5)
+mesh = SubResource("BoxMesh_cdbqh")
+
+[node name="WingTop1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+mesh = SubResource("BoxMesh_aqxbm")
+
+[node name="WingBot1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0)
+mesh = SubResource("BoxMesh_4liei")
