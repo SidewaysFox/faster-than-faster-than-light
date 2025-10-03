@@ -46,6 +46,30 @@ var shop_ship_descriptions: Array[String] = [
 ]
 
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
+	[[1, "tutorial", "enemy presence"],
+	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
+	[["Noted.", ["dialogue_set_up", 4, 6]]]
+	],
+	[[2, "tutorial", "enemy presence"],
+	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
+	[["Noted.", ["dialogue_set_up", 4, 6]]]
+	],
+	[[3, "tutorial", "enemy presence"],
+	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
+	[["Noted.", ["dialogue_set_up", 4, 6]]]
+	],
+	[[1, "tutorial", "shop presence"],
+	"This star system has a shop present within it. You can initiate trade to purchase or sell weapons and starships in order to improve your fleet. Have a look around with the tech you have right now and see if you can afford anything.",
+	[["OK.", ["close", false]]]
+	],
+	[[2, "tutorial", "shop presence"],
+	"This star system has a shop present within it. You can initiate trade to purchase or sell weapons and starships in order to improve your fleet. Have a look around with the tech you have right now and see if you can afford anything.",
+	[["OK.", ["close", false]]]
+	],
+	[[3, "tutorial", "shop presence"],
+	"This star system has a shop present within it. You can initiate trade to purchase or sell weapons and starships in order to improve your fleet. Have a look around with the tech you have right now and see if you can afford anything.",
+	[["OK.", ["close", false]]]
+	],
 	[[1],
 	"As your fleet exits its jump, you take in the picturesque scenery around you.",
 	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
@@ -189,6 +213,33 @@ var encounter_win_dialogue: Array = [
 var intro_dialogues: Array = [
 	["You, as an Alliance fleet commander, have been tasked with a crucial mission: deliver a package of goods and weapons to an isolated Alliance navy, who are currently fighting against the rebel uprising. The region of space ahead is outside of policed Alliance territory and is rife with pirates and other threats. In the rush to respond to the sudden rebel presence, you were only able to mobilise a small squadron of starships.\nMake the delivery, and save millions of lives.\nThe rest is up to you.",
 	[["Let's go.", ["close", false]]]
+	],
+	["Welcome, commander, to Fatal Fleet! You have been given authority of a small fleet of ships, and are expected to be able to adequately lead those ships through the cosmos.\nIn this tutorial, you will learn the ropes of fleet command, including the basics of combat.",
+	[["Continue", ["dialogue_set_up", 4, 0]]]
+	],
+]
+
+var tutorial_dialogues: Array = [
+	["First and foremost, the right side of your interface shows your controls and their related keyboard shortcuts. You can hide or show this at will.\nAt the top of your interface, you can see how much \"tech\" (galactic currency) you currently have, as well as how much fuel you have ready to use. Each ship in your fleet requires one fuel canister to jump between star systems. The bar to the right of that displays your fleet's current warp charge progress. You will not be able to travel to another system until your warp drives have finished charging.\nYou can hide the entire interface at any time by holding \"~\".",
+	[["OK", ["dialogue_set_up", 4, 1]], ["Back", ["dialogue_set_up", 3, 1]]]
+	],
+	["A crucial part of your toolset is the Fleet Information Menu. This panel can be accessed by pressing the Info Menu button and contains useful data about the starships in your fleet. You can also give instructions to them, upgrade them or possibly change up their equipment.",
+	[["OK", ["dialogue_set_up", 4, 2]], ["Back", ["dialogue_set_up", 4, 0]]]
+	],
+	["Speaking of starships, there are eight different types you should know about.\nCMND: Command Ship - Your fleet's flagship, within which you are seated. It is imperative that you protect this ship.\nFGHT: Fighter - Engages with and destroys threats as instructed by you. You can change which weapons it uses in the Fleet Info Menu.\nSHLD: Shield Ship: Protects your fleet from incoming projectiles. Can be bypassed by some projectiles and will need to recharge upon successfully blocking one.",
+	[["Continue", ["dialogue_set_up", 4, 3]], ["Back", ["dialogue_set_up", 4, 1]]]
+	],
+	["INFL - Infiltration Ship: Teleports troops onto enemy starships to temporarily disable them.\nREPR - Repair Ship: Gradually repairs your starships' hulls in and out of combat.\nSCAN - Scanner Ship: Scans enemy starships, revealing information about them and searching for weak spots.",
+	[["Continue", ["dialogue_set_up", 4, 4]], ["Back", ["dialogue_set_up", 4, 2]]]
+	],
+	["RLAY - Relay Ship: Boosts your warp drive charge rate and increases the distance you can travel in one jump.\nDRON - Drone Command Ship: Deploys drones to autonomously aid you in battle. Can operate fighter or repair drones, depending on its upgrade level.",
+	[["OK", ["dialogue_set_up", 4, 5]], ["Back", ["dialogue_set_up", 4, 3]]]
+	],
+	["That's all for now. Have a play around with the menus and, when ready, open the Galaxy Map with the Galaxy Map button to warp to the next system.",
+	[["OK", ["close", false]], ["Back", ["dialogue_set_up", 4, 4]]]
+	],
+	["",
+	[["OK", ["close", false]], ["Back", ["dialogue_set_up", 4, 4]]]
 	],
 ]
 
@@ -654,6 +705,14 @@ func dialogue_set_up(library: int, id: int) -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + intro_dialogues[id][1][i][0]
 			option_results.append(intro_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
+	elif library == 4:
+		%DialogueText.text = tutorial_dialogues[id][0]
+		max_option = len(tutorial_dialogues[id][1])
+		# Options
+		for i in max_option:
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + tutorial_dialogues[id][1][i][0]
+			option_results.append(tutorial_dialogues[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).show()
 	$Dialogue.show()
 	dialogue_showing = true
 	ready_to_select = true
@@ -803,7 +862,10 @@ func _ship_shop() -> void:
 func _on_warp_in_dialogue_timeout() -> void:
 	if Global.current_system in Global.visited_systems:
 		if intro_dialogue:
-			dialogue_set_up(3, 0)
+			if Global.tutorial:
+				dialogue_set_up(3, 1)
+			else:
+				dialogue_set_up(3, 0)
 			time_paused = true
 			intro_dialogue = false
 		else:
@@ -950,6 +1012,8 @@ func lose() -> void:
 	$GalaxyMap.hide()
 	action_menu_showing = false
 	$ShipActionMenu.hide()
+	info_menu_showing = false
+	$FleetInfoMenu.hide()
 	dialogue_set_up(1, 3)
 
 

@@ -8,9 +8,10 @@ var music_volume: float = 100.0
 var sfx_volume: float = 100.0
 var initialising: bool = true
 var playing: bool = true
+var tutorial: bool = false
 var resources: int = 0
 var fuel: int = 80
-var starting_fleet: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
+var starting_fleet: Array[int] = [0]
 var fleet: Array = []
 var max_inventory: int = 4
 var jump_distance: float = 140.0
@@ -239,63 +240,84 @@ var fleet_inventory: Array = [ # Stores the weapon ID
 
 
 func establish() -> void:
+	# Establish the game
 	playing = true
-	resources = 600
+	resources = 25
 	fuel = 80
-	fleet = []
 	max_inventory = 4
-	jump_distance = 140.0
-	crit_chance = 0.0
-	charge_rate = 2.0
+	fleet = []
 	galaxy_data = []
 	visited_systems = []
 	unique_visits = 0
 	next_ship_id = -1
 	in_combat = false
-	# Establish the game
-	var sector: int = 0
-	var system_id: int = 0
-	var starting_system: Array = [0, 800.0]
-	# Generate galaxy map
-	for row in SECTOR_ROWS:
-		for column in SECTOR_COLUMNS:
-			for index in randi_range(0, MAX_SECTOR_SYSTEMS):
-				var system_type: int = randi_range(0, 19)
-				var enemy_presence: bool = false
-				var shop_presence: bool = false
-				if system_type >= ENEMY_THRESHOLD:
-					enemy_presence = true
-				elif system_type < ENEMY_THRESHOLD and system_type >= SHOP_THRESHOLD:
-					shop_presence = true
-				# Set up and store data
-				galaxy_data.append({
-					"id": system_id,
-					"position": Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y)),
-					"sector": column,
-					"enemy presence": enemy_presence,
-					"shop presence": shop_presence,
-				})
-				system_id += 1
-			sector += 1
-	
-	#for c in SECTOR_COLUMNS:
-		#for n in MAX_SECTOR_SYSTEMS: # ID, position, sector, enemy presence
-			#var enemy_presence: bool
-			#if randi_range(1, 3) == 3:
-				#enemy_presence = true
-			#else:
-				#enemy_presence = false
-			## Set up and store the data
-			#galaxy_data.append({
-				#"id": system_id,
-				#"position": Vector2((sector * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), randf_range(GMAP_TOP, GMAP_BOT)),
-				#"sector": c,
-				#"enemy presence": enemy_presence
-				#})
-			#system_id += 1
-		#sector += 1
+	if tutorial:
+		galaxy_data = [
+			{
+				"id": 0,
+				"position": Vector2(155, 310),
+				"sector": 0,
+				"enemy presence": false,
+				"shop presence": false,
+			},
+			{
+				"id": 1,
+				"position": Vector2(235, 310),
+				"sector": 1,
+				"enemy presence": true,
+				"shop presence": false,
+			},
+			{
+				"id": 2,
+				"position": Vector2(400, 310),
+				"sector": 2,
+				"enemy presence": false,
+				"shop presence": true,
+			},
+			]
+		starting_fleet = [0, 1, 2, 3, 4, 5, 6]
+	else:
+		var system_id: int = 0
+		# Generate galaxy map
+		for row in SECTOR_ROWS:
+			for column in SECTOR_COLUMNS:
+				for index in randi_range(0, MAX_SECTOR_SYSTEMS):
+					var system_type: int = randi_range(0, 19)
+					var enemy_presence: bool = false
+					var shop_presence: bool = false
+					if system_type >= ENEMY_THRESHOLD:
+						enemy_presence = true
+					elif system_type < ENEMY_THRESHOLD and system_type >= SHOP_THRESHOLD:
+						shop_presence = true
+					# Set up and store data
+					galaxy_data.append({
+						"id": system_id,
+						"position": Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y)),
+						"sector": column,
+						"enemy presence": enemy_presence,
+						"shop presence": shop_presence,
+					})
+					system_id += 1
+		
+		#for c in SECTOR_COLUMNS:
+			#for n in MAX_SECTOR_SYSTEMS: # ID, position, sector, enemy presence
+				#var enemy_presence: bool
+				#if randi_range(1, 3) == 3:
+					#enemy_presence = true
+				#else:
+					#enemy_presence = false
+				## Set up and store the data
+				#galaxy_data.append({
+					#"id": system_id,
+					#"position": Vector2((sector * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), randf_range(GMAP_TOP, GMAP_BOT)),
+					#"sector": c,
+					#"enemy presence": enemy_presence
+					#})
+				#system_id += 1
+			#sector += 1
 	
 	# Check which system is furthest to the left
+	var starting_system: Array = [0, 800.0]
 	for i in galaxy_data:
 		if i["position"].x < starting_system[1]:
 			starting_system = [i["id"], i["position"].x]
@@ -310,9 +332,10 @@ func establish() -> void:
 	stats_update()
 
 
-func new_game() -> void:
+func new_game(tutor: bool = false) -> void:
 	print("NEW GAME")
 	initialising = true
+	tutorial = tutor
 	get_tree().change_scene_to_file("res://space.tscn")
 
 

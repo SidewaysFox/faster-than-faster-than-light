@@ -1,8 +1,8 @@
 extends Control
 
 
-func _on_new_game_pressed() -> void:
-	Global.new_game()
+func _on_new_game_pressed(tutorial: bool = false) -> void:
+	Global.new_game(tutorial)
 
 
 func _on_settings_pressed() -> void:

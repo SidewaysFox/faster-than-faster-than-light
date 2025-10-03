@@ -144,6 +144,8 @@ func _ready() -> void:
 				$Background.add_child(new_nebula)
 	# Set up conditions for the warp in dialogue
 	system_properties.append(main_star_count)
+	if Global.tutorial:
+		system_properties.append("tutorial")
 	if Global.galaxy_data[Global.current_system]["enemy presence"]:
 		system_properties.append("enemy presence")
 		var enemy_fleet: Array = pirate_fleets[system_stage].pick_random()
@@ -152,7 +154,7 @@ func _ready() -> void:
 			Global.create_enemy_ship(ship)
 	if Global.galaxy_data[Global.current_system]["shop presence"]:
 		system_properties.append("shop presence")
-	if star_proximity:
+	if star_proximity and not Global.tutorial:
 		system_properties.append("star proximity")
 
 
