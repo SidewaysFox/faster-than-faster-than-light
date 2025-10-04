@@ -7,17 +7,18 @@ var dual_joysticks: bool = true
 var music_volume: float = 100.0
 var sfx_volume: float = 100.0
 var initialising: bool = true
-var playing: bool = true
+var playing: bool = false
 var tutorial: bool = false
-var resources: int = 0
-var fuel: int = 80
-var starting_fleet: Array[int] = [0]
+var resources: int
+var fuel: int
+var starting_fleet: Array[int]
 var fleet: Array = []
-var max_inventory: int = 4
-var jump_distance: float = 140.0
-var charge_rate: float = 2.0
-var crit_chance: float = 0.0
+var max_inventory: int
+var jump_distance: float
+var charge_rate: float
+var crit_chance: float
 var galaxy_data: Array = []
+var destination: int
 var current_system: int
 var system_position: Vector2
 var visited_systems: Array[int] = []
@@ -26,6 +27,17 @@ var joystick_sens: float = 1.5
 var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
+
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1]
+const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
+const STARTING_RESOURCES: int = 25
+const STARTING_FUEL: int = 80
+const STARTING_INVENTORY: Array[int] = []
+const TUTORIAL_INVENTORY: Array[int] = [1, 6]
+const DEFAULT_INV_SIZE: int = 4
+const DEFAULT_JUMP_DISTANCE: float = 140.0
+const DEFAULT_CHARGE_RATE: float = 2.0
+const DEFAULT_CRIT_CHANCE: float = 0.0
 
 const SECTOR_ROWS: int = 8
 const SECTOR_COLUMNS: int = 32
@@ -242,9 +254,9 @@ var fleet_inventory: Array = [ # Stores the weapon ID
 func establish() -> void:
 	# Establish the game
 	playing = true
-	resources = 25
-	fuel = 80
-	max_inventory = 4
+	resources = STARTING_RESOURCES
+	fuel = STARTING_FUEL
+	max_inventory = DEFAULT_INV_SIZE
 	fleet = []
 	galaxy_data = []
 	visited_systems = []
@@ -252,6 +264,8 @@ func establish() -> void:
 	next_ship_id = -1
 	in_combat = false
 	if tutorial:
+		starting_fleet = DEFAULT_TUTORIAL_FLEET
+		fleet_inventory = TUTORIAL_INVENTORY
 		galaxy_data = [
 			{
 				"id": 0,
@@ -269,14 +283,22 @@ func establish() -> void:
 			},
 			{
 				"id": 2,
-				"position": Vector2(400, 310),
+				"position": Vector2(360, 310),
 				"sector": 2,
 				"enemy presence": false,
 				"shop presence": true,
 			},
+			{
+				"id": 3,
+				"position": Vector2(450, 310),
+				"sector": 3,
+				"enemy presence": false,
+				"shop presence": false,
+			},
 			]
-		starting_fleet = [0, 1, 2, 3, 4, 5, 6]
 	else:
+		starting_fleet = DEFAULT_STARTING_FLEET
+		fleet_inventory = STARTING_INVENTORY
 		var system_id: int = 0
 		# Generate galaxy map
 		for row in SECTOR_ROWS:
@@ -317,12 +339,19 @@ func establish() -> void:
 			#sector += 1
 	
 	# Check which system is furthest to the left
+	# Same for which is furthest to the right
 	var starting_system: Array = [0, 800.0]
+	var end_system: Array = [0, 400.0]
 	for i in galaxy_data:
 		if i["position"].x < starting_system[1]:
 			starting_system = [i["id"], i["position"].x]
+		elif i["position"].x > end_system[1]:
+			end_system = [i["id"], i["position"].x]
 	current_system = starting_system[0]
+	destination = end_system[0]
 	galaxy_data[current_system]["enemy presence"] = false
+	galaxy_data[destination]["enemy presence"] = false
+	galaxy_data[destination]["shop presence"] = false
 	new_system(current_system)
 	
 	# Create the fleet
@@ -346,9 +375,9 @@ func get_new_ship_id() -> int:
 
 # Update fleet stats
 func stats_update() -> void:
-	jump_distance = 140.0
-	charge_rate = 2.0
-	crit_chance = 0.0
+	jump_distance = DEFAULT_JUMP_DISTANCE
+	charge_rate = DEFAULT_CHARGE_RATE
+	crit_chance = DEFAULT_CRIT_CHANCE
 	for ship in fleet:
 		if ship.type == 5:
 			crit_chance += 0.05 * ship.level

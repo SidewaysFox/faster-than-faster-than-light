@@ -70,12 +70,36 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	"This star system has a shop present within it. You can initiate trade to purchase or sell weapons and starships in order to improve your fleet. Have a look around with the tech you have right now and see if you can afford anything.",
 	[["OK.", ["close", false]]]
 	],
+	[[1, "tutorial", "destination"],
+	"Well done for completing this short introductory course to Fatal Fleet.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
+	[["OK.", ["close", false, true]]]
+	],
+	[[2, "tutorial", "destination"],
+	"Well done for completing this short introductory course to Fatal Fleet.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
+	[["OK.", ["close", false, true]]]
+	],
+	[[3, "tutorial", "destination"],
+	"Well done for completing this short introductory course to Fatal Fleet.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
+	[["OK.", ["close", false, true]]]
+	],
+	[[1, "destination"],
+	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing Fatal Fleet.",
+	[["Complete the delivery.", ["close", false, true]]]
+	],
+	[[2, "destination"],
+	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing Fatal Fleet.",
+	[["Complete the delivery.", ["close", false, true]]]
+	],
+	[[3, "destination"],
+	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing Fatal Fleet.",
+	[["Complete the delivery.", ["close", false, true]]]
+	],
 	[[1],
 	"As your fleet exits its jump, you take in the picturesque scenery around you.",
 	[["Enjoy the view as your warp drives charge up once more.", ["close", false]]]
 	],
 	[[1],
-	"You wait with bated breath, half expecting a rebel ambush as you exit warp, but none comes. You live another day.",
+	"You wait with bated breath, half expecting a pirate ambush as you exit warp, but none comes. You live another day.",
 	[["Let's not wait around. Charge up the warp drives.", ["close", false]]]
 	],
 	[[1],
@@ -191,7 +215,7 @@ var response_dialogue: Array = [ # Main text, [option, result]
 	[["Celebrate and continue the journey.", ["close", false]]]
 	],
 	["You have lost.",
-	[["Try once more.", ["restart"]], ["Give up.", ["quit"]]]
+	[["Try once more.", ["restart"]], ["Give up.", ["quit_to_menu"]]]
 	],
 	["Unfortunately no usable material was found, but some unused fuel canisters were successfully recovered.",
 	[["Add them to your fleet's fuel reserves and continue the journey.", ["close", false]]]
@@ -221,10 +245,10 @@ var intro_dialogues: Array = [
 
 var tutorial_dialogues: Array = [
 	["First and foremost, the right side of your interface shows your controls and their related keyboard shortcuts. You can hide or show this at will.\nAt the top of your interface, you can see how much \"tech\" (galactic currency) you currently have, as well as how much fuel you have ready to use. Each ship in your fleet requires one fuel canister to jump between star systems. The bar to the right of that displays your fleet's current warp charge progress. You will not be able to travel to another system until your warp drives have finished charging.\nYou can hide the entire interface at any time by holding \"~\".",
-	[["OK", ["dialogue_set_up", 4, 1]], ["Back", ["dialogue_set_up", 3, 1]]]
+	[["OK.", ["dialogue_set_up", 4, 1]], ["Back", ["dialogue_set_up", 3, 1]]]
 	],
 	["A crucial part of your toolset is the Fleet Information Menu. This panel can be accessed by pressing the Info Menu button and contains useful data about the starships in your fleet. You can also give instructions to them, upgrade them or possibly change up their equipment.",
-	[["OK", ["dialogue_set_up", 4, 2]], ["Back", ["dialogue_set_up", 4, 0]]]
+	[["OK.", ["dialogue_set_up", 4, 2]], ["Back", ["dialogue_set_up", 4, 0]]]
 	],
 	["Speaking of starships, there are eight different types you should know about.\nCMND: Command Ship - Your fleet's flagship, within which you are seated. It is imperative that you protect this ship.\nFGHT: Fighter - Engages with and destroys threats as instructed by you. You can change which weapons it uses in the Fleet Info Menu.\nSHLD: Shield Ship: Protects your fleet from incoming projectiles. Can be bypassed by some projectiles and will need to recharge upon successfully blocking one.",
 	[["Continue", ["dialogue_set_up", 4, 3]], ["Back", ["dialogue_set_up", 4, 1]]]
@@ -233,13 +257,13 @@ var tutorial_dialogues: Array = [
 	[["Continue", ["dialogue_set_up", 4, 4]], ["Back", ["dialogue_set_up", 4, 2]]]
 	],
 	["RLAY - Relay Ship: Boosts your warp drive charge rate and increases the distance you can travel in one jump.\nDRON - Drone Command Ship: Deploys drones to autonomously aid you in battle. Can operate fighter or repair drones, depending on its upgrade level.",
-	[["OK", ["dialogue_set_up", 4, 5]], ["Back", ["dialogue_set_up", 4, 3]]]
+	[["OK.", ["dialogue_set_up", 4, 5]], ["Back", ["dialogue_set_up", 4, 3]]]
 	],
 	["That's all for now. Have a play around with the menus and, when ready, open the Galaxy Map with the Galaxy Map button to warp to the next system.",
-	[["OK", ["close", false]], ["Back", ["dialogue_set_up", 4, 4]]]
+	[["OK.", ["close", false]], ["Back", ["dialogue_set_up", 4, 4]]]
 	],
-	["",
-	[["OK", ["close", false]], ["Back", ["dialogue_set_up", 4, 4]]]
+	["After pausing time, open the Ship Action Menu with the Action Menu button to give each of your ships a target to focus on.\nRepair ships will focus on starships within your own fleet.",
+	[["OK.", ["close", true]]]
 	],
 ]
 
@@ -735,7 +759,7 @@ func _action_menu() -> void:
 
 
 func _time_pause() -> void:
-	if not galaxy_map_showing:
+	if not galaxy_map_showing and not dialogue_showing:
 		time_paused = not time_paused
 
 
@@ -898,13 +922,16 @@ func _quantity_change(quantity_type: int, up: bool) -> void:
 
 
 # Close the dialogue box
-func close(combat: bool) -> void:
+func close(combat: bool, end: bool = false) -> void:
 	$Dialogue.hide()
 	dialogue_showing = false
+	time_paused = false
 	if combat:
 		Global.in_combat = true
 	else:
 		main.warp_charge = 100.0
+	if end:
+		quit_to_menu()
 
 
 # Give the player resources from a dialogue event
@@ -929,8 +956,6 @@ func select_dialogue(n: int) -> void:
 		callv(option_results[n - 1][0], args)
 	else:
 		call(option_results[n - 1][0])
-	Engine.time_scale = 1.0
-	time_paused = false
 
 
 func hover_ship(n: int) -> void:
@@ -1017,8 +1042,9 @@ func lose() -> void:
 	dialogue_set_up(1, 3)
 
 
-func quit() -> void:
-	get_tree().quit()
+func quit_to_menu() -> void:
+	Global.playing = false
+	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
 
 
 func restart() -> void:

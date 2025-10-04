@@ -12,13 +12,15 @@ var star_proximity: bool = false
 var warp_charge: float = 0.0
 var bg_object_rotation: float = 5.0
 
+var tutorial_enemy_fleet: Array = [1, 6]
+
 var pirate_fleets: Dictionary = {
 	"start": [
 		[1, 1],
 		[1, 2],
 		[1, 3],
 		[1, 4],
-		#[1, 5],
+		[1, 5],
 		[1, 6],
 		#[1, 7],
 		[1, 2, 4],
@@ -32,7 +34,7 @@ var pirate_fleets: Dictionary = {
 		[1, 1, 2],
 		[1, 1, 3],
 		[1, 1, 4],
-		#[1, 1, 5],
+		[1, 1, 5],
 		[1, 1, 6],
 		[1, 3, 3],
 		[1, 1, 1, 4],
@@ -47,17 +49,21 @@ var pirate_fleets: Dictionary = {
 		[1, 1, 1, 1, 1],
 		[1, 1, 1, 4, 4],
 		[1, 1, 1, 1, 6],
-		#[1, 1, 2, 4],
+		[1, 1, 2, 4],
 		[1, 1, 1, 1, 1, 1],
 		[1, 1, 1, 1, 1, 6],
 	],
 	"late": [
 		[1, 1, 1, 1, 1, 1, 1, 1],
 		[1, 1, 1, 1, 1, 1, 6, 6],
-		#[1, 1, 1, 2, 2, 2, 3],
-		#[1, 1, 1, 2, 2, 2, 3, 4],
-		#[1, 1, 2, 3, 3, 3, 3, 4],
+		[1, 1, 1, 2, 2, 2, 3],
+		[1, 1, 1, 2, 2, 2, 3, 4],
+		[1, 1, 2, 3, 3, 3, 3, 4],
 	]
+}
+
+const PIRATE_WEAPONS: Dictionary = {
+	"start": [0, 5]
 }
 
 signal setup_complete
@@ -144,16 +150,27 @@ func _ready() -> void:
 				$Background.add_child(new_nebula)
 	# Set up conditions for the warp in dialogue
 	system_properties.append(main_star_count)
+	# Is it a tutorial?
 	if Global.tutorial:
 		system_properties.append("tutorial")
+	# Is the destination?
+	if Global.current_system == Global.destination:
+		system_properties.append("destination")
+	# Are there enemies present?
 	if Global.galaxy_data[Global.current_system]["enemy presence"]:
 		system_properties.append("enemy presence")
-		var enemy_fleet: Array = pirate_fleets[system_stage].pick_random()
+		var enemy_fleet: Array
+		if Global.tutorial:
+			enemy_fleet = tutorial_enemy_fleet
+		else:
+			enemy_fleet = pirate_fleets[system_stage].pick_random()
 		enemy_fleet.shuffle()
 		for ship in enemy_fleet:
 			Global.create_enemy_ship(ship)
+	# Is there a shop?
 	if Global.galaxy_data[Global.current_system]["shop presence"]:
 		system_properties.append("shop presence")
+	# Is there a star close by?
 	if star_proximity and not Global.tutorial:
 		system_properties.append("star proximity")
 
