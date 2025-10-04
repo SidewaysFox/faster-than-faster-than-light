@@ -88,66 +88,114 @@ func _ready() -> void:
 	else:
 		system_stage = "start"
 	
-	# Pass information to the BGStar GLSL script
-	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
-	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.91, 1.0))
-	$BGStars.material_override.set_shader_parameter("size", randf_range(50.0, 120.0))
-	# Establish this system's star(s)
-	main_star_count = system_types.pick_random()
-	for i in main_star_count:
-		# Set positioning
-		var x: float
-		var y: float
-		var z: float
-		z = randf_range(-2500, -300)
-		x = randf_range(z * -1.1, z * 1.1)
-		y = randf_range(z / 0.8, z / -2.3)
-		# Make sure the star is within bounds. because I cannot be bothered to do the math for this
-		while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
+	# Check if the current system is new
+	if Global.current_system not in Global.visited_systems or Global.unique_visits == 1:
+		# Generate new system
+		# Pass information to the BGStar GLSL script
+		var bg_parameters: Array[float] = [randf_range(0.01, 100.0), randf_range(0.91, 1.0), randf_range(50.0, 120.0)]
+		$BGStars.material_override.set_shader_parameter("seed", bg_parameters[0])
+		$BGStars.material_override.set_shader_parameter("prob", bg_parameters[1])
+		$BGStars.material_override.set_shader_parameter("size", bg_parameters[2])
+		Global.galaxy_data[Global.current_system]["bg parameters"] = bg_parameters
+		# Establish this system's star(s)
+		main_star_count = system_types.pick_random()
+		Global.galaxy_data[Global.current_system]["main star count"] = main_star_count
+		for i in main_star_count:
+			# Set positioning
+			var x: float
+			var y: float
+			var z: float
 			z = randf_range(-2500, -300)
 			x = randf_range(z * -1.1, z * 1.1)
 			y = randf_range(z / 0.8, z / -2.3)
-		# Set star properties
-		var colour = star_colours.pick_random()
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
-		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 250)
-		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
-		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
-		$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
-		if ($Background.get_node("MainStar" + str(i + 1)).mesh.radius / 2) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
-			star_proximity = true
-	# Create nebulae
-	var nebula_pos: Vector3
-	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
-	for i in randi_range(1, 22):
-		nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
-		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.05, 0.05))
-		nebula_colour.a = clamp(nebula_colour.a, 0.04, 0.2)
-		# Big or small nebula
-		if randi_range(0, 40) == 4: # Because I like the number 4
-			# Big
-			for j in randi_range(50, 300):
-				var new_nebula = bg_nebula.instantiate()
-				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = nebula_colour
-				new_nebula.mesh.material.emission = nebula_colour
-				new_nebula.mesh.radius = randf_range(20, 50)
-				new_nebula.mesh.height = new_nebula.mesh.radius * 2
-				nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
+			# Make sure the star is within bounds. because I cannot be bothered to do the math for this
+			while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
+				z = randf_range(-2500, -300)
+				x = randf_range(z * -1.1, z * 1.1)
+				y = randf_range(z / 0.8, z / -2.3)
+			$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
+			Global.galaxy_data[Global.current_system]["star" + str(i) + " position"] = Vector3(x, y, z)
+			# Set star properties
+			var colour: Color = star_colours.pick_random()
+			$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
+			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
+			Global.galaxy_data[Global.current_system]["star" + str(i) + " colour"] = colour
+			var radius: float = randf_range(40.0, 250.0)
+			$Background.get_node("MainStar" + str(i + 1)).mesh.radius = radius
+			$Background.get_node("MainStar" + str(i + 1)).mesh.height = radius * 2.0
+			Global.galaxy_data[Global.current_system]["star" + str(i) + " radius"] = radius
+			# This doesn't need to be saved since it's pretty minor so I'm not gonna save it
+			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
+			$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
+			# It took way too much rigorous testing to get this number
+			if (radius / 2.0) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
+				star_proximity = true
+		# Create nebulae
+		var nebula_pos: Vector3
+		var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
+		Global.galaxy_data[Global.current_system]["nebulae"] = []
+		for i in randi_range(1, 22):
+			# Not as important that it remains in bounds
+			nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
+			nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.05, 0.05))
+			nebula_colour.a = clamp(nebula_colour.a, 0.04, 0.2)
+			# Big or small nebula
+			Global.galaxy_data[Global.current_system]["nebulae"].append([])
+			if randi_range(0, 40) == 4: # Because I like the number 4
+				# Big
+				for j in randi_range(50, 300):
+					var new_nebula: Node = bg_nebula.instantiate()
+					new_nebula.position = nebula_pos
+					new_nebula.mesh.material.albedo_color = nebula_colour
+					new_nebula.mesh.material.emission = nebula_colour
+					var neb_radius: float = randf_range(20.0, 50.0)
+					new_nebula.mesh.radius = neb_radius
+					new_nebula.mesh.height = neb_radius * 2.0
+					Global.galaxy_data[Global.current_system]["nebulae"][i].append([nebula_pos, nebula_colour, neb_radius])
+					$Background.add_child(new_nebula)
+					nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
+			else:
+				# Small
+				for j in randi_range(1, 20):
+					var new_nebula: Node = bg_nebula.instantiate()
+					new_nebula.position = nebula_pos
+					new_nebula.mesh.material.albedo_color = nebula_colour
+					new_nebula.mesh.material.emission = nebula_colour
+					var neb_radius: float = randf_range(20.0, 50.0)
+					new_nebula.mesh.radius = neb_radius
+					new_nebula.mesh.height = neb_radius * 2.0
+					Global.galaxy_data[Global.current_system]["nebulae"][i].append([nebula_pos, nebula_colour, neb_radius])
+					$Background.add_child(new_nebula)
+					nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))
+	else:
+		# Load existing system data
+		$BGStars.material_override.set_shader_parameter("seed", Global.galaxy_data[Global.current_system]["bg parameters"][0])
+		$BGStars.material_override.set_shader_parameter("prob", Global.galaxy_data[Global.current_system]["bg parameters"][1])
+		$BGStars.material_override.set_shader_parameter("size", Global.galaxy_data[Global.current_system]["bg parameters"][2])
+		for i in Global.galaxy_data[Global.current_system]["main star count"]:
+			var star_position: Vector3 = Global.galaxy_data[Global.current_system]["star" + str(i) + " position"]
+			$Background.get_node("MainStar" + str(i + 1)).position = star_position
+			var colour: Color = Global.galaxy_data[Global.current_system]["star" + str(i) + " colour"]
+			$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
+			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
+			var radius: float = Global.galaxy_data[Global.current_system]["star" + str(i) + " radius"]
+			$Background.get_node("MainStar" + str(i + 1)).mesh.radius = radius
+			$Background.get_node("MainStar" + str(i + 1)).mesh.height = radius * 2.0
+			# Not saved because it's not important enough (ouch)
+			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
+			$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
+			if (radius / 2.0) / star_position.distance_to(Vector3.ZERO) > 0.21:
+				star_proximity = true
+		for nebula in Global.galaxy_data[Global.current_system]["nebulae"]:
+			for sphere in nebula:
+				var new_nebula: Node = bg_nebula.instantiate()
+				new_nebula.position = sphere[0]
+				new_nebula.mesh.material.albedo_color = sphere[1]
+				new_nebula.mesh.material.emission = sphere[1]
+				new_nebula.mesh.radius = sphere[2]
+				new_nebula.mesh.height = sphere[2] * 2.0
 				$Background.add_child(new_nebula)
-		else:
-			# Small
-			for j in randi_range(1, 20):
-				var new_nebula = bg_nebula.instantiate()
-				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = nebula_colour
-				new_nebula.mesh.material.emission = nebula_colour
-				new_nebula.mesh.radius = randf_range(20, 50)
-				new_nebula.mesh.height = new_nebula.mesh.radius * 2
-				nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))
-				$Background.add_child(new_nebula)
+	
 	# Set up conditions for the warp in dialogue
 	system_properties.append(main_star_count)
 	# Is it a tutorial?
