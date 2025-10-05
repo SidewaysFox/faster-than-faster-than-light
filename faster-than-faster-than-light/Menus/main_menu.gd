@@ -1,6 +1,32 @@
 extends Control
 
 
+var current_menu_selection: int = 0
+
+const BUTTON_COLOUR_NORMAL: Color = Color(1.0, 1.0, 1.0)
+const BUTTON_COLOUR_HOVER: Color = Color(0.0, 0.749, 1.0)
+
+
+func _process(_delta: float) -> void:
+	if Global.joystick_control:
+		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
+			current_menu_selection += 1
+			if current_menu_selection >= %Buttons.get_child_count():
+				current_menu_selection = 0
+		if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
+			current_menu_selection -= 1
+			if current_menu_selection < 0:
+				current_menu_selection = %Buttons.get_child_count() - 1
+		
+		for button in %Buttons.get_children():
+			if button.get_index() == current_menu_selection:
+				button.get_child(0).add_theme_color_override("font_color", BUTTON_COLOUR_HOVER)
+				if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+					button.get_child(0).emit_signal("pressed")
+			else:
+				button.get_child(0).add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
+
+
 func _on_new_game_pressed(tutorial: bool = false) -> void:
 	Global.new_game(tutorial)
 

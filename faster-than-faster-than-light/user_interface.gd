@@ -34,6 +34,17 @@ var TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGE
 var ACTIVE_TEXT: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
 var MISC_TEXT: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
 
+var control_tip_texts: Dictionary = {
+	"AccessShop": ["ACCESS SHOP (B)", "ACCESS SHOP (B5)"],
+	"ActionMenu": ["ACTION MENU (S)", "ACTION MENU (B2)"],
+	"InfoMenu": ["INFO MENU (I)", "INFO MENU (B3)"],
+	"GalaxyMap": ["GALAXY MAP (M)", "GALAXY MAP (B4)"],
+	"PauseTime": ["PAUSE TIME (SPACE)", "PAUSE TIME (B5)"],
+	"PauseGame": ["PAUSE GAME (ESC)", "PAUSE GAME (B6)"],
+	"HideControlTips": ["HIDE CONTROLS (H)", "HIDE CONTROLS (B1)"],
+	"ShowControlTips": ["SHOW CONTROLS (H)", "SHOW CONTROLS (B1)"],
+}
+
 var shop_ship_descriptions: Array[String] = [
 	"A ship fresh from the foundry, a fitted with all the latest technologies. The crew seem eager for hire.",
 	"Well used, but still reliable, this ship has seen better days - and wants to see more.",
@@ -306,10 +317,25 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
-	if Input.is_action_just_pressed("pause"):
+	if (Input.is_action_just_pressed("action menu") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B"))):
+		_action_menu()
+	
+	if (Input.is_action_just_pressed("info menu") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("3") or Input.is_action_just_pressed("C"))):
+		_info_menu()
+	
+	if (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D"))):
+		_galaxy_map()
+	
+	if (Input.is_action_just_pressed("time pause") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("5") or Input.is_action_just_pressed("E")) and "shop presence" not in main.system_properties):
+		_time_pause()
+	
+	if (Input.is_action_just_pressed("shop") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("5") or Input.is_action_just_pressed("E"))):
+		_shop()
+	
+	if ((Input.is_action_just_pressed("pause") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("6") or Input.is_action_just_pressed("F")))) and not warping:
 		_pause()
 	
-	if Input.is_action_just_pressed("hide controls"):
+	if (Input.is_action_just_pressed("hide controls") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"))):
 		_hide_controls()
 	
 	# Check if the dialogue is showing:
@@ -336,28 +362,26 @@ func _process(delta: float) -> void:
 				if Input.is_action_just_pressed(str(i + 1)):
 					%Options.get_node("Option" + str(i + 1)).emit_signal("pressed")
 		%ChargeProgress/Label.text = "WAITING"
-	# Show or hide the galaxy map
-	elif (((Input.is_action_just_pressed("4") or Input.is_action_just_pressed("D")) and Global.joystick_control) or (Input.is_action_just_pressed("galaxy map") and not Global.joystick_control)):
-		_galaxy_map()
-	elif Input.is_action_just_pressed("shop") and not Global.joystick_control:
-		_shop()
-	elif Input.is_action_just_pressed("time pause"):
-		_time_pause()
 	else:
 		if main.warp_charge < 100:
 			%ChargeProgress/Label.text = "WARP CHARGING"
 		else:
 			%ChargeProgress/Label.text = "WARP CHARGED"
-		if (((Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B")) and Global.joystick_control) or (Input.is_action_just_pressed("action menu") and not Global.joystick_control)):
-			_action_menu()
-		if (((Input.is_action_just_pressed("3") or Input.is_action_just_pressed("C")) and Global.joystick_control) or (Input.is_action_just_pressed("info menu") and not Global.joystick_control)):
-			_info_menu()
+	
+	for tip in $ControlTips/VBoxContainer/Main.get_children():
+		tip.get_child(0).text = control_tip_texts[tip.name][int(Global.joystick_control)]
+	if Global.controls_showing:
+		$ControlTips/VBoxContainer/HideControlTips/Button.text = control_tip_texts["HideControlTips"][int(Global.joystick_control)]
+	else:
+		$ControlTips/VBoxContainer/HideControlTips/Button.text = control_tip_texts["ShowControlTips"][int(Global.joystick_control)]
+	
 	if time_paused:
 		Engine.time_scale = lerp(Engine.time_scale, 0.0, 0.15)
 		$TimeIndicator.show()
 	else:
 		Engine.time_scale = lerp(Engine.time_scale, 1.0, 0.15)
 		$TimeIndicator.hide()
+	
 	# Galaxy map stuff
 	if galaxy_map_showing:
 		time_paused = false
@@ -389,6 +413,9 @@ func _process(delta: float) -> void:
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
 			# Warping input
 			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
+				if "shop presence" in main.system_properties:
+					Global.galaxy_data[Global.current_system]["item shop"] = item_catalogue
+					Global.galaxy_data[Global.current_system]["ship shop"] = ship_catalogue
 				Engine.time_scale = 1.0
 				warping = true
 				time_paused = false
@@ -413,6 +440,7 @@ func _process(delta: float) -> void:
 		$GalaxyMap.hide()
 		$GalaxyMapTitle.hide()
 		$GalaxyMapControls.hide()
+	
 	# Ship action menu stuff
 	if action_menu_showing:
 		$ShipActionMenu.show()
@@ -754,12 +782,12 @@ func _galaxy_map() -> void:
 
 
 func _action_menu() -> void:
-	if not galaxy_map_showing and not info_menu_showing and not dialogue_showing and not shop_showing:
+	if not galaxy_map_showing and not info_menu_showing and not dialogue_showing and not shop_showing and not warping:
 		action_menu_showing = not action_menu_showing
 
 
 func _time_pause() -> void:
-	if not galaxy_map_showing and not dialogue_showing:
+	if not galaxy_map_showing and not dialogue_showing and not warping:
 		time_paused = not time_paused
 
 
@@ -770,7 +798,7 @@ func _pause() -> void:
 
 
 func _info_menu() -> void:
-	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing and not shop_showing:
+	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing and not shop_showing and not warping:
 		info_menu_showing = not info_menu_showing
 
 
@@ -848,28 +876,31 @@ func upgrade_ship() -> void:
 func _on_shop_setup_timeout() -> void:
 	# Set up the shop, if there is one
 	if "shop presence" in main.system_properties:
-		$ControlTips/VBoxContainer/Main/AccessShop.show()
-		for item in len(item_catalogue):
-			item_catalogue[item] = randi_range(0, len(Global.weapon_list) - 1)
-		for ship in len(ship_catalogue):
-			ship_catalogue[ship][0] = randi_range(1, 7)
-			ship_catalogue[ship][1] = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
-			ship_catalogue[ship][2] = shop_ship_descriptions.pick_random()
+		if Global.current_system in Global.visited_systems:
+			item_catalogue = Global.galaxy_data[Global.current_system]["item shop"]
+			ship_catalogue = Global.galaxy_data[Global.current_system]["ship shop"]
+		else:
+			$ControlTips/VBoxContainer/Main/AccessShop.show()
+			for item in len(item_catalogue):
+				item_catalogue[item] = randi_range(0, len(Global.weapon_list) - 1)
+			for ship in len(ship_catalogue):
+				ship_catalogue[ship][0] = randi_range(1, 7)
+				ship_catalogue[ship][1] = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
+				ship_catalogue[ship][2] = shop_ship_descriptions.pick_random()
 
 
 func _shop() -> void:
-	if not galaxy_map_showing and not action_menu_showing and not info_menu_showing and not dialogue_showing and "shop presence" in main.system_properties:
+	if not galaxy_map_showing and not action_menu_showing and not info_menu_showing and not dialogue_showing and not warping and "shop presence" in main.system_properties:
 		shop_showing = not shop_showing
 
 
 func _hide_controls() -> void:
-	$ControlTips/VBoxContainer/Main.visible = not $ControlTips/VBoxContainer/Main.visible
-	if $ControlTips/VBoxContainer/Main.visible:
-		$ControlTips/VBoxContainer/HideControlTips/Button.text = "HIDE CONTROLS (H)"
-		Global.controls_showing = true
-	else:
-		$ControlTips/VBoxContainer/HideControlTips/Button.text = "SHOW CONTROLS (H)"
-		Global.controls_showing = false
+	if not Global.joystick_control or (Global.joystick_control and not action_menu_showing and not info_menu_showing and not galaxy_map_showing and not dialogue_showing and not shop_showing):
+		$ControlTips/VBoxContainer/Main.visible = not $ControlTips/VBoxContainer/Main.visible
+		if $ControlTips/VBoxContainer/Main.visible:
+			Global.controls_showing = true
+		else:
+			Global.controls_showing = false
 
 
 func _item_shop() -> void:

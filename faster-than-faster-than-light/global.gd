@@ -36,7 +36,7 @@ const STARTING_INVENTORY: Array[int] = []
 const TUTORIAL_INVENTORY: Array[int] = [1, 6]
 const DEFAULT_INV_SIZE: int = 4
 const DEFAULT_JUMP_DISTANCE: float = 140.0
-const DEFAULT_CHARGE_RATE: float = 2.0
+const DEFAULT_CHARGE_RATE: float = 3.0
 const DEFAULT_CRIT_CHANCE: float = 0.0
 
 const SECTOR_ROWS: int = 8

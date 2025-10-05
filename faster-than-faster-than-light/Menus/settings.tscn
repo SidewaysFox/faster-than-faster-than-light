@@ -287,7 +287,8 @@ text = "SETTINGS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Quit" type="PanelContainer" parent="CanvasLayer/Settings"]
+[node name="Back" type="PanelContainer" parent="CanvasLayer/Settings"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 1
 anchors_preset = 3
@@ -303,7 +304,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_fw4rw")
 
-[node name="Button" type="Button" parent="CanvasLayer/Settings/Quit"]
+[node name="Button" type="Button" parent="CanvasLayer/Settings/Back"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -336,4 +337,4 @@ mesh = SubResource("SphereMesh_gn11b")
 
 [connection signal="pressed" from="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/ControlMode" to="CanvasLayer/Settings" method="_on_control_mode_pressed"]
 [connection signal="pressed" from="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/JoystickMode" to="CanvasLayer/Settings" method="_on_joystick_mode_pressed"]
-[connection signal="pressed" from="CanvasLayer/Settings/Quit/Button" to="CanvasLayer/Settings" method="_on_back_pressed"]
+[connection signal="pressed" from="CanvasLayer/Settings/Back/Button" to="CanvasLayer/Settings" method="_on_back_pressed"]

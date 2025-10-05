@@ -118,21 +118,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainControl/HBoxContainer"]
+[node name="LeftSide" type="MarginContainer" parent="CanvasLayer/MainControl/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 60
 theme_override_constants/margin_right = 160
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainControl/HBoxContainer/LeftSide"]
 custom_minimum_size = Vector2(800, 0)
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer/VBoxContainer"]
+[node name="Title" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/LeftSide/VBoxContainer"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Label" type="Label" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer/VBoxContainer/PanelContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/MainControl/HBoxContainer/LeftSide/VBoxContainer/Title"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.74902, 1, 1)
 theme_override_font_sizes/font_size = 96
@@ -140,23 +140,24 @@ text = "FATAL FLEET"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/MainControl/HBoxContainer"]
+[node name="RightSide" type="MarginContainer" parent="CanvasLayer/MainControl/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 320
 theme_override_constants/margin_top = 80
 theme_override_constants/margin_bottom = 80
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2"]
+[node name="Buttons" type="VBoxContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 theme_override_constants/separation = 76
 
-[node name="NewGame" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="NewGame" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/NewGame"]
+[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/NewGame"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -165,12 +166,12 @@ action_mode = 0
 text = "NEW GAME"
 flat = true
 
-[node name="ContinueGame" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="ContinueGame" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/ContinueGame"]
+[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/ContinueGame"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -179,12 +180,12 @@ action_mode = 0
 text = "CONTINUE GAME"
 flat = true
 
-[node name="Tutorial" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Tutorial" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Tutorial"]
+[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Tutorial"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -193,12 +194,12 @@ action_mode = 0
 text = "TUTORIAL"
 flat = true
 
-[node name="Settings" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Settings" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Settings"]
+[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Settings"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -207,12 +208,12 @@ action_mode = 0
 text = "SETTINGS"
 flat = true
 
-[node name="Credits" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Credits" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Credits"]
+[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Credits"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -221,12 +222,12 @@ action_mode = 0
 text = "CREDITS"
 flat = true
 
-[node name="Quit" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Quit" type="PanelContainer" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_at0u2")
 
-[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Quit"]
+[node name="Button" type="Button" parent="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Quit"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -257,9 +258,9 @@ mesh = SubResource("SphereMesh_vxn86")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_gn11b")
 
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/NewGame/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/ContinueGame/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Tutorial/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed" binds= [true]]
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Settings/Button" to="CanvasLayer/MainControl" method="_on_settings_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Credits/Button" to="CanvasLayer/MainControl" method="_on_credits_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/MarginContainer2/VBoxContainer/Quit/Button" to="CanvasLayer/MainControl" method="_on_quit_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/NewGame/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/ContinueGame/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Tutorial/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed" binds= [true]]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Settings/Button" to="CanvasLayer/MainControl" method="_on_settings_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Credits/Button" to="CanvasLayer/MainControl" method="_on_credits_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Quit/Button" to="CanvasLayer/MainControl" method="_on_quit_pressed"]

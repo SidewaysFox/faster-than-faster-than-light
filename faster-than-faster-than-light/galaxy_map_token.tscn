@@ -41,6 +41,7 @@ offset_bottom = 40.0
 
 [node name="ColorRect3" type="ColorRect" parent="ShopIndicator"]
 z_index = 2
+layout_mode = 0
 offset_left = 5.0
 offset_top = -6.0
 offset_right = 6.0
@@ -48,6 +49,7 @@ offset_bottom = 6.0
 
 [node name="ColorRect4" type="ColorRect" parent="ShopIndicator"]
 z_index = 2
+layout_mode = 0
 offset_left = -6.0
 offset_top = -6.0
 offset_right = -5.0
@@ -55,6 +57,7 @@ offset_bottom = 6.0
 
 [node name="ColorRect5" type="ColorRect" parent="ShopIndicator"]
 z_index = 2
+layout_mode = 0
 offset_left = -6.0
 offset_top = -6.0
 offset_right = 6.0
@@ -62,10 +65,50 @@ offset_bottom = -5.0
 
 [node name="ColorRect6" type="ColorRect" parent="ShopIndicator"]
 z_index = 2
+layout_mode = 0
 offset_left = -6.0
 offset_top = 5.0
 offset_right = 6.0
 offset_bottom = 6.0
+
+[node name="DestinationIndicator" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect3" type="ColorRect" parent="DestinationIndicator"]
+z_index = 2
+layout_mode = 0
+offset_left = -1.0
+offset_top = -21.0
+offset_right = 1.0
+offset_bottom = -9.0
+
+[node name="ColorRect4" type="ColorRect" parent="DestinationIndicator"]
+z_index = 2
+layout_mode = 0
+offset_left = -1.0
+offset_top = 9.0
+offset_right = 1.0
+offset_bottom = 21.0
+
+[node name="ColorRect5" type="ColorRect" parent="DestinationIndicator"]
+z_index = 2
+layout_mode = 0
+offset_left = -21.0
+offset_top = -1.0
+offset_right = -9.0
+offset_bottom = 1.0
+
+[node name="ColorRect6" type="ColorRect" parent="DestinationIndicator"]
+z_index = 2
+layout_mode = 0
+offset_left = 9.0
+offset_top = -1.0
+offset_right = 21.0
+offset_bottom = 1.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.2
