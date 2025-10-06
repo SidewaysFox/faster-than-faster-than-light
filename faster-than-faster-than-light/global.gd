@@ -246,9 +246,7 @@ var weapon_list: Array[Dictionary] = [
 
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
 
-var fleet_inventory: Array = [ # Stores the weapon ID
-	
-]
+var fleet_inventory: Array = [] # Stores the weapon ID
 
 
 func establish() -> void:
@@ -265,7 +263,7 @@ func establish() -> void:
 	in_combat = false
 	if tutorial:
 		starting_fleet = DEFAULT_TUTORIAL_FLEET
-		fleet_inventory = TUTORIAL_INVENTORY
+		fleet_inventory = TUTORIAL_INVENTORY.duplicate()
 		galaxy_data = [
 			{
 				"id": 0,
@@ -298,7 +296,7 @@ func establish() -> void:
 			]
 	else:
 		starting_fleet = DEFAULT_STARTING_FLEET
-		fleet_inventory = STARTING_INVENTORY
+		fleet_inventory = STARTING_INVENTORY.duplicate()
 		var system_id: int = 0
 		# Generate galaxy map
 		for row in SECTOR_ROWS:

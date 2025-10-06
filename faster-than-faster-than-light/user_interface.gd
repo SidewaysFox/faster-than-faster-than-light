@@ -17,6 +17,7 @@ var info_menu_showing: bool = false
 var shop_showing: bool = false
 var hovered_ship: int = 0
 var hovered_target: int = 0
+var left_action_menu: bool = true
 var selected_ship: int = 0
 var targeting_mode: int = 0
 var time_paused: bool = false
@@ -445,23 +446,54 @@ func _process(delta: float) -> void:
 	if action_menu_showing:
 		$ShipActionMenu.show()
 		if Global.joystick_control:
-			if Input.is_action_just_pressed("left1"):
-				hovered_ship -= 1
-			if Input.is_action_just_pressed("right1"):
-				hovered_ship += 1
-			if Input.is_action_just_pressed("down1"):
-				hovered_ship += 4
-			if Input.is_action_just_pressed("up1"):
-				hovered_ship -= 4
+			if Global.dual_joysticks:
+				if Input.is_action_just_pressed("left1"):
+					hovered_ship -= 1
+				if Input.is_action_just_pressed("right1"):
+					hovered_ship += 1
+				if Input.is_action_just_pressed("down1"):
+					hovered_ship += 4
+				if Input.is_action_just_pressed("up1"):
+					hovered_ship -= 4
+				if Input.is_action_just_pressed("left2"):
+					hovered_target -= 1
+				if Input.is_action_just_pressed("right2"):
+					hovered_target += 1
+				if Input.is_action_just_pressed("down2"):
+					hovered_target += 4
+				if Input.is_action_just_pressed("up2"):
+					hovered_target -= 4
+			elif left_action_menu:
+				if Input.is_action_just_pressed("left1"):
+					if hovered_ship == 0 or hovered_ship == 4:
+						left_action_menu = false
+					else:
+						hovered_ship -= 1
+				if Input.is_action_just_pressed("right1"):
+					if hovered_ship == 3 or hovered_ship == 7:
+						left_action_menu = false
+					else:
+						hovered_ship += 1
+				if Input.is_action_just_pressed("down1"):
+					hovered_ship += 4
+				if Input.is_action_just_pressed("up1"):
+					hovered_ship -= 4
+			elif not left_action_menu:
+				if Input.is_action_just_pressed("left1"):
+					if hovered_target == 0 or hovered_target == 4:
+						left_action_menu = true
+					else:
+						hovered_target -= 1
+				if Input.is_action_just_pressed("right1"):
+					if hovered_target == 3 or hovered_target == 7:
+						left_action_menu = true
+					else:
+						hovered_target += 1
+				if Input.is_action_just_pressed("down1"):
+					hovered_target += 4
+				if Input.is_action_just_pressed("up1"):
+					hovered_target -= 4
 			hovered_ship = clamp(hovered_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
-			if Input.is_action_just_pressed("left2"):
-				hovered_target -= 1
-			if Input.is_action_just_pressed("right2"):
-				hovered_target += 1
-			if Input.is_action_just_pressed("down2"):
-				hovered_target += 4
-			if Input.is_action_just_pressed("up2"):
-				hovered_target -= 4
 		for i in %ActionTargetShips/GridContainer.get_children():
 			i.hide()
 		for i in %ActionFriendlyShips/GridContainer.get_children():
@@ -476,7 +508,7 @@ func _process(delta: float) -> void:
 					var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 					var stylebox: Resource = box.get_theme_stylebox("panel")
 					box.get_node("Code").text = SHIP_CODES[ship.type]
-					if index == hovered_target:
+					if index == hovered_target and ((Global.joystick_control and not Global.dual_joysticks and not left_action_menu) or not Global.joystick_control):
 						stylebox.border_color = Color8(100, 100, 160)
 					else:
 						stylebox.border_color = Color8(0, 0, 160)
@@ -499,7 +531,7 @@ func _process(delta: float) -> void:
 				var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 				var stylebox: Resource = box.get_theme_stylebox("panel")
 				box.get_node("Code").text = SHIP_CODES[ship.type]
-				if index == hovered_target:
+				if index == hovered_target and ((Global.joystick_control and not Global.dual_joysticks and not left_action_menu) or not Global.joystick_control):
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
@@ -520,7 +552,7 @@ func _process(delta: float) -> void:
 			var stylebox: Resource = box.get_theme_stylebox("panel")
 			box.get_node("Code").text = SHIP_CODES[ship.type]
 			box.set_meta("type", ship.type)
-			if index == hovered_ship:
+			if index == hovered_ship and ((Global.joystick_control and not Global.dual_joysticks and left_action_menu) or not Global.joystick_control):
 				stylebox.border_color = Color8(160, 100, 100)
 			else:
 				stylebox.border_color = Color8(160, 0, 0)

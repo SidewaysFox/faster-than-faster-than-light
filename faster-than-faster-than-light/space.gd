@@ -12,7 +12,7 @@ var star_proximity: bool = false
 var warp_charge: float = 0.0
 var bg_object_rotation: float = 5.0
 
-var tutorial_enemy_fleet: Array = [1, 6]
+var tutorial_enemy_fleet: Array = [1, 2, 6]
 
 var pirate_fleets: Dictionary = {
 	"start": [
