@@ -294,8 +294,6 @@ func _ready() -> void:
 		new_token.id = i["id"]
 		new_token.position = i["position"]
 		$GalaxyMap/Tokens.add_child(new_token)
-	if not Global.controls_showing:
-		_hide_controls()
 
 
 func _process(delta: float) -> void:
@@ -338,6 +336,11 @@ func _process(delta: float) -> void:
 	
 	if (Input.is_action_just_pressed("hide controls") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"))):
 		_hide_controls()
+	
+	if Global.controls_showing:
+		$ControlTips/VBoxContainer/Main.show()
+	else:
+		$ControlTips/VBoxContainer/Main.hide()
 	
 	# Check if the dialogue is showing:
 	if dialogue_showing:
@@ -448,13 +451,13 @@ func _process(delta: float) -> void:
 		if Global.joystick_control:
 			if Global.dual_joysticks:
 				if Input.is_action_just_pressed("left1"):
-					hovered_ship -= 1
+					selected_ship -= 1
 				if Input.is_action_just_pressed("right1"):
-					hovered_ship += 1
+					selected_ship += 1
 				if Input.is_action_just_pressed("down1"):
-					hovered_ship += 4
+					selected_ship += 4
 				if Input.is_action_just_pressed("up1"):
-					hovered_ship -= 4
+					selected_ship -= 4
 				if Input.is_action_just_pressed("left2"):
 					hovered_target -= 1
 				if Input.is_action_just_pressed("right2"):
@@ -463,15 +466,25 @@ func _process(delta: float) -> void:
 					hovered_target += 4
 				if Input.is_action_just_pressed("up2"):
 					hovered_target -= 4
+				selected_ship = clampi(selected_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
+				select_ship()
 			elif left_action_menu:
 				if Input.is_action_just_pressed("left1"):
-					if hovered_ship == 0 or hovered_ship == 4:
+					if hovered_ship == 0 and %ActionTargetShips/GridContainer/Ship3.visible:
 						left_action_menu = false
+						hovered_target = 3
+					elif hovered_ship == 4 and %ActionTargetShips/GridContainer/Ship7.visible:
+						left_action_menu = false
+						hovered_target = 7
 					else:
 						hovered_ship -= 1
 				if Input.is_action_just_pressed("right1"):
-					if hovered_ship == 3 or hovered_ship == 7:
+					if hovered_ship == 3 and %ActionTargetShips/GridContainer/Ship0.visible:
 						left_action_menu = false
+						hovered_target = 0
+					elif hovered_ship == 7 and %ActionTargetShips/GridContainer/Ship4.visible:
+						left_action_menu = false
+						hovered_target = 4
 					else:
 						hovered_ship += 1
 				if Input.is_action_just_pressed("down1"):
@@ -480,13 +493,21 @@ func _process(delta: float) -> void:
 					hovered_ship -= 4
 			elif not left_action_menu:
 				if Input.is_action_just_pressed("left1"):
-					if hovered_target == 0 or hovered_target == 4:
+					if hovered_target == 0 and %ActionFriendlyShips/GridContainer/Ship3.visible:
 						left_action_menu = true
+						hovered_ship = 3
+					elif hovered_target == 4 and %ActionFriendlyShips/GridContainer/Ship7.visible:
+						left_action_menu = true
+						hovered_ship = 7
 					else:
 						hovered_target -= 1
 				if Input.is_action_just_pressed("right1"):
-					if hovered_target == 3 or hovered_target == 7:
+					if hovered_target == 3:
 						left_action_menu = true
+						hovered_ship = 0
+					elif hovered_target == 7 and %ActionFriendlyShips/GridContainer/Ship4.visible:
+						left_action_menu = true
+						hovered_ship = 4
 					else:
 						hovered_target += 1
 				if Input.is_action_just_pressed("down1"):
@@ -508,7 +529,7 @@ func _process(delta: float) -> void:
 					var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 					var stylebox: Resource = box.get_theme_stylebox("panel")
 					box.get_node("Code").text = SHIP_CODES[ship.type]
-					if index == hovered_target and ((Global.joystick_control and not Global.dual_joysticks and not left_action_menu) or not Global.joystick_control):
+					if index == hovered_target and (Global.joystick_control and (Global.dual_joysticks or (not Global.dual_joysticks and not left_action_menu)) or not Global.joystick_control):
 						stylebox.border_color = Color8(100, 100, 160)
 					else:
 						stylebox.border_color = Color8(0, 0, 160)
@@ -521,8 +542,6 @@ func _process(delta: float) -> void:
 								stylebox.draw_center = false
 					box.show()
 					index += 1
-				if Input.is_action_just_pressed("A") and Global.joystick_control:
-					main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
 			else:
 				%ActionTargetShips/NoTargets.show()
 		elif targeting_mode == 4:
@@ -531,7 +550,7 @@ func _process(delta: float) -> void:
 				var box: Node = %ActionTargetShips/GridContainer.get_child(index)
 				var stylebox: Resource = box.get_theme_stylebox("panel")
 				box.get_node("Code").text = SHIP_CODES[ship.type]
-				if index == hovered_target and ((Global.joystick_control and not Global.dual_joysticks and not left_action_menu) or not Global.joystick_control):
+				if index == hovered_target and (Global.joystick_control and (Global.dual_joysticks or (not Global.dual_joysticks and not left_action_menu)) or not Global.joystick_control):
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
@@ -551,7 +570,7 @@ func _process(delta: float) -> void:
 			var box: Node = %ActionFriendlyShips/GridContainer.get_child(index)
 			var stylebox: Resource = box.get_theme_stylebox("panel")
 			box.get_node("Code").text = SHIP_CODES[ship.type]
-			box.set_meta("type", ship.type)
+			#box.set_meta("type", ship.type)
 			if index == hovered_ship and ((Global.joystick_control and not Global.dual_joysticks and left_action_menu) or not Global.joystick_control):
 				stylebox.border_color = Color8(160, 100, 100)
 			else:
@@ -562,10 +581,14 @@ func _process(delta: float) -> void:
 				stylebox.draw_center = false
 			box.show()
 			index += 1
-		if Input.is_action_just_pressed("1") and Global.joystick_control:
-			selected_ship = hovered_ship
-			targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
-			%Instruction/Label.text = TARGETING_OPTIONS[targeting_mode]
+		if Global.joystick_control and (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")):
+			if Global.dual_joysticks:
+				main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+			elif left_action_menu:
+				selected_ship = hovered_ship
+				select_ship()
+			else:
+				main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
 	else:
 		$ShipActionMenu.hide()
 	
@@ -928,11 +951,7 @@ func _shop() -> void:
 
 func _hide_controls() -> void:
 	if not Global.joystick_control or (Global.joystick_control and not action_menu_showing and not info_menu_showing and not galaxy_map_showing and not dialogue_showing and not shop_showing):
-		$ControlTips/VBoxContainer/Main.visible = not $ControlTips/VBoxContainer/Main.visible
-		if $ControlTips/VBoxContainer/Main.visible:
-			Global.controls_showing = true
-		else:
-			Global.controls_showing = false
+		Global.controls_showing = not Global.controls_showing
 
 
 func _item_shop() -> void:
@@ -1025,9 +1044,10 @@ func hover_ship(n: int) -> void:
 	hovered_ship = n
 
 
-func select_ship(n: int) -> void:
-	selected_ship = n
-	targeting_mode = %ActionFriendlyShips/GridContainer.get_node("Ship" + str(selected_ship)).get_meta("type")
+func select_ship(n: int = -1) -> void:
+	if n != -1:
+		selected_ship = n
+	targeting_mode = main.get_node("FriendlyShips").get_child(selected_ship).type
 	%Instruction/Label.text = TARGETING_OPTIONS[targeting_mode]
 
 

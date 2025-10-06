@@ -3,7 +3,7 @@ extends Node
 
 var starship: PackedScene = preload("res://starship.tscn")
 var joystick_control: bool = false
-var dual_joysticks: bool = true
+var dual_joysticks: bool = false
 var music_volume: float = 100.0
 var sfx_volume: float = 100.0
 var initialising: bool = true
@@ -28,7 +28,7 @@ var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1]
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
 const STARTING_RESOURCES: int = 25
 const STARTING_FUEL: int = 80

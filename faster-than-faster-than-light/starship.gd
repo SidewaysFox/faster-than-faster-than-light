@@ -253,9 +253,8 @@ func new_target(ship: int = 0) -> void:
 
 
 func _weapon_fire(firing: int) -> void:
-	print(ship_name + " FIRES WEAPON " + str(firing))
+	print(ship_name + " FIRES WEAPON " + str(firing) + " AT " + target.ship_name)
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
-	print(target)
 	if target == null:
 		new_target()
 	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
