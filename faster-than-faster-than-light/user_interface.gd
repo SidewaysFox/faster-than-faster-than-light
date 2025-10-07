@@ -25,16 +25,21 @@ var info_menu_column: int = 0
 var hovered_at_ship_info: int = 0
 var looking_at_ship_info: int = 0
 var info_showing: int = 0
+var hovered_instruction: int = 0
+var switch_weapon: Vector2i = Vector2i(0, 0)
 var warping = false
 var prev_mouse_pos: Vector2
 var item_catalogue = [0, 0, 0, 0]
 var ship_catalogue = [[1, "ship name", "desc"], [1, "ship name", "desc"], [1, "ship name", "desc"]]
+var current_shopfront: int = 0
 var hovered_shop_button: int = 0
+var selected_shop_side: int = 0
 
-var SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
-var TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
-var ACTIVE_TEXT: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
-var MISC_TEXT: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
+const HOVERED_COLOUR: Color = Color(0.0, 0.749, 1.0)
+const SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
+const TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
+const ACTIVE_TEXT: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
+const MISC_TEXT: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
 
 var control_tip_texts: Dictionary = {
 	"AccessShop": ["ACCESS SHOP (B)", "ACCESS SHOP (B5)"],
@@ -681,6 +686,8 @@ func _process(delta: float) -> void:
 			else:
 				button.hide()
 			index += 1
+		get_tree().call_group("info menu buttons", "add_theme_color_override", "font_color", Color.WHITE)
+		# What the hell
 		if Global.joystick_control:
 			if info_menu_column == 0:
 				if Input.is_action_just_pressed("down1"):
@@ -690,6 +697,7 @@ func _process(delta: float) -> void:
 				if Input.is_action_just_pressed("right1"):
 					info_menu_column += 1
 				hovered_at_ship_info = looking_at_ship_info
+			var this_ship: Node = main.get_node("FriendlyShips").get_child(looking_at_ship_info)
 			if info_menu_column == 1:
 				if Input.is_action_just_pressed("down1"):
 					info_showing += 1
@@ -697,8 +705,49 @@ func _process(delta: float) -> void:
 					info_showing -= 1
 				if Input.is_action_just_pressed("left1"):
 					info_menu_column -= 1
-			if info_menu_column == 2:
-				pass
+				if Input.is_action_just_pressed("right1") and ((info_showing == 1 and this_ship.level < 3) or info_showing == 2 or (info_showing == 3 and this_ship.type == 1)):
+					info_menu_column += 1
+			elif info_menu_column == 2:
+				if info_showing == 1:
+					%Information/Leveling/Upgrade/Button.add_theme_color_override("font_color", HOVERED_COLOUR)
+					if Input.is_action_just_pressed("left1"):
+						info_menu_column -= 1
+					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+						upgrade_ship()
+						if this_ship.level >= 3:
+							info_menu_column -= 1
+				elif info_showing == 2:
+					if Input.is_action_just_pressed("down1") and hovered_instruction < 2:
+						hovered_instruction += 1
+					if Input.is_action_just_pressed("up1") and hovered_instruction > 0:
+						hovered_instruction -= 1
+					for instruction in get_tree().get_nodes_in_group("instructions"):
+						if instruction.get_meta("index") == hovered_instruction:
+							instruction.add_theme_color_override("font_color", HOVERED_COLOUR)
+					if Input.is_action_just_pressed("left1"):
+						info_menu_column -= 1
+					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+						if hovered_instruction < 2:
+							ship_action(not bool(hovered_instruction))
+						else:
+							abandon_ship()
+				elif info_showing == 3:
+					if Input.is_action_just_pressed("left1"):
+						if switch_weapon.x == 0:
+							info_menu_column -= 1
+						else:
+							switch_weapon.x = 0
+					if Input.is_action_just_pressed("right1"):
+						switch_weapon.x = 1
+					if Input.is_action_just_pressed("up1") and switch_weapon.y > 0:
+						switch_weapon.y -= 1
+					if Input.is_action_just_pressed("down1") and switch_weapon.y < this_ship.level - 1:
+						switch_weapon.y += 1
+					for button in get_tree().get_nodes_in_group("weapon switchers"):
+						if button.get_meta("position") == switch_weapon:
+							button.add_theme_color_override("font_color", HOVERED_COLOUR)
+							if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+								button.emit_signal("pressed")
 			info_showing = clampi(info_showing, 0, 3)
 			info_menu_column = clampi(info_menu_column, 0, 2)
 		looking_at_ship_info = clampi(looking_at_ship_info, 0, main.get_node("FriendlyShips").get_child_count() - 1)
@@ -714,7 +763,12 @@ func _process(delta: float) -> void:
 			if index > 0:
 				child.hide()
 				var stylebox: Resource = child.get_theme_stylebox("panel")
-				if index == hovered_shop_button:
+				if Global.joystick_control:
+					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 0:
+						stylebox.border_color = Color8(160, 100, 100)
+					else:
+						stylebox.border_color = Color8(160, 0, 0)
+				elif index == hovered_shop_button:
 					stylebox.border_color = Color8(160, 100, 100)
 				else:
 					stylebox.border_color = Color8(160, 0, 0)
@@ -735,7 +789,12 @@ func _process(delta: float) -> void:
 			if index > 0:
 				child.hide()
 				var stylebox: Resource = child.get_theme_stylebox("panel")
-				if index + %ItemBuy.get_child_count() == hovered_shop_button:
+				if Global.joystick_control:
+					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 1:
+						stylebox.border_color = Color8(100, 100, 160)
+					else:
+						stylebox.border_color = Color8(0, 0, 160)
+				elif index + %ItemBuy.get_child_count() == hovered_shop_button:
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
@@ -755,7 +814,12 @@ func _process(delta: float) -> void:
 			if index > 0:
 				child.hide()
 				var stylebox: Resource = child.get_theme_stylebox("panel")
-				if index == hovered_shop_button:
+				if Global.joystick_control:
+					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 0:
+						stylebox.border_color = Color8(160, 100, 100)
+					else:
+						stylebox.border_color = Color8(160, 0, 0)
+				elif index == hovered_shop_button:
 					stylebox.border_color = Color8(160, 100, 100)
 				else:
 					stylebox.border_color = Color8(160, 0, 0)
@@ -774,7 +838,12 @@ func _process(delta: float) -> void:
 			if index > 0:
 				child.hide()
 				var stylebox: Resource = child.get_theme_stylebox("panel")
-				if index + %ShipBuy.get_child_count() == hovered_shop_button:
+				if Global.joystick_control:
+					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 1:
+						stylebox.border_color = Color8(100, 100, 160)
+					else:
+						stylebox.border_color = Color8(0, 0, 160)
+				elif index + %ShipBuy.get_child_count() == hovered_shop_button:
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
@@ -788,6 +857,60 @@ func _process(delta: float) -> void:
 			%ShipSell.get_child(child_index).get_node("Row/Col2/Level").text = " LEVEL: " + str(ship.level)
 			%ShipSell.get_child(child_index).get_node("Row/Col2/Value").text = " SELL VALUE: " + str((ceil(Global.starship_base_stats[ship.type]["Cost"]) / 2) * ship.level) + " TECH"
 			child_index += 1
+		
+		if Global.joystick_control:
+			if Input.is_action_just_pressed("up1"):
+				hovered_shop_button -= 1
+			if Input.is_action_just_pressed("down1"):
+				hovered_shop_button += 1
+			if Input.is_action_just_pressed("right1"):
+				selected_shop_side = 1
+			if Input.is_action_just_pressed("left1"):
+				selected_shop_side = 0
+			
+			get_tree().call_group("shopfront select", "add_theme_color_override", "font_color", Color.WHITE)
+			
+			if current_shopfront == 0:
+				if selected_shop_side == 0:
+					hovered_shop_button = clampi(hovered_shop_button, -1, len(item_catalogue) - 1)
+					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A") and hovered_shop_button >= 0:
+						for button in get_tree().get_nodes_in_group("item buy"):
+							if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
+								button.emit_signal("pressed")
+								break
+				if selected_shop_side == 1:
+					hovered_shop_button = clampi(hovered_shop_button, -1, len(Global.fleet_inventory) - 1)
+					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+						if hovered_shop_button >= 0:
+							for button in get_tree().get_nodes_in_group("item sell"):
+								if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
+									button.emit_signal("pressed")
+									break
+						else:
+							_ship_shop()
+			elif current_shopfront == 1:
+				if selected_shop_side == 0:
+					hovered_shop_button = clampi(hovered_shop_button, -1, len(ship_catalogue) - 1)
+					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
+						if hovered_shop_button >= 0:
+							for button in get_tree().get_nodes_in_group("ship buy"):
+								if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
+									button.emit_signal("pressed")
+									break
+						else:
+							_item_shop()
+				if selected_shop_side == 1:
+					hovered_shop_button = clampi(hovered_shop_button, -1, len(Global.fleet) - 2)
+					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A") and hovered_shop_button >= 0:
+						for button in get_tree().get_nodes_in_group("ship sell"):
+							if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
+								button.emit_signal("pressed")
+								break
+			if hovered_shop_button == -1:
+				if selected_shop_side == 0:
+					%ItemButton/Button.add_theme_color_override("font_color", HOVERED_COLOUR)
+				else:
+					%ShipButton/Button.add_theme_color_override("font_color", HOVERED_COLOUR)
 	else:
 		$Shop.hide()
 	
@@ -885,7 +1008,7 @@ func upgrade_ship() -> void:
 	var price: int = Global.upgrade_costs[ship.type][ship.level - 1]
 	if Global.resources >= price:
 		resources(-price)
-		# I can't really think of a good, efficient and easily editable way to do this
+		# I genuinely cannot think of a better way to do this
 		if ship.type == 0:
 			ship.hull_strength += 5
 			ship.hull += 5
@@ -980,11 +1103,13 @@ func _hide_controls() -> void:
 func _item_shop() -> void:
 	$Shop/VBoxContainer/HBoxContainer/ShipShop.hide()
 	$Shop/VBoxContainer/HBoxContainer/ItemShop.show()
+	current_shopfront = 0
 
 
 func _ship_shop() -> void:
 	$Shop/VBoxContainer/HBoxContainer/ItemShop.hide()
 	$Shop/VBoxContainer/HBoxContainer/ShipShop.show()
+	current_shopfront = 1
 
 
 # Small interval before showing the warp in dialogue
@@ -1031,15 +1156,17 @@ func close(combat: bool, end: bool = false) -> void:
 	$Dialogue.hide()
 	dialogue_showing = false
 	time_paused = false
+	# Is combat starting now?
 	if combat:
 		Global.in_combat = true
 	else:
 		main.warp_charge = 100.0
+	# Is this the end of the game?
 	if end:
 		quit_to_menu()
 
 
-# Give the player resources from a dialogue event
+# Give (or remove) resources or fuel
 func resources(n: int, resource_type: int = 0, dialogue: bool = false, response: int = 0, library: int = 1) -> void:
 	if resource_type == 0:
 		Global.resources += n
@@ -1148,10 +1275,12 @@ func lose() -> void:
 	dialogue_set_up(1, 3)
 
 
+# Quit to the main menu
 func quit_to_menu() -> void:
 	Global.playing = false
 	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
 
 
+# Restart the game
 func restart() -> void:
 	Global.new_game()

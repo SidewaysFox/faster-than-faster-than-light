@@ -1627,6 +1627,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Leveling" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information"]
+visible = false
 layout_mode = 2
 offset_right = 464.0
 offset_bottom = 696.0
@@ -1664,7 +1665,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade"]
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling/Upgrade" groups=["info menu buttons"]]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -1847,7 +1848,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction" groups=["info menu buttons", "instructions"]]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -1855,6 +1856,7 @@ theme_override_font_sizes/font_size = 40
 action_mode = 0
 text = "TAKE ACTION!"
 flat = true
+metadata/index = 0
 
 [node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/TakeAction"]
 custom_minimum_size = Vector2(20, 20)
@@ -1958,7 +1960,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction" groups=["info menu buttons", "instructions"]]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -1966,6 +1968,7 @@ theme_override_font_sizes/font_size = 40
 action_mode = 0
 text = "CEASE ACTION!"
 flat = true
+metadata/index = 1
 
 [node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/CeaseAction"]
 custom_minimum_size = Vector2(20, 20)
@@ -2082,7 +2085,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
+[node name="Button" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip" groups=["info menu buttons", "instructions"]]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -2090,6 +2093,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = "ABANDON SHIP!"
 flat = true
+metadata/index = 2
 
 [node name="ColorRect" type="ColorRect" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Instructions/AbandonShip"]
 custom_minimum_size = Vector2(20, 20)
@@ -2428,7 +2432,7 @@ metadata/id = 0
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer"]
+[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer" groups=["info menu buttons", "weapon switchers"]]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
@@ -2437,6 +2441,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = "<"
 flat = true
+metadata/position = Vector2i(0, 0)
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer"]
 custom_minimum_size = Vector2(366, 0)
@@ -2446,7 +2451,7 @@ text = "PHASOR 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer"]
+[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon1/HBoxContainer" groups=["info menu buttons", "weapon switchers"]]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
@@ -2455,6 +2460,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = ">"
 flat = true
+metadata/position = Vector2i(1, 0)
 
 [node name="WeaponStats1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
 custom_minimum_size = Vector2(0, 87)
@@ -2496,7 +2502,7 @@ metadata/id = 0
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer"]
+[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer" groups=["info menu buttons", "weapon switchers"]]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
@@ -2505,6 +2511,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = "<"
 flat = true
+metadata/position = Vector2i(0, 1)
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer"]
 custom_minimum_size = Vector2(366, 0)
@@ -2514,7 +2521,7 @@ text = "PHASOR 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer"]
+[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon2/HBoxContainer" groups=["info menu buttons", "weapon switchers"]]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
@@ -2523,6 +2530,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = ">"
 flat = true
+metadata/position = Vector2i(1, 1)
 
 [node name="WeaponStats2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
 custom_minimum_size = Vector2(0, 87)
@@ -2564,7 +2572,7 @@ metadata/id = 0
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer"]
+[node name="Left" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer" groups=["info menu buttons", "weapon switchers"]]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
@@ -2573,6 +2581,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = "<"
 flat = true
+metadata/position = Vector2i(0, 2)
 
 [node name="Label" type="Label" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer"]
 custom_minimum_size = Vector2(366, 0)
@@ -2582,7 +2591,7 @@ text = "PHASOR 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer"]
+[node name="Right" type="Button" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter/Weapon3/HBoxContainer" groups=["info menu buttons", "weapon switchers"]]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
@@ -2591,6 +2600,7 @@ theme_override_font_sizes/font_size = 48
 action_mode = 0
 text = ">"
 flat = true
+metadata/position = Vector2i(1, 2)
 
 [node name="WeaponStats3" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu/Fighter"]
 custom_minimum_size = Vector2(0, 87)
@@ -2623,7 +2633,6 @@ text = " RELOAD: 6.0 seconds"
 vertical_alignment = 1
 
 [node name="Shop" type="PanelContainer" parent="."]
-visible = false
 custom_minimum_size = Vector2(1400, 790)
 layout_mode = 1
 anchors_preset = 8
@@ -2660,11 +2669,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ItemButton" type="PanelContainer" parent="Shop/VBoxContainer/TopTab"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(296, 92)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_81j6j")
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/TopTab/ItemButton"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/TopTab/ItemButton" groups=["shopfront select"]]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -2674,11 +2684,12 @@ text = "ITEMS"
 flat = true
 
 [node name="ShipButton" type="PanelContainer" parent="Shop/VBoxContainer/TopTab"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(296, 92)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_81j6j")
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/TopTab/ShipButton"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/TopTab/ShipButton" groups=["shopfront select"]]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -2722,7 +2733,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8d62i")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot1" groups=["item buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -2798,7 +2809,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5ow8y")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot2" groups=["item buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -2874,7 +2885,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dmmcw")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot3" groups=["item buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -2950,7 +2961,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ltrnm")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemBuy/Slot4" groups=["item buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3048,7 +3059,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7x8bb")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot1" groups=["item sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3109,7 +3120,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_caicv")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot2" groups=["item sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3170,7 +3181,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_j0sjl")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot3" groups=["item sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3231,7 +3242,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_5nqfq")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot4" groups=["item sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3292,7 +3303,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ja2hr")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot5" groups=["item sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3353,7 +3364,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mfdol")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ItemShop/ItemSell/Slot6" groups=["item sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3439,7 +3450,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fmgxe")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot1" groups=["ship buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3501,7 +3512,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8gm50")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot2" groups=["ship buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3563,7 +3574,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_38xjk")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipBuy/Slot3" groups=["ship buy"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3647,7 +3658,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iqvtj")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot1" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3701,7 +3712,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4ucpr")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot2" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3755,7 +3766,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7orrd")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot3" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3809,7 +3820,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0v5os")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot4" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3863,7 +3874,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_0y0nd")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot5" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3917,7 +3928,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_15sdr")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot6" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -3971,7 +3982,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_tsuqu")
 metadata/id = 0
 
-[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7"]
+[node name="Button" type="Button" parent="Shop/VBoxContainer/HBoxContainer/ShipShop/ShipSell/Slot7" groups=["ship sell"]]
 layout_mode = 2
 action_mode = 0
 flat = true
@@ -4430,7 +4441,8 @@ text = "SETTINGS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Quit" type="PanelContainer" parent="PauseMenu/Settings"]
+[node name="Back" type="PanelContainer" parent="PauseMenu/Settings"]
+unique_name_in_owner = true
 z_index = 7
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 1
@@ -4440,7 +4452,7 @@ offset_right = 600.0
 offset_bottom = 295.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_maktp")
 
-[node name="Button" type="Button" parent="PauseMenu/Settings/Quit"]
+[node name="Button" type="Button" parent="PauseMenu/Settings/Back"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0, 0.74902, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -4600,5 +4612,5 @@ autostart = true
 [connection signal="timeout" from="PauseMenu/UnpauseTimer" to="PauseMenu" method="_on_unpause_timer_timeout"]
 [connection signal="pressed" from="PauseMenu/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/ControlMode" to="PauseMenu" method="_on_control_mode_pressed"]
 [connection signal="pressed" from="PauseMenu/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/JoystickMode" to="PauseMenu" method="_on_joystick_mode_pressed"]
-[connection signal="pressed" from="PauseMenu/Settings/Quit/Button" to="PauseMenu" method="_on_back_pressed"]
+[connection signal="pressed" from="PauseMenu/Settings/Back/Button" to="PauseMenu" method="_on_back_pressed"]
 [connection signal="timeout" from="ShopSetup" to="." method="_on_shop_setup_timeout"]

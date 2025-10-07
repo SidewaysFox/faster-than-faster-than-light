@@ -8,13 +8,16 @@ const BUTTON_COLOUR_NORMAL: Color = Color(1.0, 1.0, 1.0)
 const BUTTON_COLOUR_HOVER: Color = Color(0.0, 0.749, 1.0)
 
 
+func _ready() -> void:
+	%MusicVolume/HSlider.value = Global.music_volume
+	%SFXVolume/HSlider.value = Global.sfx_volume
+
+
 func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
 
 
 func _process(_delta: float) -> void:
-	%MusicVolume/Value.text = str(int(%MusicVolume/HSlider.value))
-	%SFXVolume/Value.text = str(int(%SFXVolume/HSlider.value))
 	Global.music_volume = %MusicVolume/HSlider.value
 	Global.sfx_volume = %SFXVolume/HSlider.value
 	if Global.joystick_control:
@@ -61,6 +64,9 @@ func _process(_delta: float) -> void:
 		%Gameplay/JoystickMode.text = "JOYSTICK MODE: DUAL"
 	else:
 		%Gameplay/JoystickMode.text = "JOYSTICK MODE: SINGLE"
+	
+	%MusicVolume/Value.text = str(int(Global.music_volume))
+	%SFXVolume/Value.text = str(int(Global.sfx_volume))
 
 
 func _on_control_mode_pressed() -> void:

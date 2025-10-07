@@ -46,7 +46,7 @@ const MAX_SECTOR_SYSTEMS: int = 3
 const GMAP_TOP: float = 30.0
 const GMAP_BOT: float = 590.0
 const ENEMY_THRESHOLD: int = 9
-const SHOP_THRESHOLD: int = 8
+const SHOP_THRESHOLD: int = 2
 
 var starship_base_stats: Array[Dictionary] = [
 	{
