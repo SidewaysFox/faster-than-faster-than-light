@@ -1035,10 +1035,11 @@ vertical_alignment = 1
 
 [node name="Tabs" type="HBoxContainer" parent="ShipActionMenu"]
 layout_mode = 2
+alignment = 1
 
 [node name="ActionFriendlyShips" type="PanelContainer" parent="ShipActionMenu/Tabs"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(800, 200)
+custom_minimum_size = Vector2(808, 200)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f4522")
@@ -1202,7 +1203,7 @@ autowrap_mode = 2
 
 [node name="ActionTargetShips" type="PanelContainer" parent="ShipActionMenu/Tabs"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(800, 200)
+custom_minimum_size = Vector2(808, 200)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pe3dc")

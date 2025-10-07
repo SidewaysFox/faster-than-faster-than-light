@@ -21,6 +21,7 @@ var left_action_menu: bool = true
 var selected_ship: int = 0
 var targeting_mode: int = 0
 var time_paused: bool = false
+var info_menu_column: int = 0
 var hovered_at_ship_info: int = 0
 var looking_at_ship_info: int = 0
 var info_showing: int = 0
@@ -363,7 +364,7 @@ func _process(delta: float) -> void:
 		else:
 			# Check for numerical inputs
 			for i in max_option:
-				if Input.is_action_just_pressed(str(i + 1)):
+				if Input.is_action_just_pressed(str(i + 1)) and ready_to_select:
 					%Options.get_node("Option" + str(i + 1)).emit_signal("pressed")
 		%ChargeProgress/Label.text = "WAITING"
 	else:
@@ -565,6 +566,8 @@ func _process(delta: float) -> void:
 				index += 1
 		elif targeting_mode == 7:
 			pass # Select which drones to deploy
+		else:
+			%ActionTargetShips/NoTargets.hide()
 		index = 0
 		for ship in main.get_node("FriendlyShips").get_children():
 			var box: Node = %ActionFriendlyShips/GridContainer.get_child(index)
@@ -602,7 +605,7 @@ func _process(delta: float) -> void:
 				button.show()
 				button.get_child(0).text = SHIP_CODES[ship.type] + ": " + ship.ship_name.to_upper()
 				var stylebox: Resource = button.get_theme_stylebox("panel")
-				if index == hovered_at_ship_info:
+				if index == hovered_at_ship_info and (not Global.joystick_control or (Global.joystick_control and info_menu_column == 0)):
 					stylebox.border_color = Color8(160, 100, 100)
 				else:
 					stylebox.border_color = Color8(160, 0, 0)
@@ -678,6 +681,26 @@ func _process(delta: float) -> void:
 			else:
 				button.hide()
 			index += 1
+		if Global.joystick_control:
+			if info_menu_column == 0:
+				if Input.is_action_just_pressed("down1"):
+					looking_at_ship_info += 1
+				if Input.is_action_just_pressed("up1"):
+					looking_at_ship_info -= 1
+				if Input.is_action_just_pressed("right1"):
+					info_menu_column += 1
+				hovered_at_ship_info = looking_at_ship_info
+			if info_menu_column == 1:
+				if Input.is_action_just_pressed("down1"):
+					info_showing += 1
+				if Input.is_action_just_pressed("up1"):
+					info_showing -= 1
+				if Input.is_action_just_pressed("left1"):
+					info_menu_column -= 1
+			if info_menu_column == 2:
+				pass
+			info_showing = clampi(info_showing, 0, 3)
+			info_menu_column = clampi(info_menu_column, 0, 2)
 		looking_at_ship_info = clampi(looking_at_ship_info, 0, main.get_node("FriendlyShips").get_child_count() - 1)
 	else:
 		$FleetInfoMenu.hide()
@@ -931,7 +954,7 @@ func upgrade_ship() -> void:
 func _on_shop_setup_timeout() -> void:
 	# Set up the shop, if there is one
 	if "shop presence" in main.system_properties:
-		if Global.current_system in Global.visited_systems:
+		if Global.current_system in Global.visited_systems and len(Global.visited_systems) > 1:
 			item_catalogue = Global.galaxy_data[Global.current_system]["item shop"]
 			ship_catalogue = Global.galaxy_data[Global.current_system]["ship shop"]
 		else:
