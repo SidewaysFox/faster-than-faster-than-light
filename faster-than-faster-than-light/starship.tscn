@@ -57,7 +57,7 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="Starship" type="Node3D"]
+[node name="Starship" type="Node3D" groups=["starships"]]
 script = ExtResource("1_ng4vp")
 meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), ExtResource("5_w3rac"), ExtResource("4_w4b5x"), ExtResource("7_gv6hp"), ExtResource("4_deqbx"), null, null, null])
 projectiles = Array[PackedScene]([ExtResource("5_fb3fn"), ExtResource("9_ndpil")])

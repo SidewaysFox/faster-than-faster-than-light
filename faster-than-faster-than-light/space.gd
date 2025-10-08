@@ -16,49 +16,100 @@ var tutorial_enemy_fleet: Array = [1, 2, 6]
 
 var pirate_fleets: Dictionary = {
 	"start": [
-		[1, 1],
-		[1, 2],
-		[1, 3],
-		[1, 4],
-		[1, 5],
-		[1, 6],
-		#[1, 7],
-		[1, 2, 4],
-		[1, 1, 3],
-		[1, 3, 3],
-		[1, 3, 4],
-		[1, 4, 4],
+		[
+			[1, 1, [0]],
+			[1, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[1, 1, [5]],
+		],
+		[
+			[1, 1, [5]],
+			[2, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[3, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[4, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[5, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[6, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[2, 1, [0]],
+			[3, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[2, 1, [0]],
+			[4, 1, [0]],
+		],
+		[
+			[1, 1, [5]],
+			[2, 1, [0]],
+			[6, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[3, 1, [0]],
+			[5, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[3, 1, [0]],
+			[4, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[3, 1, [0]],
+			[6, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[4, 1, [0]],
+			[4, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[4, 1, [0]],
+			[5, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[4, 1, [0]],
+			[6, 1, [0]],
+		],
+		[
+			[1, 1, [0]],
+			[5, 1, [0]],
+			[5, 1, [0]],
+		],
+		[
+			[1, 2, [0, 5]],
+		],
+		[
+			[1, 1, [1]],
+			[6, 1, [0]],
+		],
 	],
 	"early": [
-		[1, 1, 1],
-		[1, 1, 2],
-		[1, 1, 3],
-		[1, 1, 4],
-		[1, 1, 5],
-		[1, 1, 6],
-		[1, 3, 3],
-		[1, 1, 1, 4],
-		[1, 1, 2, 4],
-		[1, 1, 1, 1],
-		[1, 1, 1, 6],
-		[1, 1, 4, 4],
-		[1, 1, 6, 6],
-		[1, 2, 3, 4],
+		
 	],
 	"middle": [
-		[1, 1, 1, 1, 1],
-		[1, 1, 1, 4, 4],
-		[1, 1, 1, 1, 6],
-		[1, 1, 2, 4],
-		[1, 1, 1, 1, 1, 1],
-		[1, 1, 1, 1, 1, 6],
+		
 	],
 	"late": [
-		[1, 1, 1, 1, 1, 1, 1, 1],
-		[1, 1, 1, 1, 1, 1, 6, 6],
-		[1, 1, 1, 2, 2, 2, 3],
-		[1, 1, 1, 2, 2, 2, 3, 4],
-		[1, 1, 2, 3, 3, 3, 3, 4],
+		
 	]
 }
 
@@ -214,13 +265,14 @@ func _ready() -> void:
 			enemy_fleet = pirate_fleets[system_stage].pick_random()
 		enemy_fleet.shuffle()
 		for ship in enemy_fleet:
-			Global.create_enemy_ship(ship)
+			Global.create_enemy_ship(ship[0], ship[1], ship[2])
 	# Is there a shop?
 	if Global.galaxy_data[Global.current_system]["shop presence"]:
 		system_properties.append("shop presence")
 	# Is there a star close by?
 	if star_proximity and not Global.tutorial:
 		system_properties.append("star proximity")
+		$SolarFlare.start()
 
 
 func _process(delta: float) -> void:
@@ -256,3 +308,8 @@ func _process(delta: float) -> void:
 func commence_warp() -> void:
 	for ship in $FriendlyShips.get_children():
 		ship.begin_warp()
+
+
+func _on_solar_flare_timeout() -> void:
+	for starship in get_tree().get_nodes_in_group("starships"):
+		starship.hull -= randi_range(0, 2)

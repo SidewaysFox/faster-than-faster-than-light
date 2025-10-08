@@ -296,6 +296,7 @@ func _on_infiltrate_reload_timeout() -> void:
 		new_target()
 	target.attacked = true
 	target.get_node("UnderAttack").start()
+	target.hull -= 1
 
 
 func _on_under_attack_timeout() -> void:

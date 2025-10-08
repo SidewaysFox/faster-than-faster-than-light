@@ -124,4 +124,8 @@ mesh = SubResource("SphereMesh_1vxpe")
 
 [node name="Projectiles" type="Node3D" parent="."]
 
+[node name="SolarFlare" type="Timer" parent="."]
+wait_time = 14.0
+
 [connection signal="timeout" from="WarpInDialogue" to="CanvasLayer/UserInterface" method="_on_warp_in_dialogue_timeout"]
+[connection signal="timeout" from="SolarFlare" to="." method="_on_solar_flare_timeout"]
