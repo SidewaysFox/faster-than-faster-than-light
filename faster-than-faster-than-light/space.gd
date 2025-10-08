@@ -17,93 +17,106 @@ var tutorial_enemy_fleet: Array = [1, 2, 6]
 var pirate_fleets: Dictionary = {
 	"start": [
 		[
-			[1, 1, [0]],
-			[1, 1, [0]],
+			[1, 0, [0]],
+			[1, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[1, 1, [5]],
+			[1, 0, [0]],
+			[1, 0, [5]],
 		],
 		[
-			[1, 1, [5]],
-			[2, 1, [0]],
+			[1, 0, [5]],
+			[2, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[3, 1, [0]],
+			[1, 0, [0]],
+			[3, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[4, 1, [0]],
+			[1, 0, [0]],
+			[4, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[5, 1, [0]],
+			[1, 0, [0]],
+			[5, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[6, 1, [0]],
+			[1, 0, [0]],
+			[6, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[2, 1, [0]],
-			[3, 1, [0]],
+			[1, 0, [0]],
+			[2, 0, [0]],
+			[3, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[2, 1, [0]],
-			[4, 1, [0]],
+			[1, 0, [0]],
+			[2, 0, [0]],
+			[4, 0, [0]],
 		],
 		[
-			[1, 1, [5]],
-			[2, 1, [0]],
-			[6, 1, [0]],
+			[1, 0, [5]],
+			[2, 0, [0]],
+			[6, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[3, 1, [0]],
-			[5, 1, [0]],
+			[1, 0, [0]],
+			[3, 0, [0]],
+			[5, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[3, 1, [0]],
-			[4, 1, [0]],
+			[1, 0, [0]],
+			[3, 0, [0]],
+			[4, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[3, 1, [0]],
-			[6, 1, [0]],
+			[1, 0, [0]],
+			[3, 0, [0]],
+			[6, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[4, 1, [0]],
-			[4, 1, [0]],
+			[1, 0, [0]],
+			[4, 0, [0]],
+			[4, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[4, 1, [0]],
-			[5, 1, [0]],
+			[1, 0, [0]],
+			[4, 0, [0]],
+			[5, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[4, 1, [0]],
-			[6, 1, [0]],
+			[1, 0, [0]],
+			[4, 0, [0]],
+			[6, 0, [0]],
 		],
 		[
-			[1, 1, [0]],
-			[5, 1, [0]],
-			[5, 1, [0]],
+			[1, 0, [0]],
+			[5, 0, [0]],
+			[5, 0, [0]],
 		],
 		[
-			[1, 2, [0, 5]],
+			[1, 1, [0, 5]],
 		],
 		[
-			[1, 1, [1]],
-			[6, 1, [0]],
+			[1, 0, [1]],
+			[6, 0, [0]],
 		],
 	],
 	"early": [
-		
+		[
+			[1, 1, [0, 1]],
+			[1, 1, [0, 1]],
+		],
+		[
+			[1, 0, [1]],
+			[1, 0, [1]],
+			[2, 0, [0]],
+		],
+		[
+			[1, 0, [1]],
+			[2, 0, [0]],
+			[2, 0, [0]],
+		],
 	],
 	"middle": [
 		
@@ -181,6 +194,7 @@ func _ready() -> void:
 			# It took way too much rigorous testing to get this number
 			if (radius / 2.0) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
 				star_proximity = true
+				%UserInterface.get_node("SolarFlareFlash").color = colour
 		# Create nebulae
 		var nebula_pos: Vector3
 		var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
@@ -258,14 +272,18 @@ func _ready() -> void:
 	# Are there enemies present?
 	if Global.galaxy_data[Global.current_system]["enemy presence"]:
 		system_properties.append("enemy presence")
-		var enemy_fleet: Array
-		if Global.tutorial:
-			enemy_fleet = tutorial_enemy_fleet
+		if Global.current_system not in Global.visited_systems:
+			var enemy_fleet: Array
+			if Global.tutorial:
+				enemy_fleet = tutorial_enemy_fleet
+			else:
+				enemy_fleet = pirate_fleets[system_stage].pick_random()
+			enemy_fleet.shuffle()
+			for ship in enemy_fleet:
+				Global.create_enemy_ship(ship[0], ship[1], ship[2])
 		else:
-			enemy_fleet = pirate_fleets[system_stage].pick_random()
-		enemy_fleet.shuffle()
-		for ship in enemy_fleet:
-			Global.create_enemy_ship(ship[0], ship[1], ship[2])
+			for enemy in Global.galaxy_data[Global.current_system]["enemies"]:
+				$HostileShips.add_child(enemy)
 	# Is there a shop?
 	if Global.galaxy_data[Global.current_system]["shop presence"]:
 		system_properties.append("shop presence")
@@ -311,5 +329,7 @@ func commence_warp() -> void:
 
 
 func _on_solar_flare_timeout() -> void:
-	for starship in get_tree().get_nodes_in_group("starships"):
-		starship.hull -= randi_range(0, 2)
+	if not "shop presence" in system_properties:
+		for existing_starship in get_tree().get_nodes_in_group("starships"):
+			existing_starship.hull -= randi_range(0, 2)
+		%UserInterface.get_node("SolarFlareFlash").self_modulate.a = 0.4

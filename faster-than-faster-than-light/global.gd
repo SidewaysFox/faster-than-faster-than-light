@@ -28,10 +28,10 @@ var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1]
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 6, 6, 6, 6, 6]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
 const STARTING_RESOURCES: int = 25
-const STARTING_FUEL: int = 80
+const STARTING_FUEL: int = 40
 const STARTING_INVENTORY: Array[int] = []
 const TUTORIAL_INVENTORY: Array[int] = [1, 6]
 const DEFAULT_INV_SIZE: int = 4
@@ -46,7 +46,7 @@ const MAX_SECTOR_SYSTEMS: int = 3
 const GMAP_TOP: float = 30.0
 const GMAP_BOT: float = 590.0
 const ENEMY_THRESHOLD: int = 9
-const SHOP_THRESHOLD: int = 2
+const SHOP_THRESHOLD: int = 8
 
 var starship_base_stats: Array[Dictionary] = [
 	{
@@ -408,15 +408,16 @@ func create_new_starship(type: int, ship_name: String = "Starship") -> void:
 	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
 
 
-func create_enemy_ship(type: int, level: int, weapons: Array[int]) -> void:
+func create_enemy_ship(type: int, level: int, weapons: Array) -> void:
 	var new_enemy: Node = starship.instantiate()
 	new_enemy.id = get_new_ship_id()
 	new_enemy.team = -1
 	new_enemy.type = type
 	new_enemy.alignment = 3
-	new_enemy.level = level
+	new_enemy.level = 1
 	new_enemy.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_enemy.hull = starship_base_stats[type]["Hull Strength"]
 	new_enemy.agility = starship_base_stats[type]["Agility"]
 	new_enemy.weapons = weapons
+	new_enemy.set_level = level
 	get_node("/root/Space/HostileShips").add_child(new_enemy)

@@ -793,6 +793,15 @@ grow_vertical = 2
 script = ExtResource("1_kxhmu")
 galaxy_map_token = ExtResource("2_i7dvk")
 
+[node name="SolarFlareFlash" type="ColorRect" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+z_index = -1
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.0156863, 0.0313726, 0.0627451, 1)
+
 [node name="InfoTabs" type="MarginContainer" parent="."]
 layout_mode = 0
 offset_right = 40.0

@@ -322,6 +322,8 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
+	$SolarFlareFlash.self_modulate.a = lerp($SolarFlareFlash.self_modulate.a, 0.0, 0.1)
+	
 	if (Input.is_action_just_pressed("action menu") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B"))):
 		_action_menu()
 	
@@ -426,6 +428,10 @@ func _process(delta: float) -> void:
 				if "shop presence" in main.system_properties:
 					Global.galaxy_data[Global.current_system]["item shop"] = item_catalogue
 					Global.galaxy_data[Global.current_system]["ship shop"] = ship_catalogue
+				if "enemy presence" in main.system_properties:
+					Global.galaxy_data[Global.current_system]["enemies"] = []
+					for enemy in main.get_node("HostileShips").get_children():
+						Global.galaxy_data[Global.current_system]["enemies"].append(enemy.duplicate())
 				Engine.time_scale = 1.0
 				warping = true
 				time_paused = false
@@ -1008,70 +1014,7 @@ func upgrade_ship() -> void:
 	var price: int = Global.upgrade_costs[ship.type][ship.level - 1]
 	if Global.resources >= price:
 		resources(-price)
-		# I genuinely cannot think of a better way to do this
-		if ship.type == 0:
-			ship.hull_strength += 5
-			ship.hull += 5
-			ship.agility += 0.05
-			Global.max_inventory += 1
-		elif ship.type == 1:
-			if ship.level == 1:
-				ship.hull_strength += 2
-				ship.hull += 2
-				ship.agility += 0.05
-			elif ship.level == 2:
-				ship.hull_strength += 4
-				ship.hull += 4
-				ship.agility += 0.1
-			ship.weapons.append(0)
-		elif ship.type == 2:
-			ship.agility += 0.05
-			if ship.level == 1:
-				ship.hull_strength += 2
-				ship.hull += 2
-			elif ship.level == 2:
-				ship.hull_strength += 3
-				ship.hull += 3
-		elif ship.type == 3:
-			ship.agility += 0.05
-			if ship.level == 1:
-				ship.hull_strength += 2
-				ship.hull += 2
-			elif ship.level == 2:
-				ship.hull_strength += 5
-				ship.hull += 5
-		elif ship.type == 4:
-			if ship.level == 1:
-				ship.hull_strength += 1
-				ship.hull += 1
-				ship.agility += 0.05
-			elif ship.level == 2:
-				ship.hull_strength += 2
-				ship.hull += 2
-		elif ship.type == 5:
-			ship.hull_strength += 1
-			ship.hull += 1
-			if ship.level == 1:
-				ship.agility += 0.05
-			elif ship.level == 2:
-				ship.agility += 0.1
-		elif ship.type == 6:
-			ship.agility += 0.05
-			if ship.level == 1:
-				ship.hull_strength += 1
-				ship.hull += 1
-			elif ship.level == 2:
-				ship.hull_strength += 2
-				ship.hull += 2
-		elif ship.type == 7:
-			ship.hull_strength += 4
-			ship.hull += 4
-			if ship.level == 1:
-				ship.drone_slots.append(0)
-			elif ship.level == 2:
-				ship.drone_slots.append_array([0, 0])
-		ship.level += 1
-		ship.stats_update()
+		ship.upgrade()
 
 
 func _on_shop_setup_timeout() -> void:

@@ -36,7 +36,7 @@ class_name Starship extends Node3D
 ## The starship's chance to avoid enemy weapons
 @export var agility: float
 ## The starship's currently active weapons
-@export var weapons: Array[int] = [0]
+@export var weapons: Array = [0]
 ## The starship's available drone slots
 @export var drone_slots: Array[int] = [1]
 @export_category("Misc")
@@ -66,11 +66,14 @@ var active: bool = true
 var shield_layers: int
 var attacked: bool = false
 var scanned: bool = false
+var set_level: int
 
 const INFILTRATE_RECHARGE: float = 16.0
 const INFILTRATE_UPGRADE: float = 3.5
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
+
+const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
 
 
 func _ready() -> void:
@@ -85,6 +88,8 @@ func _ready() -> void:
 		ship_name = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
 	elif team != 1:
 		ship_name = "PIRATE"
+		for l in set_level:
+			upgrade()
 	
 	# Starting location based on team
 	if team != 0:
@@ -126,6 +131,10 @@ func _process(_delta: float) -> void:
 	$Marker/Reload2.hide()
 	$Marker/Reload3.hide()
 	if team == 1:
+		if ui.selected_ship == get_index():
+			$Marker.modulate.a = 1.0
+		else:
+			$Marker.modulate.a = 0.4
 		if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
 			hover_alpha = 255
 		else:
@@ -148,6 +157,7 @@ func _process(_delta: float) -> void:
 	$Marker/Info/Name.text = "NAME: " + ship_name
 	$Marker/Info/Type.text = "TYPE: " + ui.SHIP_CODES[type]
 	$Marker/Info/Hull.text = "HULL: " + str(hull)
+	$Marker/Info/Status.text = STATUS_MESSAGES[int(attacked)]
 	
 	if ui.action_menu_showing and (team == 1 or scanned):
 		$Marker.show()
@@ -269,8 +279,8 @@ func _new_projectile(projectile_type: int, damage: int) -> void:
 
 func _get_data_location() -> int:
 	var index: int = 0
-	for ship in Global.fleet:
-		if ship.id == id:
+	for temp_ship in Global.fleet:
+		if temp_ship.id == id:
 			break
 		index += 1
 	return index
@@ -301,3 +311,71 @@ func _on_infiltrate_reload_timeout() -> void:
 
 func _on_under_attack_timeout() -> void:
 	attacked = false
+
+
+func upgrade() -> void:
+	# I genuinely cannot think of a better way to do this
+	if type == 0:
+		hull_strength += 5
+		hull += 5
+		agility += 0.05
+		Global.max_inventory += 1
+	elif type == 1:
+		if level == 1:
+			hull_strength += 2
+			hull += 2
+			agility += 0.05
+		elif level == 2:
+			hull_strength += 4
+			hull += 4
+			agility += 0.1
+		weapons.append(0)
+	elif type == 2:
+		agility += 0.05
+		if level == 1:
+			hull_strength += 2
+			hull += 2
+		elif level == 2:
+			hull_strength += 3
+			hull += 3
+	elif type == 3:
+		agility += 0.05
+		if level == 1:
+			hull_strength += 2
+			hull += 2
+		elif level == 2:
+			hull_strength += 5
+			hull += 5
+	elif type == 4:
+		if level == 1:
+			hull_strength += 1
+			hull += 1
+			agility += 0.05
+		elif level == 2:
+			hull_strength += 2
+			hull += 2
+	elif type == 5:
+		hull_strength += 1
+		hull += 1
+		if level == 1:
+			agility += 0.05
+		elif level == 2:
+			agility += 0.1
+	elif type == 6:
+		agility += 0.05
+		if level == 1:
+			hull_strength += 1
+			hull += 1
+		elif level == 2:
+			hull_strength += 2
+			hull += 2
+	elif type == 7:
+		hull_strength += 4
+		hull += 4
+		if level == 1:
+			drone_slots.append(0)
+		elif level == 2:
+			drone_slots.append_array([0, 0])
+	level += 1
+	if team == 1:
+		stats_update()
