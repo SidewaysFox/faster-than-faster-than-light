@@ -337,7 +337,7 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
-	$SolarFlareFlash.self_modulate.a = lerp($SolarFlareFlash.self_modulate.a, 0.0, 0.1)
+	$SolarFlareFlash.self_modulate.a = lerp($SolarFlareFlash.self_modulate.a, 0.0, 0.02)
 	
 	if (Input.is_action_just_pressed("action menu") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B"))):
 		_action_menu()

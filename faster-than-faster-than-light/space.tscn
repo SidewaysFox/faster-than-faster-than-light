@@ -122,6 +122,8 @@ mesh = SubResource("SphereMesh_1vxpe")
 
 [node name="HostileShips" type="Node3D" parent="."]
 
+[node name="Drones" type="Node3D" parent="."]
+
 [node name="Projectiles" type="Node3D" parent="."]
 
 [node name="SolarFlare" type="Timer" parent="."]

@@ -28,16 +28,16 @@ var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 7]
-const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
-const STARTING_RESOURCES: int = 25
-const STARTING_FUEL: int = 25
-const STARTING_INVENTORY: Array[int] = [10, 1, 2, 9]
-const TUTORIAL_INVENTORY: Array[int] = [1, 6]
-const DEFAULT_INV_SIZE: int = 4
-const DEFAULT_JUMP_DISTANCE: float = 140.0
-const DEFAULT_CHARGE_RATE: float = 3.0
-const DEFAULT_CRIT_CHANCE: float = 0.0
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 7, 7] # Default [0, 1, 1]
+const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6] # Default [0, 1, 1, 2, 3, 4, 5, 6]
+const STARTING_RESOURCES: int = 400 # Default 25
+const STARTING_FUEL: int = 40 # Default 25
+const STARTING_INVENTORY: Array[int] = [10, 10, 10, 10] # Default []
+const TUTORIAL_INVENTORY: Array[int] = [1, 6] # Default [1, 6]
+const DEFAULT_INV_SIZE: int = 4 # Default 4
+const DEFAULT_JUMP_DISTANCE: float = 140.0 # Default 140.0
+const DEFAULT_CHARGE_RATE: float = 3.0 # Default 3.0
+const DEFAULT_CRIT_CHANCE: float = 0.0 # Default 0.0
 
 const SECTOR_ROWS: int = 8
 const SECTOR_COLUMNS: int = 32
@@ -45,9 +45,9 @@ const SECTOR_SIZE: Vector2 = Vector2(100, 70)
 const MAX_SECTOR_SYSTEMS: int = 3
 const GMAP_TOP: float = 30.0
 const GMAP_BOT: float = 590.0
-const ENEMY_THRESHOLD: int = 9
-const SHOP_THRESHOLD: int = 8
-const ITEM_WIN_THRESHOLD: int = 17
+const ENEMY_THRESHOLD: int = 9 # Default 9
+const SHOP_THRESHOLD: int = 0 # Default 8
+const ITEM_WIN_THRESHOLD: int = 17 # Default 17
 
 var starship_base_stats: Array[Dictionary] = [
 	{
@@ -140,8 +140,8 @@ var upgrade_specifications: Array = [
 		["+2 HULL STRENGTH", "+0.05 AGILITY", "INCREASED RANGE"],
 	],
 	[
-		["+4 HULL STRENGTH", "+1 DRONE SLOT", "REPAIR DRONES"],
-		["+4 HULL STRENGTH", "+2 DRONE SLOTS", "NONE"],
+		["+4 HULL STRENGTH", "+0.01 AGILITY", "+1 DRONE SLOT"],
+		["+4 HULL STRENGTH", "+0.02 AGILITY", "+1 DRONE SLOT"],
 	],
 ]
 
@@ -248,6 +248,8 @@ var weapon_list: Array[Dictionary] = [
 		"Type": 3,
 		"Ship type": 8,
 		"Cost": 40,
+		"Damage": 1,
+		"Reload time": 8.0,
 		"Description": "A basic fighter drone for use by Drone Command Ships."
 	},
 	{ # 10
@@ -255,6 +257,8 @@ var weapon_list: Array[Dictionary] = [
 		"Type": 3,
 		"Ship type": 9,
 		"Cost": 50,
+		"Damage": 0,
+		"Reload time": 15.0,
 		"Description": "A basic repair drone for use by Drone Command Ships."
 	},
 ]
@@ -410,7 +414,7 @@ func new_system(system: int) -> void:
 	current_system = system
 
 
-func create_new_starship(type: int, ship_name: String = "Starship") -> void:
+func create_new_starship(type: int, ship_name: String = "Starship", creator_id: int = -1) -> void:
 	var new_ship: Node = starship.instantiate()
 	new_ship.id = get_new_ship_id()
 	new_ship.team = 1
@@ -421,11 +425,15 @@ func create_new_starship(type: int, ship_name: String = "Starship") -> void:
 	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_ship.hull = starship_base_stats[type]["Hull Strength"]
 	new_ship.agility = starship_base_stats[type]["Agility"]
-	fleet.append(new_ship)
-	get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	new_ship.creator_id = creator_id
+	if type < 8:
+		fleet.append(new_ship)
+		get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
+	else:
+		get_node("/root/Space/Drones").add_child(new_ship)
 
 
-func create_enemy_ship(type: int, level: int, weapons: Array) -> void:
+func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = -1) -> void:
 	var new_enemy: Node = starship.instantiate()
 	new_enemy.id = get_new_ship_id()
 	new_enemy.team = -1
@@ -437,4 +445,8 @@ func create_enemy_ship(type: int, level: int, weapons: Array) -> void:
 	new_enemy.agility = starship_base_stats[type]["Agility"]
 	new_enemy.weapons = weapons
 	new_enemy.set_level = level
-	get_node("/root/Space/HostileShips").add_child(new_enemy)
+	new_enemy.creator_id = creator_id
+	if type < 8:
+		get_node("/root/Space/HostileShips").add_child(new_enemy)
+	else:
+		get_node("/root/Space/Drones").add_child(new_enemy)

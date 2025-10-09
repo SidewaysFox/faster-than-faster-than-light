@@ -2239,6 +2239,7 @@ layout_mode = 2
 script = ExtResource("4_r3lf1")
 
 [node name="CommandShip" type="VBoxContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Misc/MiscMenu"]
+visible = false
 layout_mode = 0
 offset_right = 464.0
 offset_bottom = 522.0
@@ -2642,6 +2643,7 @@ text = " RELOAD: 6.0 seconds"
 vertical_alignment = 1
 
 [node name="Shop" type="PanelContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(1400, 790)
 layout_mode = 1
 anchors_preset = 8

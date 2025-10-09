@@ -18,14 +18,14 @@ class_name Starship extends Node3D
 # 4: Repair
 # 5: Scanner
 # 6: Relay
-# 7: Drone command ship
-# 8: Drone fighter
-# 9: Drone repair
+# 7: drone command ship
+# 8: drone fighter
+# 9: drone repair
 ## The starship's alignment
 @export var alignment: int
 # 0: Federation
-# 1: Civilian
-# 2: Rebel
+# 1: Civilian (outdated)
+# 2: Rebel (outdated)
 # 3: Pirate
 ## The starship's name
 @export var ship_name: String = "Starship"
@@ -67,11 +67,15 @@ var shield_layers: int
 var attacked: bool = false
 var scanned: bool = false
 var set_level: int
+var is_drone: bool = false
+var drones_deployed: bool = false
+var creator_id: int
 
 const INFILTRATE_RECHARGE: float = 16.0
 const INFILTRATE_UPGRADE: float = 3.5
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
+const DRONE_RESIZE: Vector3 = Vector3.ONE * 0.5
 
 const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
 
@@ -84,8 +88,15 @@ func _ready() -> void:
 	
 	marker = $Marker/Selection.get_theme_stylebox("panel")
 	
+	if type > 7:
+		is_drone = true
+		scale = DRONE_RESIZE
+	
 	if ship_name == "Starship" and team == 1:
-		ship_name = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
+		if is_drone:
+			ship_name = "DRONE"
+		else:
+			ship_name = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
 	elif team != 1:
 		ship_name = "PIRATE"
 		for l in set_level:
@@ -107,7 +118,7 @@ func _ready() -> void:
 	warp_destination = -global_position.x
 	$JumpDelay.start(1 + (randf() * 2))
 	
-	if type == 1:
+	if type == 1 or type == 8:
 		var index: int = 1
 		for weapon_id in weapons:
 			get_node("WeaponReload" + str(index)).wait_time = Global.weapon_list[weapon_id]["Reload time"]
@@ -116,53 +127,59 @@ func _ready() -> void:
 		shield_layers = level
 	elif type == 3:
 		$InfiltrateReload.wait_time = INFILTRATE_RECHARGE - (level * INFILTRATE_UPGRADE)
-	elif type == 4:
+	elif type == 4 or type == 9:
 		$RepairReload.wait_time = REPAIR_TIME - (level * REPAIR_UPGRADE)
 
 
 func _process(_delta: float) -> void:
 	if hull <= 0:
-		if team == 1:
+		if team == 1 and not is_drone:
 			Global.fleet.remove_at(_get_data_location())
+		if type == 7:
+			for drone in main.get_node("Drones").get_children():
+				if drone.creator_id == id:
+					drone.hull = 0
 		queue_free()
 	
-	var hover_alpha: int
-	$Marker/Reload1.hide()
-	$Marker/Reload2.hide()
-	$Marker/Reload3.hide()
-	if team == 1:
-		if ui.selected_ship == get_index():
-			$Marker.modulate.a = 1.0
-		else:
-			$Marker.modulate.a = 0.4
-		if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
-			hover_alpha = 255
-		else:
-			hover_alpha = 160
-	elif team == -1:
-		if ui.hovered_target == get_index() and ui.targeting_mode != 4:
-			hover_alpha = 255
-		else:
-			hover_alpha = 160
-	if ui.selected_ship == get_index() and team == 1:
-		marker.border_color = Color8(0, 191, 255, hover_alpha)
-	else:
-		marker.border_color = Color8(255, 255, 255, hover_alpha)
-	if ui.selected_ship < main.get_node("FriendlyShips").get_child_count():
-		if main.get_node("FriendlyShips").get_child(ui.selected_ship).target != null:
-			if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
-				$Marker/Target.show()
+	if not is_drone:
+		var hover_alpha: int
+		$Marker/Reload1.hide()
+		$Marker/Reload2.hide()
+		$Marker/Reload3.hide()
+		if team == 1:
+			if ui.selected_ship == get_index():
+				$Marker.modulate.a = 1.0
 			else:
-				$Marker/Target.hide()
-	$Marker/Info/Name.text = "NAME: " + ship_name
-	$Marker/Info/Type.text = "TYPE: " + ui.SHIP_CODES[type]
-	$Marker/Info/Hull.text = "HULL: " + str(hull)
-	$Marker/Info/Status.text = STATUS_MESSAGES[int(attacked)]
-	
-	if ui.action_menu_showing and (team == 1 or scanned):
-		$Marker.show()
-	else:
-		$Marker.hide()
+				$Marker.modulate.a = 0.4
+			if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == 4):
+				hover_alpha = 255
+			else:
+				hover_alpha = 160
+		elif team == -1:
+			if ui.hovered_target == get_index() and ui.targeting_mode != 4:
+				hover_alpha = 255
+			else:
+				hover_alpha = 160
+		# This needs to be distinct because it requires specific AND and ELSE conditions
+		if ui.selected_ship == get_index() and team == 1:
+			marker.border_color = Color8(0, 191, 255, hover_alpha)
+		else:
+			marker.border_color = Color8(255, 255, 255, hover_alpha)
+		if ui.selected_ship < main.get_node("FriendlyShips").get_child_count():
+			if main.get_node("FriendlyShips").get_child(ui.selected_ship).target != null:
+				if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
+					$Marker/Target.show()
+				else:
+					$Marker/Target.hide()
+		$Marker/Info/Name.text = "NAME: " + ship_name
+		$Marker/Info/Type.text = "TYPE: " + ui.SHIP_CODES[type]
+		$Marker/Info/Hull.text = "HULL: " + str(hull)
+		$Marker/Info/Status.text = STATUS_MESSAGES[int(attacked)]
+		
+		if ui.action_menu_showing and (team == 1 or scanned):
+			$Marker.show()
+		else:
+			$Marker.hide()
 	
 	scanned = false
 	
@@ -210,6 +227,34 @@ func _process(_delta: float) -> void:
 			if target == null:
 				new_target()
 			target.scanned = true
+		if type == 7 and Global.in_combat:
+			if not drones_deployed:
+				for drone in drones:
+					if team == 1:
+						Global.create_new_starship(Global.weapon_list[drone]["Ship type"], "Starship", id)
+					elif team == -1:
+						Global.create_enemy_ship(Global.weapon_list[drone]["Ship type"], 1, [0], id)
+			else:
+				for drone in main.get_node("Drones").get_children():
+					if drone.creator_id == id:
+						drone.active = true
+			drones_deployed = true
+		if type == 8:
+			if Global.in_combat:
+				if $WeaponReload1.is_stopped():
+					$WeaponReload1.start()
+				if $WeaponReload1.paused:
+					$WeaponReload1.paused = false
+			else:
+				hull = 0
+		if type == 9:
+			if target != null:
+				if target.hull < target.hull_strength and $RepairReload.is_stopped():
+					$RepairReload.start()
+				elif target.hull >= target.hull_strength:
+					$RepairReload.stop()
+			if $RepairReload.is_stopped():
+				new_target()
 	else:
 		for num in len(weapons):
 			if get_node("WeaponReload" + str(num + 1)).time_left < 0.1:
@@ -217,6 +262,10 @@ func _process(_delta: float) -> void:
 		$RepairReload.stop()
 		$ShieldReload.stop()
 		$InfiltrateReload.stop()
+		if type == 7:
+			for drone in main.get_node("Drones").get_children():
+				if drone.creator_id == id:
+					drone.active = false
 	
 	# Do jumping animations
 	if jumping:
@@ -238,6 +287,7 @@ func stats_update() -> void:
 	Global.fleet[index].hull = hull
 	Global.fleet[index].agility = agility
 	Global.fleet[index].weapons = weapons
+	Global.fleet[index].drones = drones
 	Global.fleet[index].active = active
 	Global.stats_update()
 
@@ -260,11 +310,25 @@ func new_target(ship: int = 0) -> void:
 			target = main.get_node("HostileShips").get_children().pick_random()
 		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0:
 			target = main.get_node("FriendlyShips").get_child(ship)
+	elif type == 8:
+		if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
+			target = main.get_node("HostileShips").get_children().pick_random()
+		elif team == -1 and main.get_node("FriendlyShips").get_child_count() > 0:
+			target = main.get_node("FriendlyShips").get_children().pick_random()
+	elif type == 9:
+		if team == -1 and main.get_node("HostileShips").get_child_count() > 0:
+			for potential_target in main.get_node("HostileShips").get_children():
+				if potential_target.hull < potential_target.hull_strength:
+					target = potential_target
+		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0 and $RepairReload.is_stopped():
+			for potential_target in main.get_node("FriendlyShips").get_children():
+				if potential_target.hull < potential_target.hull_strength:
+					target = potential_target
 
 
 func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
-	if target == null:
+	if target == null or is_drone:
 		new_target()
 	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
@@ -294,6 +358,7 @@ func _repair() -> void:
 	else:
 		target.hull += 2
 	target.hull = clampi(target.hull, 0, target.hull_strength)
+	print(is_drone)
 
 
 func _shield_up() -> void:
@@ -373,9 +438,11 @@ func upgrade() -> void:
 		hull_strength += 4
 		hull += 4
 		if level == 1:
-			drones.append(8)
+			agility += 0.01
+			drones.append(9)
 		elif level == 2:
-			drones.append_array([8, 8])
+			agility += 0.02
+			drones.append(10)
 	level += 1
 	if team == 1:
 		stats_update()

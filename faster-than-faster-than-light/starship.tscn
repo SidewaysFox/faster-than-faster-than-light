@@ -60,7 +60,7 @@ corner_radius_bottom_left = 5
 
 [node name="Starship" type="Node3D" groups=["starships"]]
 script = ExtResource("1_ng4vp")
-meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), ExtResource("5_w3rac"), ExtResource("4_w4b5x"), ExtResource("7_gv6hp"), ExtResource("4_deqbx"), ExtResource("9_nctpa"), null, null])
+meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), ExtResource("5_w3rac"), ExtResource("4_w4b5x"), ExtResource("7_gv6hp"), ExtResource("4_deqbx"), ExtResource("9_nctpa"), ExtResource("2_wpmgm"), ExtResource("4_w4b5x")])
 projectiles = Array[PackedScene]([ExtResource("5_fb3fn"), ExtResource("9_ndpil")])
 
 [node name="JumpDelay" type="Timer" parent="."]
@@ -95,6 +95,7 @@ one_shot = true
 [node name="RepairReload" type="Timer" parent="."]
 
 [node name="Marker" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = -50.0
