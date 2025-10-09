@@ -28,11 +28,11 @@ var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 6, 6, 6, 6, 6]
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 7]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
 const STARTING_RESOURCES: int = 25
-const STARTING_FUEL: int = 40
-const STARTING_INVENTORY: Array[int] = []
+const STARTING_FUEL: int = 25
+const STARTING_INVENTORY: Array[int] = [10, 1, 2, 9]
 const TUTORIAL_INVENTORY: Array[int] = [1, 6]
 const DEFAULT_INV_SIZE: int = 4
 const DEFAULT_JUMP_DISTANCE: float = 140.0
@@ -47,6 +47,7 @@ const GMAP_TOP: float = 30.0
 const GMAP_BOT: float = 590.0
 const ENEMY_THRESHOLD: int = 9
 const SHOP_THRESHOLD: int = 8
+const ITEM_WIN_THRESHOLD: int = 17
 
 var starship_base_stats: Array[Dictionary] = [
 	{
@@ -64,7 +65,7 @@ var starship_base_stats: Array[Dictionary] = [
 		"Cost": 45
 	},
 	{
-		"Hull Strength": 8,
+		"Hull Strength": 7,
 		"Agility": 0.05,
 		"Cost": 40
 	},
@@ -89,11 +90,11 @@ var starship_base_stats: Array[Dictionary] = [
 		"Cost": 75
 	},
 	{
-		"Hull Strength": 3,
+		"Hull Strength": 1,
 		"Agility": 0.4,
 	},
 	{
-		"Hull Strength": 3,
+		"Hull Strength": 1,
 		"Agility": 0.4,
 	},
 ]
@@ -170,7 +171,7 @@ var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "
 		"SABRE", "KATANA", "MACE", "TALWAR", "SCOURGE", "SPIKE", "BULLPUP", "YUKON"]
 
 var weapon_list: Array[Dictionary] = [
-	{
+	{ # 0
 		"Name": "PHASOR 1",
 		"Type": 0,
 		"Cost": 15,
@@ -178,7 +179,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 6.0,
 		"Description": "A weak laser weapon, able to do a little bit of damage."
 	},
-	{
+	{ # 1
 		"Name": "PHASOR 2",
 		"Type": 0,
 		"Cost": 30,
@@ -186,7 +187,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 4.0,
 		"Description": "Faster than the previous model, capable of easily dealing with weaker threats."
 	},
-	{
+	{ # 2
 		"Name": "PHASOR 3",
 		"Type": 0,
 		"Cost": 60,
@@ -194,7 +195,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 2.0,
 		"Description": "A strong laser weapon which can quickly take out most enemies."
 	},
-	{
+	{ # 3
 		"Name": "RAILGUN",
 		"Type": 0,
 		"Cost": 55,
@@ -202,7 +203,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 6.0,
 		"Description": "A high damage but somewhat slow reloading laser weapon."
 	},
-	{
+	{ # 4
 		"Name": "OBLITERATOR",
 		"Type": 0,
 		"Cost": 80,
@@ -210,7 +211,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 18.0,
 		"Description": "Very slow reload, but can tear most ships to shreds when it hits."
 	},
-	{
+	{ # 5
 		"Name": "COILGUN 1",
 		"Type": 1,
 		"Cost": 15,
@@ -218,7 +219,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 6.0,
 		"Description": "A weak projectile weapon, sacrificing accuracy for the ability to avoid shields."
 	},
-	{
+	{ # 6
 		"Name": "COILGUN 2",
 		"Type": 1,
 		"Cost": 30,
@@ -226,7 +227,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 4.0,
 		"Description": "Stronger than the first model and able to make light work of defensive starships."
 	},
-	{
+	{ # 7
 		"Name": "COILGUN 3",
 		"Type": 1,
 		"Cost": 60,
@@ -234,7 +235,7 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 2.0,
 		"Description": "A very powerful weapon, bombarding enemies with fast firing projectiles."
 	},
-	{
+	{ # 8
 		"Name": "GMAT AUTOCOIL",
 		"Type": 1,
 		"Cost": 400,
@@ -242,9 +243,25 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 0.2,
 		"Description": "The latest tech only used by elite fighters. Will make your fleet virtually unstoppable."
 	},
+	{ # 9
+		"Name": "FIGHTER DRONE",
+		"Type": 3,
+		"Ship type": 8,
+		"Cost": 40,
+		"Description": "A basic fighter drone for use by Drone Command Ships."
+	},
+	{ # 10
+		"Name": "REPAIR DRONE",
+		"Type": 3,
+		"Ship type": 9,
+		"Cost": 50,
+		"Description": "A basic repair drone for use by Drone Command Ships."
+	},
 ]
 
-var weapon_types: Array[String] = ["LASER", "PHYSICAL", "BEAM"]
+const WINNABLE_WEAPONS: Array[int] = [0, 1, 2, 3, 5, 6, 7]
+
+var weapon_types: Array[String] = ["LASER", "PHYSICAL", "EMP", "DRONE"]
 
 var fleet_inventory: Array = [] # Stores the weapon ID
 

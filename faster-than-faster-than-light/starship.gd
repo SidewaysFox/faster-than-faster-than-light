@@ -38,7 +38,7 @@ class_name Starship extends Node3D
 ## The starship's currently active weapons
 @export var weapons: Array = [0]
 ## The starship's available drone slots
-@export var drone_slots: Array[int] = [1]
+@export var drones: Array = [9]
 @export_category("Misc")
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
@@ -373,9 +373,9 @@ func upgrade() -> void:
 		hull_strength += 4
 		hull += 4
 		if level == 1:
-			drone_slots.append(0)
+			drones.append(8)
 		elif level == 2:
-			drone_slots.append_array([0, 0])
+			drones.append_array([8, 8])
 	level += 1
 	if team == 1:
 		stats_update()

@@ -11,6 +11,7 @@ var system_stage: String
 var star_proximity: bool = false
 var warp_charge: float = 0.0
 var bg_object_rotation: float = 5.0
+var enemy_ship_count: int
 
 var tutorial_enemy_fleet: Array = [1, 2, 6]
 
@@ -278,6 +279,7 @@ func _ready() -> void:
 				enemy_fleet = tutorial_enemy_fleet
 			else:
 				enemy_fleet = pirate_fleets[system_stage].pick_random()
+				enemy_ship_count = len(enemy_fleet)
 			enemy_fleet.shuffle()
 			for ship in enemy_fleet:
 				Global.create_enemy_ship(ship[0], ship[1], ship[2])
@@ -329,6 +331,7 @@ func commence_warp() -> void:
 
 
 func _on_solar_flare_timeout() -> void:
+	print("SOLAR FLARE")
 	if not "shop presence" in system_properties:
 		for existing_starship in get_tree().get_nodes_in_group("starships"):
 			existing_starship.hull -= randi_range(0, 2)

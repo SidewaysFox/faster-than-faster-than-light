@@ -36,7 +36,7 @@ var hovered_shop_button: int = 0
 var selected_shop_side: int = 0
 
 const HOVERED_COLOUR: Color = Color(0.0, 0.749, 1.0)
-const SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON"]
+const SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON", "FGHT", "REPR"]
 const TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
 const ACTIVE_TEXT: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
 const MISC_TEXT: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
@@ -213,7 +213,7 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[["Hope the star doesn't flare up while you wait for your warp drives to charge.", ["close", false]]]
 	],
 	[[3, "enemy presence", "star proximity"],
-	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger slides into view.",
+	"Your fleet exits warp, and you realise that you're uncomfortably close to a star. Suddenly, your systems warn you of a nearby threat. A pirate fleet either unaware or uncaring of the danger streaks into view.",
 	[["Hope that the star doesn't pose too much of an issue and get ready for combat.", ["close", true]]]
 	],
 	[[3, "shop presence", "star proximity"],
@@ -240,7 +240,7 @@ var response_dialogue: Array = [ # Main text, [option, result]
 	],
 ]
 
-var encounter_win_dialogue: Array = [
+var encounter_win_dialogues: Array = [
 	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials.",
 	[["Continue the journey.", ["close", false]]]
 	],
@@ -249,6 +249,21 @@ var encounter_win_dialogue: Array = [
 	],
 	["You barely manage to hear muffled screams through the static of the final enemy ship's transmitters. As the sound fades away, you gather resources from the fresh debris field.",
 	[["Reap your reward and move on.", ["close", false]]]
+	],
+	["You have defeated the enemy fleet, and live to see another day.",
+	[["Continue the journey.", ["close", false]]]
+	],
+	["With its hull gradually failing, the final enemy ship attempts to start firing up its warp drives - but it is too late.\nYour crews search what's left of the enemy fleet, finding some useful resources.",
+	[["Stash your findings and continue the journey.", ["close", false]]]
+	],
+]
+
+var item_win_dialogues: Array = [
+	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials. Among the debris, your crews manage to find an undamaged piece of equipment!\nYou got the ",
+	[["Continue the journey.", ["close", false]]]
+	],
+	["Searching the broken parts of the destroyed ships, your fleet is able to stock up on tech and fuel, but you also manage to find something of more significant value: a ",
+	[["Continue the journey.", ["close", false]]]
 	],
 ]
 
@@ -432,6 +447,7 @@ func _process(delta: float) -> void:
 					Global.galaxy_data[Global.current_system]["enemies"] = []
 					for enemy in main.get_node("HostileShips").get_children():
 						Global.galaxy_data[Global.current_system]["enemies"].append(enemy.duplicate())
+					Global.galaxy_data[Global.current_system]["enemy count"] = main.enemy_ship_count
 				Engine.time_scale = 1.0
 				warping = true
 				time_paused = false
@@ -575,8 +591,6 @@ func _process(delta: float) -> void:
 							stylebox.draw_center = false
 				box.show()
 				index += 1
-		elif targeting_mode == 7:
-			pass # Select which drones to deploy
 		else:
 			%ActionTargetShips/NoTargets.hide()
 		index = 0
@@ -678,6 +692,23 @@ func _process(delta: float) -> void:
 							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = " TYPE: " + str(Global.weapon_types[Global.weapon_list[weapon]["Type"]])
 							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = " DAMAGE: " + str(Global.weapon_list[weapon]["Damage"])
 							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").text = " RELOAD: " + str(Global.weapon_list[weapon]["Reload time"])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").show() # May have been hidden by the drone view
+							child_index += 2
+					elif ship.type == 7:
+						%Information/Misc/RelatedStat2.show()
+						%MiscMenu/Fighter.show()
+						%Information/Misc/RelatedStat2/Label.text = "DRONE SLOTS: " + str(ship.level)
+						for child in %MiscMenu/Fighter.get_children():
+							child.hide()
+						var child_index: int = 0
+						for drone in ship.drones:
+							%MiscMenu/Fighter.get_child(child_index).show()
+							%MiscMenu/Fighter.get_child(child_index + 1).show()
+							@warning_ignore("integer_division") # Always divisible by 2
+							%MiscMenu/Fighter.get_child(child_index).get_node("HBoxContainer/Label").text = "DRONE " + str((child_index / 2) + 1)
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = " TYPE: " + SHIP_CODES[Global.weapon_list[drone]["Ship type"]]
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = " HULL: " + str(Global.starship_base_stats[Global.weapon_list[drone]["Ship type"]]["Hull Strength"])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").hide()
 							child_index += 2
 					else:
 						%Information/Misc/RelatedStat2.hide()
@@ -923,7 +954,7 @@ func _process(delta: float) -> void:
 	prev_mouse_pos = get_global_mouse_position()
 
 # Sets up the dialogue box, with text and dialogue options
-func dialogue_set_up(library: int, id: int) -> void:
+func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 	# Hide the options by default
 	for child in %Options.get_children():
 		child.hide()
@@ -948,12 +979,12 @@ func dialogue_set_up(library: int, id: int) -> void:
 			%Options.get_node("Option" + str(i + 1)).show()
 	# Encounter win dialogue
 	elif library == 2:
-		%DialogueText.text = encounter_win_dialogue[id][0]
-		max_option = len(encounter_win_dialogue[id][1])
+		%DialogueText.text = encounter_win_dialogues[id][0]
+		max_option = len(encounter_win_dialogues[id][1])
 		# Options
 		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + encounter_win_dialogue[id][1][i][0]
-			option_results.append(encounter_win_dialogue[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + encounter_win_dialogues[id][1][i][0]
+			option_results.append(encounter_win_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
 	# Intro dialogue
 	elif library == 3:
@@ -971,6 +1002,14 @@ func dialogue_set_up(library: int, id: int) -> void:
 		for i in max_option:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + tutorial_dialogues[id][1][i][0]
 			option_results.append(tutorial_dialogues[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).show()
+	elif library == 5:
+		%DialogueText.text = item_win_dialogues[id][0] + bonus_text
+		max_option = len(item_win_dialogues[id][1])
+		# Options
+		for i in max_option:
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + item_win_dialogues[id][1][i][0]
+			option_results.append(item_win_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
 	$Dialogue.show()
 	dialogue_showing = true
@@ -1200,11 +1239,18 @@ func abandon_ship() -> void:
 
 
 func win_encounter() -> void:
-	# Tech
-	resources(randi_range(8, 32))
-	# Fuel
-	resources(randi_range(3, 4 * len(Global.fleet) - 1), 1, true, randi_range(0, len(encounter_win_dialogue) - 1), 2)
 	Global.galaxy_data[Global.current_system]["enemy presence"] = false
+	# Tech
+	resources(randi_range(4, 8 * main.enemy_ship_count))
+	# Fuel
+	resources(randi_range(3, 4 * len(Global.fleet) - 1), 1)
+	# Potential item
+	if randi_range(0, 19) >= Global.ITEM_WIN_THRESHOLD and len(Global.fleet_inventory) < Global.max_inventory:
+		var weapon_won: int = Global.WINNABLE_WEAPONS.pick_random()
+		Global.fleet_inventory.append(weapon_won)
+		dialogue_set_up(5, len(item_win_dialogues) - 1, Global.weapon_list[weapon_won]["Name"] + ".")
+	else:
+		dialogue_set_up(2, len(encounter_win_dialogues) - 1)
 
 
 func lose() -> void:

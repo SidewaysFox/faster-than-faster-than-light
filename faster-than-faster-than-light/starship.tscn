@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cjxyia0bj1uuo"]
+[gd_scene load_steps=17 format=3 uid="uid://cjxyia0bj1uuo"]
 
 [ext_resource type="Script" uid="uid://ou4uilyxtgnd" path="res://starship.gd" id="1_ng4vp"]
 [ext_resource type="PackedScene" uid="uid://b7rwxfw7w8fbl" path="res://command_ship_mesh.tscn" id="2_86p3r"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://d1b5i1m4aoy5a" path="res://infiltration_mesh.tscn" id="5_w3rac"]
 [ext_resource type="PackedScene" uid="uid://bdo7iuweolhl0" path="res://scanner_mesh.tscn" id="7_gv6hp"]
 [ext_resource type="Script" uid="uid://4wla3nr3yud7" path="res://marker.gd" id="7_ndcd6"]
+[ext_resource type="PackedScene" uid="uid://bsfvbrj3qnlqg" path="res://drone_command_mesh.tscn" id="9_nctpa"]
 [ext_resource type="PackedScene" uid="uid://b8oaffc6b0div" path="res://physical_proj.tscn" id="9_ndpil"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w4b5x"]
@@ -59,7 +60,7 @@ corner_radius_bottom_left = 5
 
 [node name="Starship" type="Node3D" groups=["starships"]]
 script = ExtResource("1_ng4vp")
-meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), ExtResource("5_w3rac"), ExtResource("4_w4b5x"), ExtResource("7_gv6hp"), ExtResource("4_deqbx"), null, null, null])
+meshes = Array[PackedScene]([ExtResource("2_86p3r"), ExtResource("2_wpmgm"), ExtResource("4_3nnsc"), ExtResource("5_w3rac"), ExtResource("4_w4b5x"), ExtResource("7_gv6hp"), ExtResource("4_deqbx"), ExtResource("9_nctpa"), null, null])
 projectiles = Array[PackedScene]([ExtResource("5_fb3fn"), ExtResource("9_ndpil")])
 
 [node name="JumpDelay" type="Timer" parent="."]

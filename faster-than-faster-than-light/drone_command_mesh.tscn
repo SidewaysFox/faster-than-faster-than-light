@@ -1,0 +1,64 @@
+[gd_scene load_steps=9 format=3 uid="uid://bsfvbrj3qnlqg"]
+
+[ext_resource type="Script" uid="uid://dj2c17mgoq0wa" path="res://starship_mesh.gd" id="1_5d06b"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5d06b"]
+resource_local_to_scene = true
+size = Vector3(22, 5, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_378tv"]
+resource_local_to_scene = true
+size = Vector3(5, 3, 7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kbhqr"]
+resource_local_to_scene = true
+size = Vector3(28, 1.5, 16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_adlpc"]
+resource_local_to_scene = true
+size = Vector3(12, 0.1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t4v17"]
+resource_local_to_scene = true
+size = Vector3(14, 0.1, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_geswp"]
+resource_local_to_scene = true
+size = Vector3(18, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q70nf"]
+resource_local_to_scene = true
+size = Vector3(12, 0.5, 0.1)
+
+[node name="DroneCommandMesh" type="Node3D"]
+script = ExtResource("1_5d06b")
+
+[node name="Hull0" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_5d06b")
+
+[node name="HullBridge2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 3, 0)
+mesh = SubResource("BoxMesh_378tv")
+
+[node name="Wing1" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_kbhqr")
+
+[node name="HullAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, 0)
+mesh = SubResource("BoxMesh_adlpc")
+
+[node name="HullAccentRight3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.5, 3)
+mesh = SubResource("BoxMesh_t4v17")
+
+[node name="HullAccentLeft3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.5, -3)
+mesh = SubResource("BoxMesh_t4v17")
+
+[node name="HullSideAccent3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 5)
+mesh = SubResource("BoxMesh_geswp")
+
+[node name="HullSideAccent23" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 5)
+mesh = SubResource("BoxMesh_q70nf")
