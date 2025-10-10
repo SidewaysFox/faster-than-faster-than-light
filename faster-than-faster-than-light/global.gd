@@ -28,10 +28,10 @@ var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 7, 7] # Default [0, 1, 1]
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1] # Default [0, 1, 1]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6] # Default [0, 1, 1, 2, 3, 4, 5, 6]
-const STARTING_RESOURCES: int = 400 # Default 25
-const STARTING_FUEL: int = 40 # Default 25
+const STARTING_RESOURCES: int = 25 # Default 25
+const STARTING_FUEL: int = 25 # Default 25
 const STARTING_INVENTORY: Array[int] = [10, 10, 10, 10] # Default []
 const TUTORIAL_INVENTORY: Array[int] = [1, 6] # Default [1, 6]
 const DEFAULT_INV_SIZE: int = 4 # Default 4
@@ -46,7 +46,7 @@ const MAX_SECTOR_SYSTEMS: int = 3
 const GMAP_TOP: float = 30.0
 const GMAP_BOT: float = 590.0
 const ENEMY_THRESHOLD: int = 9 # Default 9
-const SHOP_THRESHOLD: int = 0 # Default 8
+const SHOP_THRESHOLD: int = 8 # Default 8
 const ITEM_WIN_THRESHOLD: int = 17 # Default 17
 
 var starship_base_stats: Array[Dictionary] = [
@@ -174,7 +174,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 0
 		"Name": "PHASOR 1",
 		"Type": 0,
-		"Cost": 15,
+		"Cost": 12,
 		"Damage": 1,
 		"Reload time": 6.0,
 		"Description": "A weak laser weapon, able to do a little bit of damage."
@@ -182,7 +182,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 1
 		"Name": "PHASOR 2",
 		"Type": 0,
-		"Cost": 30,
+		"Cost": 24,
 		"Damage": 1,
 		"Reload time": 4.0,
 		"Description": "Faster than the previous model, capable of easily dealing with weaker threats."
@@ -190,7 +190,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 2
 		"Name": "PHASOR 3",
 		"Type": 0,
-		"Cost": 60,
+		"Cost": 48,
 		"Damage": 1,
 		"Reload time": 2.0,
 		"Description": "A strong laser weapon which can quickly take out most enemies."
@@ -198,7 +198,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 3
 		"Name": "RAILGUN",
 		"Type": 0,
-		"Cost": 55,
+		"Cost": 36,
 		"Damage": 3,
 		"Reload time": 6.0,
 		"Description": "A high damage but somewhat slow reloading laser weapon."
@@ -214,7 +214,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 5
 		"Name": "COILGUN 1",
 		"Type": 1,
-		"Cost": 15,
+		"Cost": 14,
 		"Damage": 1,
 		"Reload time": 6.0,
 		"Description": "A weak projectile weapon, sacrificing accuracy for the ability to avoid shields."
@@ -222,7 +222,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 6
 		"Name": "COILGUN 2",
 		"Type": 1,
-		"Cost": 30,
+		"Cost": 28,
 		"Damage": 1,
 		"Reload time": 4.0,
 		"Description": "Stronger than the first model and able to make light work of defensive starships."
@@ -230,7 +230,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 7
 		"Name": "COILGUN 3",
 		"Type": 1,
-		"Cost": 60,
+		"Cost": 56,
 		"Damage": 1,
 		"Reload time": 2.0,
 		"Description": "A very powerful weapon, bombarding enemies with fast firing projectiles."
@@ -238,7 +238,7 @@ var weapon_list: Array[Dictionary] = [
 	{ # 8
 		"Name": "GMAT AUTOCOIL",
 		"Type": 1,
-		"Cost": 400,
+		"Cost": 840,
 		"Damage": 1,
 		"Reload time": 0.2,
 		"Description": "The latest tech only used by elite fighters. Will make your fleet virtually unstoppable."
@@ -247,7 +247,7 @@ var weapon_list: Array[Dictionary] = [
 		"Name": "FIGHTER DRONE",
 		"Type": 3,
 		"Ship type": 8,
-		"Cost": 40,
+		"Cost": 32,
 		"Damage": 1,
 		"Reload time": 8.0,
 		"Description": "A basic fighter drone for use by Drone Command Ships."
@@ -256,7 +256,7 @@ var weapon_list: Array[Dictionary] = [
 		"Name": "REPAIR DRONE",
 		"Type": 3,
 		"Ship type": 9,
-		"Cost": 50,
+		"Cost": 42,
 		"Damage": 0,
 		"Reload time": 15.0,
 		"Description": "A basic repair drone for use by Drone Command Ships."

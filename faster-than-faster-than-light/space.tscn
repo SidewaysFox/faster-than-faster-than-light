@@ -129,5 +129,10 @@ mesh = SubResource("SphereMesh_1vxpe")
 [node name="SolarFlare" type="Timer" parent="."]
 wait_time = 14.0
 
+[node name="RunAway" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+
 [connection signal="timeout" from="WarpInDialogue" to="CanvasLayer/UserInterface" method="_on_warp_in_dialogue_timeout"]
 [connection signal="timeout" from="SolarFlare" to="." method="_on_solar_flare_timeout"]
+[connection signal="timeout" from="RunAway" to="." method="_on_run_away_timeout"]

@@ -240,6 +240,12 @@ var response_dialogue: Array = [ # Main text, [option, result]
 	],
 ]
 
+var enemy_running_dialogue: Array = [ # Main text, [option, result]
+	["In the middle of combat, you notice the enemy fleet is beginning to charge its warp drives, in an attempt to get away!",
+	[["Continue combat.", ["close", true]]]
+	],
+]
+
 var encounter_win_dialogues: Array = [
 	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials.",
 	[["Continue the journey.", ["close", false]]]
@@ -561,15 +567,16 @@ func _process(delta: float) -> void:
 						stylebox.border_color = Color8(100, 100, 160)
 					else:
 						stylebox.border_color = Color8(0, 0, 160)
-					var friendly: Node = main.get_node("FriendlyShips").get_child(selected_ship)
-					if friendly != null:
-						if friendly.target != null:
-							if index == friendly.target.get_index():
-								stylebox.draw_center = true
-							else:
-								stylebox.draw_center = false
-					box.show()
-					index += 1
+					if selected_ship < main.get_node("FriendlyShips").get_child_count():
+						var friendly: Node = main.get_node("FriendlyShips").get_child(selected_ship)
+						if friendly != null:
+							if friendly.target != null:
+								if index == friendly.target.get_index():
+									stylebox.draw_center = true
+								else:
+									stylebox.draw_center = false
+						box.show()
+						index += 1
 			else:
 				%ActionTargetShips/NoTargets.show()
 		elif targeting_mode == 4:
@@ -1241,7 +1248,7 @@ func abandon_ship() -> void:
 func win_encounter() -> void:
 	Global.galaxy_data[Global.current_system]["enemy presence"] = false
 	# Tech
-	resources(randi_range(4, 8 * main.enemy_ship_count))
+	resources(randi_range(4 * main.enemy_ship_count, 8 * main.enemy_ship_count))
 	# Fuel
 	resources(randi_range(3, 4 * len(Global.fleet) - 1), 1)
 	# Potential item

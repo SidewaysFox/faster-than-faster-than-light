@@ -273,6 +273,8 @@ func _process(_delta: float) -> void:
 			global_position.x = lerp(global_position.x, jump_destination, 0.1)
 		elif jump_mode == 1:
 			global_position.x = lerp(global_position.x, warp_destination, 0.1)
+			if global_position.x > warp_destination - 1.0 and team != 1:
+				queue_free()
 
 
 func _on_jump_delay_timeout() -> void:
@@ -293,8 +295,9 @@ func stats_update() -> void:
 
 
 func begin_warp() -> void:
-	# Update fleet data
-	stats_update()
+	if team == 1:
+		# Update fleet data
+		stats_update()
 	$JumpDelay.start(randf() * 2)
 
 

@@ -85,11 +85,11 @@ wait_time = 16.0
 one_shot = true
 
 [node name="InfiltratingProcess" type="Timer" parent="."]
-wait_time = 6.0
+wait_time = 8.0
 one_shot = true
 
 [node name="UnderAttack" type="Timer" parent="."]
-wait_time = 6.0
+wait_time = 8.0
 one_shot = true
 
 [node name="RepairReload" type="Timer" parent="."]

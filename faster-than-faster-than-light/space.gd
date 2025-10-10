@@ -12,8 +12,10 @@ var star_proximity: bool = false
 var warp_charge: float = 0.0
 var bg_object_rotation: float = 5.0
 var enemy_ship_count: int
+var run_away: bool = false
+var enemy_aggression: int
 
-var tutorial_enemy_fleet: Array = [1, 2, 6]
+var tutorial_enemy_fleet: Array = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
 var pirate_fleets: Dictionary = {
 	"start": [
@@ -125,10 +127,6 @@ var pirate_fleets: Dictionary = {
 	"late": [
 		
 	]
-}
-
-const PIRATE_WEAPONS: Dictionary = {
-	"start": [0, 5]
 }
 
 signal setup_complete
@@ -279,7 +277,8 @@ func _ready() -> void:
 				enemy_fleet = tutorial_enemy_fleet
 			else:
 				enemy_fleet = pirate_fleets[system_stage].pick_random()
-				enemy_ship_count = len(enemy_fleet)
+			enemy_ship_count = len(enemy_fleet)
+			enemy_aggression = randi_range(-1, enemy_ship_count)
 			enemy_fleet.shuffle()
 			for ship in enemy_fleet:
 				Global.create_enemy_ship(ship[0], ship[1], ship[2])
@@ -322,6 +321,10 @@ func _process(delta: float) -> void:
 			# Win the encounter
 			Global.in_combat = false
 			%UserInterface.win_encounter()
+		elif not run_away and $HostileShips.get_child_count() < enemy_aggression:
+			run_away = true
+			%UserInterface.dialogue_set_up(6, randi_range(0, len(%UserInterface.enemy_running_dialogue) - 1))
+			$RunAway.start()
 
 
 # Start warp animations
@@ -331,8 +334,12 @@ func commence_warp() -> void:
 
 
 func _on_solar_flare_timeout() -> void:
-	print("SOLAR FLARE")
 	if not "shop presence" in system_properties:
 		for existing_starship in get_tree().get_nodes_in_group("starships"):
 			existing_starship.hull -= randi_range(0, 2)
 		%UserInterface.get_node("SolarFlareFlash").self_modulate.a = 0.4
+
+
+func _on_run_away_timeout() -> void:
+	for ship in $HostileShips.get_children():
+		ship.begin_warp()
