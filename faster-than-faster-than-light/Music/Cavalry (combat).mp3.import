@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://wgoakl0k7id1"
+path="res://.godot/imported/Cavalry (combat).mp3-d15653d005ed1075f4c6ccd18b3c906a.mp3str"
+
+[deps]
+
+source_file="res://Music/Cavalry (combat).mp3"
+dest_files=["res://.godot/imported/Cavalry (combat).mp3-d15653d005ed1075f4c6ccd18b3c906a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

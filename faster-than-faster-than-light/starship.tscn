@@ -94,6 +94,9 @@ one_shot = true
 
 [node name="RepairReload" type="Timer" parent="."]
 
+[node name="Retarget" type="Timer" parent="."]
+one_shot = true
+
 [node name="Marker" type="Control" parent="."]
 visible = false
 layout_mode = 3
@@ -243,3 +246,4 @@ vertical_alignment = 1
 [connection signal="timeout" from="InfiltrateReload" to="." method="_on_infiltrate_reload_timeout"]
 [connection signal="timeout" from="UnderAttack" to="." method="_on_under_attack_timeout"]
 [connection signal="timeout" from="RepairReload" to="." method="_repair"]
+[connection signal="timeout" from="Retarget" to="." method="_on_retarget_timeout"]

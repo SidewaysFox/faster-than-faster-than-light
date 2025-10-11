@@ -5,6 +5,8 @@ var starship: PackedScene = preload("res://starship.tscn")
 var joystick_control: bool = false
 var dual_joysticks: bool = false
 var music_volume: float = 100.0
+var menu_music_progress: float = 0.0
+var game_music_progress: float = 0.0
 var sfx_volume: float = 100.0
 var initialising: bool = true
 var playing: bool = false
@@ -28,7 +30,7 @@ var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1] # Default [0, 1, 1]
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2] # Default [0, 1, 1, 2]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6] # Default [0, 1, 1, 2, 3, 4, 5, 6]
 const STARTING_RESOURCES: int = 25 # Default 25
 const STARTING_FUEL: int = 25 # Default 25
@@ -263,11 +265,16 @@ var weapon_list: Array[Dictionary] = [
 	},
 ]
 
-const WINNABLE_WEAPONS: Array[int] = [0, 1, 2, 3, 5, 6, 7]
+const WINNABLE_WEAPONS: Array[int] = [0, 1, 2, 3, 5, 6, 7, 9, 10]
 
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "EMP", "DRONE"]
 
 var fleet_inventory: Array = [] # Stores the weapon ID
+
+
+func _process(_delta: float) -> void:
+	AudioServer.set_bus_volume_linear(1, music_volume / 100.0)
+	AudioServer.set_bus_volume_linear(2, sfx_volume / 100.0)
 
 
 func establish() -> void:

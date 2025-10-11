@@ -1,9 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://l6qgi62pwv0w"]
+[gd_scene load_steps=20 format=3 uid="uid://l6qgi62pwv0w"]
 
 [ext_resource type="Script" uid="uid://butvhv1xw41l0" path="res://Menus/background_gen.gd" id="1_utxdh"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="2_sw42x"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg_stars.gdshader" id="3_jb58k"]
 [ext_resource type="Script" uid="uid://cj602blcrluox" path="res://Menus/credits.gd" id="3_sw42x"]
+[ext_resource type="AudioStream" uid="uid://d4hy1f1qs35hu" path="res://Music/Lone Fleet.mp3" id="5_jb58k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sw42x"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.470588)
@@ -189,16 +190,20 @@ mesh = SubResource("SphereMesh_at0u2")
 
 [node name="Background" type="Node3D" parent="."]
 
-[node name="MainStar1" type="MeshInstance3D" parent="Background"]
+[node name="MainStar1" type="MeshInstance3D" parent="Background" groups=["1", "2", "3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_cxdly")
 
-[node name="MainStar2" type="MeshInstance3D" parent="Background"]
+[node name="MainStar2" type="MeshInstance3D" parent="Background" groups=["2", "3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_vxn86")
 
-[node name="MainStar3" type="MeshInstance3D" parent="Background"]
+[node name="MainStar3" type="MeshInstance3D" parent="Background" groups=["3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_gn11b")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_jb58k")
+bus = &"Music"
 
 [connection signal="pressed" from="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer/MarginContainer/Options/Option1" to="CanvasLayer/Credits" method="_on_back_pressed"]

@@ -1,9 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://clwuqcs44cl3l"]
+[gd_scene load_steps=21 format=3 uid="uid://clwuqcs44cl3l"]
 
 [ext_resource type="Script" uid="uid://butvhv1xw41l0" path="res://Menus/background_gen.gd" id="1_lpudm"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="2_fw4rw"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg_stars.gdshader" id="3_boh0i"]
 [ext_resource type="Script" uid="uid://drfxgegcx48j3" path="res://Menus/settings.gd" id="3_fw4rw"]
+[ext_resource type="AudioStream" uid="uid://d4hy1f1qs35hu" path="res://Music/Lone Fleet.mp3" id="5_boh0i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lpudm"]
 bg_color = Color(0.0156863, 0.0313726, 0.0627451, 0.862745)
@@ -233,6 +234,7 @@ custom_minimum_size = Vector2(360, 50)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/slider = SubResource("StyleBoxFlat_boh0i")
+max_value = 200.0
 value = 100.0
 scrollable = false
 
@@ -259,6 +261,7 @@ custom_minimum_size = Vector2(360, 50)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/slider = SubResource("StyleBoxFlat_boh0i")
+max_value = 200.0
 value = 100.0
 scrollable = false
 
@@ -323,17 +326,21 @@ mesh = SubResource("SphereMesh_at0u2")
 
 [node name="Background" type="Node3D" parent="."]
 
-[node name="MainStar1" type="MeshInstance3D" parent="Background"]
+[node name="MainStar1" type="MeshInstance3D" parent="Background" groups=["1", "2", "3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_cxdly")
 
-[node name="MainStar2" type="MeshInstance3D" parent="Background"]
+[node name="MainStar2" type="MeshInstance3D" parent="Background" groups=["2", "3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_vxn86")
 
-[node name="MainStar3" type="MeshInstance3D" parent="Background"]
+[node name="MainStar3" type="MeshInstance3D" parent="Background" groups=["3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_gn11b")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_boh0i")
+bus = &"Music"
 
 [connection signal="pressed" from="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/ControlMode" to="CanvasLayer/Settings" method="_on_control_mode_pressed"]
 [connection signal="pressed" from="CanvasLayer/Settings/Panel/MarginContainer/HBoxContainer/Gameplay/JoystickMode" to="CanvasLayer/Settings" method="_on_joystick_mode_pressed"]

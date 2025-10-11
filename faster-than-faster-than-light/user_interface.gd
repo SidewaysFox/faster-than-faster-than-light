@@ -1274,6 +1274,7 @@ func lose() -> void:
 # Quit to the main menu
 func quit_to_menu() -> void:
 	Global.playing = false
+	Global.menu_music_progress = 0.0
 	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
 
 

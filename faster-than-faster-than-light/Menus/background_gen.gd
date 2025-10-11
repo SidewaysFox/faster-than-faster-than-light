@@ -4,39 +4,38 @@ extends Node3D
 @export var bg_nebula: PackedScene
 var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(0.9, 0.9, 0.9), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
-var main_star_count: int
+var main_star_count: String
 var bg_object_rotation: float = 5.0
 
 
 func _ready() -> void:
+	$Music.play(Global.menu_music_progress)
 	# Pass information to the BGStar GLSL script
 	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
 	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.91, 1.0))
 	$BGStars.material_override.set_shader_parameter("size", randf_range(50.0, 120.0))
 	# Establish this system's star(s)
-	main_star_count = system_types.pick_random()
-	for i in main_star_count:
+	main_star_count = str(system_types.pick_random())
+	for star in get_tree().get_nodes_in_group(main_star_count):
+		# Set star colour
+		var colour: Color = star_colours.pick_random()
+		star.mesh.material.albedo_color = colour
+		star.mesh.material.emission = colour
+		# Set star size
+		var radius: float = randf_range(40.0, 250.0)
+		star.mesh.radius = radius
+		star.mesh.height = radius * 2.0
 		# Set positioning
-		var x: float
-		var y: float
-		var z: float
-		z = randf_range(-2500, -300)
-		x = randf_range(z * -1.1, z * 1.1)
-		y = randf_range(z / 0.8, z / -2.3)
-		# Make sure the star is within bounds. because I cannot be bothered to do the math for this
-		while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
-			z = randf_range(-2500, -300)
-			x = randf_range(z * -1.1, z * 1.1)
-			y = randf_range(z / 0.8, z / -2.3)
-		# Set star properties
-		var colour = star_colours.pick_random()
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
-		$Background.get_node("MainStar" + str(i + 1)).mesh.radius = randf_range(40, 250)
-		$Background.get_node("MainStar" + str(i + 1)).mesh.height = $Background.get_node("MainStar" + str(i + 1)).mesh.radius * 2
-		$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
-		$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
-		$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
+		var star_position: Vector3 = star_reposition()
+		var not_colliding: int = 1
+		while not_colliding == get_tree().get_node_count_in_group(main_star_count):
+			for other_star in get_tree().get_nodes_in_group(main_star_count):
+				if other_star != star and star_position.distance_to(other_star.position) < star.mesh.radius + other_star.mesh.radius:
+					star_position = star_reposition()
+				else:
+					not_colliding += 1
+		star.position = star_position
+		star.mesh.material.emission_texture.noise.seed = randi()
 	# Create nebulae
 	var nebula_pos: Vector3
 	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
@@ -80,3 +79,24 @@ func _process(delta: float) -> void:
 	
 	for child in $Background.get_children():
 		child.rotation_degrees.y += bg_object_rotation * delta
+	
+	Global.menu_music_progress += delta
+	
+	if not $Music.playing:
+		$Music.play()
+		Global.menu_music_progress = 0.0
+
+
+func star_reposition() -> Vector3:
+	var x: float
+	var y: float
+	var z: float
+	z = randf_range(-2500, -300)
+	x = randf_range(z * -1.1, z * 1.1)
+	y = randf_range(z / 0.8, z / -2.3)
+	# Make sure the star is within bounds. because I cannot be bothered to do the math for this
+	while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
+		z = randf_range(-2500, -300)
+		x = randf_range(z * -1.1, z * 1.1)
+		y = randf_range(z / 0.8, z / -2.3)
+	return Vector3(x, y, z)

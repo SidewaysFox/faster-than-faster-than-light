@@ -5,7 +5,7 @@ extends Node3D
 @export var starship: PackedScene
 var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(0.9, 0.9, 0.9), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
-var main_star_count: int
+var main_star_count: String # Trust me, it just has to be this way
 var system_properties: Array = []
 var system_stage: String
 var star_proximity: bool = false
@@ -14,6 +14,8 @@ var bg_object_rotation: float = 5.0
 var enemy_ship_count: int
 var run_away: bool = false
 var enemy_aggression: int
+
+const MUSIC_FADE_RATE: float = 0.8
 
 var tutorial_enemy_fleet: Array = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
@@ -142,6 +144,9 @@ func _ready() -> void:
 		for ship in Global.fleet:
 			$FriendlyShips.add_child(ship.duplicate())
 	
+	$MusicExplore.play(Global.game_music_progress)
+	$MusicCombat.play(Global.game_music_progress)
+	
 	if Global.galaxy_data[Global.current_system]["position"].x > 2400:
 		system_stage = "late"
 	elif Global.galaxy_data[Global.current_system]["position"].x > 1600:
@@ -151,6 +156,7 @@ func _ready() -> void:
 	else:
 		system_stage = "start"
 	
+	var star_index: int = 1
 	# Check if the current system is new
 	if Global.current_system not in Global.visited_systems or Global.unique_visits == 1:
 		# Generate new system
@@ -161,39 +167,37 @@ func _ready() -> void:
 		$BGStars.material_override.set_shader_parameter("size", bg_parameters[2])
 		Global.galaxy_data[Global.current_system]["bg parameters"] = bg_parameters
 		# Establish this system's star(s)
-		main_star_count = system_types.pick_random()
+		main_star_count = str(system_types.pick_random())
 		Global.galaxy_data[Global.current_system]["main star count"] = main_star_count
-		for i in main_star_count:
-			# Set positioning
-			var x: float
-			var y: float
-			var z: float
-			z = randf_range(-2500, -300)
-			x = randf_range(z * -1.1, z * 1.1)
-			y = randf_range(z / 0.8, z / -2.3)
-			# Make sure the star is within bounds. because I cannot be bothered to do the math for this
-			while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
-				z = randf_range(-2500, -300)
-				x = randf_range(z * -1.1, z * 1.1)
-				y = randf_range(z / 0.8, z / -2.3)
-			$Background.get_node("MainStar" + str(i + 1)).position = Vector3(x, y, z)
-			Global.galaxy_data[Global.current_system]["star" + str(i) + " position"] = Vector3(x, y, z)
-			# Set star properties
+		for star in get_tree().get_nodes_in_group(main_star_count):
+			# Set star colour
 			var colour: Color = star_colours.pick_random()
-			$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
-			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
-			Global.galaxy_data[Global.current_system]["star" + str(i) + " colour"] = colour
+			star.mesh.material.albedo_color = colour
+			star.mesh.material.emission = colour
+			Global.galaxy_data[Global.current_system]["star" + str(star_index) + " colour"] = colour
+			# Set star size
 			var radius: float = randf_range(40.0, 250.0)
-			$Background.get_node("MainStar" + str(i + 1)).mesh.radius = radius
-			$Background.get_node("MainStar" + str(i + 1)).mesh.height = radius * 2.0
-			Global.galaxy_data[Global.current_system]["star" + str(i) + " radius"] = radius
+			star.mesh.radius = radius
+			star.mesh.height = radius * 2.0
+			Global.galaxy_data[Global.current_system]["star" + str(star_index) + " radius"] = radius
+			# Set positioning
+			var star_position: Vector3 = star_reposition()
+			var not_colliding: int = 1
+			while not_colliding == get_tree().get_node_count_in_group(main_star_count):
+				for other_star in get_tree().get_nodes_in_group(main_star_count):
+					if other_star != star and star_position.distance_to(other_star.position) < star.mesh.radius + other_star.mesh.radius:
+						star_position = star_reposition()
+					else:
+						not_colliding += 1
+			star.position = star_position
+			Global.galaxy_data[Global.current_system]["star" + str(star_index) + " position"] = star_position
 			# This doesn't need to be saved since it's pretty minor so I'm not gonna save it
-			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
-			$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
+			star.mesh.material.emission_texture.noise.seed = randi()
 			# It took way too much rigorous testing to get this number
-			if (radius / 2.0) / Vector3(x, y, z).distance_to(Vector3.ZERO) > 0.21:
+			if (radius / 2.0) / star_position.distance_to(Vector3.ZERO) > 0.21:
 				star_proximity = true
 				%UserInterface.get_node("SolarFlareFlash").color = colour
+			star_index += 1
 		# Create nebulae
 		var nebula_pos: Vector3
 		var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
@@ -236,20 +240,20 @@ func _ready() -> void:
 		$BGStars.material_override.set_shader_parameter("seed", Global.galaxy_data[Global.current_system]["bg parameters"][0])
 		$BGStars.material_override.set_shader_parameter("prob", Global.galaxy_data[Global.current_system]["bg parameters"][1])
 		$BGStars.material_override.set_shader_parameter("size", Global.galaxy_data[Global.current_system]["bg parameters"][2])
-		for i in Global.galaxy_data[Global.current_system]["main star count"]:
-			var star_position: Vector3 = Global.galaxy_data[Global.current_system]["star" + str(i) + " position"]
-			$Background.get_node("MainStar" + str(i + 1)).position = star_position
-			var colour: Color = Global.galaxy_data[Global.current_system]["star" + str(i) + " colour"]
-			$Background.get_node("MainStar" + str(i + 1)).mesh.material.albedo_color = colour
-			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission = colour
-			var radius: float = Global.galaxy_data[Global.current_system]["star" + str(i) + " radius"]
-			$Background.get_node("MainStar" + str(i + 1)).mesh.radius = radius
-			$Background.get_node("MainStar" + str(i + 1)).mesh.height = radius * 2.0
+		for star in get_tree().get_nodes_in_group(Global.galaxy_data[Global.current_system]["main star count"]):
+			var star_position: Vector3 = Global.galaxy_data[Global.current_system]["star" + str(star_index) + " position"]
+			star.position = star_position
+			var colour: Color = Global.galaxy_data[Global.current_system]["star" + str(star_index) + " colour"]
+			star.mesh.material.albedo_color = colour
+			star.mesh.material.emission = colour
+			var radius: float = Global.galaxy_data[Global.current_system]["star" + str(star_index) + " radius"]
+			star.mesh.radius = radius
+			star.mesh.height = radius * 2.0
 			# Not saved because it's not important enough (ouch)
-			$Background.get_node("MainStar" + str(i + 1)).mesh.material.emission_texture.noise.seed = randi()
-			$Background.get_node("MainStar" + str(i + 1)).look_at(Vector3.ZERO)
+			star.mesh.material.emission_texture.noise.seed = randi()
 			if (radius / 2.0) / star_position.distance_to(Vector3.ZERO) > 0.21:
 				star_proximity = true
+			star_index += 1
 		for nebula in Global.galaxy_data[Global.current_system]["nebulae"]:
 			for sphere in nebula:
 				var new_nebula: Node = bg_nebula.instantiate()
@@ -261,7 +265,7 @@ func _ready() -> void:
 				$Background.add_child(new_nebula)
 	
 	# Set up conditions for the warp in dialogue
-	system_properties.append(main_star_count)
+	system_properties.append(int(main_star_count))
 	# Is it a tutorial?
 	if Global.tutorial:
 		system_properties.append("tutorial")
@@ -315,8 +319,12 @@ func _process(delta: float) -> void:
 			Global.in_combat = false
 			%UserInterface.lose()
 	
+	Global.game_music_progress += delta
+	
 	if Global.in_combat:
 		warp_charge += Global.charge_rate * delta
+		$MusicExplore.volume_linear = move_toward($MusicExplore.volume_linear, 0.0, delta * MUSIC_FADE_RATE)
+		$MusicCombat.volume_linear = move_toward($MusicCombat.volume_linear, 1.0, delta * MUSIC_FADE_RATE)
 		if $HostileShips.get_child_count() < 1:
 			# Win the encounter
 			Global.in_combat = false
@@ -325,6 +333,14 @@ func _process(delta: float) -> void:
 			run_away = true
 			%UserInterface.dialogue_set_up(6, randi_range(0, len(%UserInterface.enemy_running_dialogue) - 1))
 			$RunAway.start()
+	else:
+		$MusicExplore.volume_linear = move_toward($MusicExplore.volume_linear, 1.0, delta * MUSIC_FADE_RATE)
+		$MusicCombat.volume_linear = move_toward($MusicCombat.volume_linear, 0.0, delta * MUSIC_FADE_RATE)
+	
+	if not $MusicExplore.playing and not $MusicCombat.playing:
+		$MusicExplore.play()
+		$MusicCombat.play()
+		Global.game_music_progress = 0.0
 
 
 # Start warp animations
@@ -343,3 +359,18 @@ func _on_solar_flare_timeout() -> void:
 func _on_run_away_timeout() -> void:
 	for ship in $HostileShips.get_children():
 		ship.begin_warp()
+
+
+func star_reposition() -> Vector3:
+	var x: float
+	var y: float
+	var z: float
+	z = randf_range(-2500, -300)
+	x = randf_range(z * -1.1, z * 1.1)
+	y = randf_range(z / 0.8, z / -2.3)
+	# Make sure the star is within bounds. because I cannot be bothered to do the math for this
+	while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
+		z = randf_range(-2500, -300)
+		x = randf_range(z * -1.1, z * 1.1)
+		y = randf_range(z / 0.8, z / -2.3)
+	return Vector3(x, y, z)

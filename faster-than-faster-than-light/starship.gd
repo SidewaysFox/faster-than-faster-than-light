@@ -45,31 +45,30 @@ class_name Starship extends Node3D
 ## Projectiles
 @export var projectiles: Array[PackedScene] = []
 
-# Miscellaneous stats
-var kills: int = 0
-var total_hull_damage: int = 0
-
-# Variables
+# General variables
 @onready var main: Node = get_node("/root/Space")
 @onready var ui: Node = get_node("/root/Space/CanvasLayer/UserInterface")
 @export_category("Bugfixing")
 @export var hull: int # WHY DOES THIS NEED TO BE EXPORTED
+var status: int
+var active: bool = true
 var target: Node
+var shield_layers: int
+var attacked: bool = false
+var scanned: bool = false
+var drones_deployed: bool = false
+var is_drone: bool = false
+var creator_id: int
 var jumping: bool = true
 var jump_mode: int = -1
 var jump_destination: float
 var warp_destination: float
 var spawn_location: Vector3
 var marker: StyleBoxFlat
-var status: int
-var active: bool = true
-var shield_layers: int
-var attacked: bool = false
-var scanned: bool = false
+
+# AI variables
 var set_level: int
-var is_drone: bool = false
-var drones_deployed: bool = false
-var creator_id: int
+var targeting_strategy: int = randi_range(0, 2)
 
 const INFILTRATE_RECHARGE: float = 16.0
 const INFILTRATE_UPGRADE: float = 3.5
@@ -111,6 +110,8 @@ func _ready() -> void:
 			marker.border_color = Color.WHITE
 		else:
 			marker.border_color = Color.DARK_RED
+			if targeting_strategy == 1:
+				$Retarget.start(randf_range(16.0, 32.0))
 	else:
 		global_position = Vector3(randf_range(50, 50), randf_range(-25, 25), randf_range(-10, -150))
 		jumping = false
@@ -215,14 +216,9 @@ func _process(_delta: float) -> void:
 					$InfiltrateReload.start()
 			else:
 				$InfiltrateReload.stop()
-		if type == 4 and target != null:
-			if ui.action_menu_showing:
-				$Marker/Reload1.show()
+		if type == 4 and ui.action_menu_showing:
+			$Marker/Reload1.show()
 			$Marker/Reload1/ProgressBar.value = 100 - (($RepairReload.time_left / $RepairReload.wait_time) * 100)
-			if target.hull < target.hull_strength and $RepairReload.is_stopped():
-				$RepairReload.start()
-			elif target.hull >= target.hull_strength:
-				$RepairReload.stop()
 		if type == 5 and Global.in_combat:
 			if target == null:
 				new_target()
@@ -247,12 +243,13 @@ func _process(_delta: float) -> void:
 					$WeaponReload1.paused = false
 			else:
 				hull = 0
-		if type == 9:
+		if type == 4 or type == 9:
 			if target != null:
 				if target.hull < target.hull_strength and $RepairReload.is_stopped():
 					$RepairReload.start()
 				elif target.hull >= target.hull_strength:
 					$RepairReload.stop()
+		if type == 9 or (type == 4 and team == -1):
 			if $RepairReload.is_stopped():
 				new_target()
 	else:
@@ -310,7 +307,9 @@ func new_target(ship: int = 0) -> void:
 			target = main.get_node("FriendlyShips").get_children().pick_random()
 	elif type == 4:
 		if team == -1 and main.get_node("HostileShips").get_child_count() > 0:
-			target = main.get_node("HostileShips").get_children().pick_random()
+			for potential_target in main.get_node("HostileShips").get_children():
+				if potential_target.hull < potential_target.hull_strength:
+					target = potential_target
 		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0:
 			target = main.get_node("FriendlyShips").get_child(ship)
 	elif type == 8:
@@ -331,7 +330,7 @@ func new_target(ship: int = 0) -> void:
 
 func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
-	if target == null or is_drone:
+	if target == null or is_drone or (targeting_strategy == 2 and team == -1):
 		new_target()
 	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
@@ -361,7 +360,6 @@ func _repair() -> void:
 	else:
 		target.hull += 2
 	target.hull = clampi(target.hull, 0, target.hull_strength)
-	print(is_drone)
 
 
 func _shield_up() -> void:
@@ -449,3 +447,8 @@ func upgrade() -> void:
 	level += 1
 	if team == 1:
 		stats_update()
+
+
+func _on_retarget_timeout() -> void:
+	new_target()
+	$Retarget.start(randf_range(16.0, 32.0))

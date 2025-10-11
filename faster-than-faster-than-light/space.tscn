@@ -1,10 +1,12 @@
-[gd_scene load_steps=17 format=3 uid="uid://cacny3icm7ern"]
+[gd_scene load_steps=19 format=3 uid="uid://cacny3icm7ern"]
 
 [ext_resource type="Script" uid="uid://b4wkdvc46ch1a" path="res://space.gd" id="1_81phd"]
 [ext_resource type="PackedScene" uid="uid://dn8u0s6bv084r" path="res://bg_nebula.tscn" id="3_rxlph"]
 [ext_resource type="PackedScene" uid="uid://b4sj2kgmpfsbh" path="res://user_interface.tscn" id="3_ulv8f"]
 [ext_resource type="PackedScene" uid="uid://cjxyia0bj1uuo" path="res://starship.tscn" id="3_w5eul"]
 [ext_resource type="Shader" uid="uid://dbf33bsxrsi1x" path="res://bg_stars.gdshader" id="4_ulv8f"]
+[ext_resource type="AudioStream" uid="uid://032utvr83wtb" path="res://Music/Cavalry (explore).mp3" id="6_w5eul"]
+[ext_resource type="AudioStream" uid="uid://wgoakl0k7id1" path="res://Music/Cavalry (combat).mp3" id="7_b5fhv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ulv8f"]
 render_priority = 0
@@ -104,15 +106,15 @@ mesh = SubResource("SphereMesh_4fhbr")
 
 [node name="Background" type="Node3D" parent="."]
 
-[node name="MainStar1" type="MeshInstance3D" parent="Background"]
+[node name="MainStar1" type="MeshInstance3D" parent="Background" groups=["1", "2", "3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_ulv8f")
 
-[node name="MainStar2" type="MeshInstance3D" parent="Background"]
+[node name="MainStar2" type="MeshInstance3D" parent="Background" groups=["2", "3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_b5fhv")
 
-[node name="MainStar3" type="MeshInstance3D" parent="Background"]
+[node name="MainStar3" type="MeshInstance3D" parent="Background" groups=["3"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2000)
 mesh = SubResource("SphereMesh_1vxpe")
 
@@ -132,6 +134,15 @@ wait_time = 14.0
 [node name="RunAway" type="Timer" parent="."]
 wait_time = 30.0
 one_shot = true
+
+[node name="MusicExplore" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_w5eul")
+bus = &"Music"
+
+[node name="MusicCombat" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_b5fhv")
+volume_db = -80.0
+bus = &"Music"
 
 [connection signal="timeout" from="WarpInDialogue" to="CanvasLayer/UserInterface" method="_on_warp_in_dialogue_timeout"]
 [connection signal="timeout" from="SolarFlare" to="." method="_on_solar_flare_timeout"]
