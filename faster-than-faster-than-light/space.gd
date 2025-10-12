@@ -16,6 +16,7 @@ var run_away: bool = false
 var enemy_aggression: int
 
 const MUSIC_FADE_RATE: float = 0.8
+const SOLAR_FLARE_SFX_DELAY: float = 2.05
 
 var tutorial_enemy_fleet: Array = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
@@ -351,6 +352,8 @@ func commence_warp() -> void:
 
 func _on_solar_flare_timeout() -> void:
 	if not "shop presence" in system_properties:
+		$SolarFlareSFX.play()
+		await get_tree().create_timer(SOLAR_FLARE_SFX_DELAY).timeout
 		for existing_starship in get_tree().get_nodes_in_group("starships"):
 			existing_starship.hull -= randi_range(0, 2)
 		%UserInterface.get_node("SolarFlareFlash").self_modulate.a = 0.4

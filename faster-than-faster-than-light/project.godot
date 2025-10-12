@@ -10,10 +10,13 @@ config_version=5
 
 [application]
 
-config/name="Faster Than Faster Than Light"
+config/name="FATAL FLEET"
+config/version="0.1.0"
 run/main_scene="uid://bdn10xypgr4j0"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://cdjuvo3fqu3uu"
+config/macos_native_icon="res://icon.icns"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 

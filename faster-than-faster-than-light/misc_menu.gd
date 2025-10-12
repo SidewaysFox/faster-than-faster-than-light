@@ -17,6 +17,7 @@ func left_button(weapon_index: int) -> void:
 		inventory_drones.insert(0, edited_ship.drones[weapon_index])
 		edited_ship.drones[weapon_index] = inventory_drones.pop_back()
 	Global.fleet_inventory = inventory_weapons + inventory_drones
+	ui.get_node("PressSFX").play()
 
 
 func right_button(weapon_index: int) -> void:
@@ -29,6 +30,7 @@ func right_button(weapon_index: int) -> void:
 		inventory_drones.append(edited_ship.drones[weapon_index])
 		edited_ship.drones[weapon_index] = inventory_drones.pop_front()
 	Global.fleet_inventory = inventory_weapons + inventory_drones
+	ui.get_node("PressSFX").play()
 
 
 func sort_inventory() -> void:

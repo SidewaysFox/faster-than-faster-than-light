@@ -14,10 +14,12 @@ func _process(_delta: float) -> void:
 
 func _on_button_pressed() -> void:
 	ui.info_showing = id
+	ui.get_node("PressSFX").play()
 
 
 func _on_button_mouse_entered() -> void:
 	get_theme_stylebox("panel").border_color = Color8(160, 100, 100)
+	ui.get_node("HoverSFX").play()
 
 
 func _on_button_mouse_exited() -> void:

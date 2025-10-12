@@ -44,6 +44,8 @@ class_name Starship extends Node3D
 @export var meshes: Array[PackedScene] = []
 ## Projectiles
 @export var projectiles: Array[PackedScene] = []
+## Sound effects
+@export var warp_sfx: Array[AudioStreamOggVorbis] = []
 
 # General variables
 @onready var main: Node = get_node("/root/Space")
@@ -75,6 +77,8 @@ const INFILTRATE_UPGRADE: float = 3.5
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
 const DRONE_RESIZE: Vector3 = Vector3.ONE * 0.5
+const WARP_OUT_SFX_DELAY: float = 0.9
+const WARP_IN_SFX_DELAY: float = 0.4
 
 const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
 
@@ -275,7 +279,14 @@ func _process(_delta: float) -> void:
 
 
 func _on_jump_delay_timeout() -> void:
+	$WarpSFX.stream = warp_sfx[jump_mode + 1] # The actual setting of the variable has to be delayed
+	if jump_mode == 0:
+		$WarpSFX.play()
+		await get_tree().create_timer(WARP_OUT_SFX_DELAY).timeout
 	jump_mode += 1
+	if jump_mode == 0:
+		await get_tree().create_timer(WARP_IN_SFX_DELAY).timeout
+		$WarpSFX.play()
 
 
 func stats_update() -> void:
@@ -299,6 +310,7 @@ func begin_warp() -> void:
 
 
 func new_target(ship: int = 0) -> void:
+	var target_set: bool = false
 	# Choose a target
 	if type == 1 or type == 3 or type == 5:
 		if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
@@ -310,6 +322,9 @@ func new_target(ship: int = 0) -> void:
 			for potential_target in main.get_node("HostileShips").get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
+					target_set = true
+			if not target_set:
+				target = self
 		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0:
 			target = main.get_node("FriendlyShips").get_child(ship)
 	elif type == 8:
@@ -322,10 +337,16 @@ func new_target(ship: int = 0) -> void:
 			for potential_target in main.get_node("HostileShips").get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
+					target_set = true
+			if not target_set:
+				target = self
 		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0 and $RepairReload.is_stopped():
 			for potential_target in main.get_node("FriendlyShips").get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
+					target_set = true
+			if not target_set:
+				target = self
 
 
 func _weapon_fire(firing: int) -> void:

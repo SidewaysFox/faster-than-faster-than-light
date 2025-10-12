@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cp76bj20vhwe6"
+path="res://.godot/imported/Warp in.ogg-27fb3483c7f293c2c533db8c32d207b0.oggvorbisstr"
+
+[deps]
+
+source_file="res://SFX/Warp in.ogg"
+dest_files=["res://.godot/imported/Warp in.ogg-27fb3483c7f293c2c533db8c32d207b0.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

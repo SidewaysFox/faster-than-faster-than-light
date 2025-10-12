@@ -31,10 +31,10 @@ var in_combat: bool = false
 var controls_showing: bool = true
 
 const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2] # Default [0, 1, 1, 2]
-const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6] # Default [0, 1, 1, 2, 3, 4, 5, 6]
-const STARTING_RESOURCES: int = 25 # Default 25
+const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]#Default [0, 1, 1, 2, 3, 4, 5, 6]
+const STARTING_RESOURCES: int = 32 # Default 32
 const STARTING_FUEL: int = 25 # Default 25
-const STARTING_INVENTORY: Array[int] = [10, 10, 10, 10] # Default []
+const STARTING_INVENTORY: Array[int] = [] # Default []
 const TUTORIAL_INVENTORY: Array[int] = [1, 6] # Default [1, 6]
 const DEFAULT_INV_SIZE: int = 4 # Default 4
 const DEFAULT_JUMP_DISTANCE: float = 140.0 # Default 140.0

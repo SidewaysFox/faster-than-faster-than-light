@@ -377,8 +377,10 @@ func _process(delta: float) -> void:
 		if Global.joystick_control:
 			if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
 				current_dialogue_selection -= 1
+				$HoverSFX.play()
 			if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
 				current_dialogue_selection += 1
+				$HoverSFX.play()
 			current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
 			# Select
 			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select:
@@ -446,6 +448,7 @@ func _process(delta: float) -> void:
 			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
 			# Warping input
 			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
+				$PressSFX.play()
 				if "shop presence" in main.system_properties:
 					Global.galaxy_data[Global.current_system]["item shop"] = item_catalogue
 					Global.galaxy_data[Global.current_system]["ship shop"] = ship_catalogue
@@ -463,11 +466,12 @@ func _process(delta: float) -> void:
 				_quantity_change(1, false)
 				Global.new_system(closest_token[2])
 				# Warp sequence
-				await get_tree().create_timer(1).timeout
+				await get_tree().create_timer(0.5).timeout
 				main.commence_warp()
-				await get_tree().create_timer(2).timeout
+				await get_tree().create_timer(3.0).timeout
 				fade_mode = 1
-				await get_tree().create_timer(3).timeout
+				await get_tree().create_timer(4.0).timeout
+				Global.game_music_progress = main.get_node("MusicExplore").get_playback_position()
 				main.get_tree().reload_current_scene()
 		# Clamping
 		$GalaxyMap/Tokens.position.x = clampf($GalaxyMap/Tokens.position.x, -2040.0, 45.0)
@@ -486,20 +490,28 @@ func _process(delta: float) -> void:
 			if Global.dual_joysticks:
 				if Input.is_action_just_pressed("left1"):
 					selected_ship -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1"):
 					selected_ship += 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("down1"):
 					selected_ship += 4
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
 					selected_ship -= 4
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("left2"):
 					hovered_target -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("right2"):
 					hovered_target += 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("down2"):
 					hovered_target += 4
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("up2"):
 					hovered_target -= 4
+					$HoverSFX.play()
 				selected_ship = clampi(selected_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
 				select_ship()
 			elif left_action_menu:
@@ -512,6 +524,7 @@ func _process(delta: float) -> void:
 						hovered_target = 7
 					else:
 						hovered_ship -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1"):
 					if hovered_ship == 3 and %ActionTargetShips/GridContainer/Ship0.visible:
 						left_action_menu = false
@@ -521,10 +534,13 @@ func _process(delta: float) -> void:
 						hovered_target = 4
 					else:
 						hovered_ship += 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("down1"):
 					hovered_ship += 4
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
 					hovered_ship -= 4
+					$HoverSFX.play()
 			elif not left_action_menu:
 				if Input.is_action_just_pressed("left1"):
 					if hovered_target == 0 and %ActionFriendlyShips/GridContainer/Ship3.visible:
@@ -535,6 +551,7 @@ func _process(delta: float) -> void:
 						hovered_ship = 7
 					else:
 						hovered_target -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1"):
 					if hovered_target == 3:
 						left_action_menu = true
@@ -544,10 +561,13 @@ func _process(delta: float) -> void:
 						hovered_ship = 4
 					else:
 						hovered_target += 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("down1"):
 					hovered_target += 4
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
 					hovered_target -= 4
+					$HoverSFX.play()
 			hovered_ship = clamp(hovered_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
 		for i in %ActionTargetShips/GridContainer.get_children():
 			i.hide()
@@ -619,11 +639,14 @@ func _process(delta: float) -> void:
 		if Global.joystick_control and (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")):
 			if Global.dual_joysticks:
 				main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+				$PressSFX.play()
 			elif left_action_menu:
 				selected_ship = hovered_ship
 				select_ship()
+				$PressSFX.play()
 			else:
 				main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+				$PressSFX.play()
 	else:
 		$ShipActionMenu.hide()
 	
@@ -736,26 +759,34 @@ func _process(delta: float) -> void:
 			if info_menu_column == 0:
 				if Input.is_action_just_pressed("down1"):
 					looking_at_ship_info += 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
 					looking_at_ship_info -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1"):
 					info_menu_column += 1
+					$HoverSFX.play()
 				hovered_at_ship_info = looking_at_ship_info
 			var this_ship: Node = main.get_node("FriendlyShips").get_child(looking_at_ship_info)
 			if info_menu_column == 1:
 				if Input.is_action_just_pressed("down1"):
 					info_showing += 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
 					info_showing -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("left1"):
 					info_menu_column -= 1
+					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1") and ((info_showing == 1 and this_ship.level < 3) or info_showing == 2 or (info_showing == 3 and this_ship.type == 1)):
 					info_menu_column += 1
+					$HoverSFX.play()
 			elif info_menu_column == 2:
 				if info_showing == 1:
 					%Information/Leveling/Upgrade/Button.add_theme_color_override("font_color", HOVERED_COLOUR)
 					if Input.is_action_just_pressed("left1"):
 						info_menu_column -= 1
+						$HoverSFX.play()
 					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 						upgrade_ship()
 						if this_ship.level >= 3:
@@ -763,13 +794,16 @@ func _process(delta: float) -> void:
 				elif info_showing == 2:
 					if Input.is_action_just_pressed("down1") and hovered_instruction < 2:
 						hovered_instruction += 1
+						$HoverSFX.play()
 					if Input.is_action_just_pressed("up1") and hovered_instruction > 0:
 						hovered_instruction -= 1
+						$HoverSFX.play()
 					for instruction in get_tree().get_nodes_in_group("instructions"):
 						if instruction.get_meta("index") == hovered_instruction:
 							instruction.add_theme_color_override("font_color", HOVERED_COLOUR)
 					if Input.is_action_just_pressed("left1"):
 						info_menu_column -= 1
+						$HoverSFX.play()
 					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 						if hovered_instruction < 2:
 							ship_action(not bool(hovered_instruction))
@@ -781,12 +815,16 @@ func _process(delta: float) -> void:
 							info_menu_column -= 1
 						else:
 							switch_weapon.x = 0
+						$HoverSFX.play()
 					if Input.is_action_just_pressed("right1"):
 						switch_weapon.x = 1
+						$HoverSFX.play()
 					if Input.is_action_just_pressed("up1") and switch_weapon.y > 0:
 						switch_weapon.y -= 1
+						$HoverSFX.play()
 					if Input.is_action_just_pressed("down1") and switch_weapon.y < this_ship.level - 1:
 						switch_weapon.y += 1
+						$HoverSFX.play()
 					for button in get_tree().get_nodes_in_group("weapon switchers"):
 						if button.get_meta("position") == switch_weapon:
 							button.add_theme_color_override("font_color", HOVERED_COLOUR)
@@ -905,12 +943,16 @@ func _process(delta: float) -> void:
 		if Global.joystick_control:
 			if Input.is_action_just_pressed("up1"):
 				hovered_shop_button -= 1
+				$HoverSFX.play()
 			if Input.is_action_just_pressed("down1"):
 				hovered_shop_button += 1
+				$HoverSFX.play()
 			if Input.is_action_just_pressed("right1"):
 				selected_shop_side = 1
+				$HoverSFX.play()
 			if Input.is_action_just_pressed("left1"):
 				selected_shop_side = 0
+				$HoverSFX.play()
 			
 			get_tree().call_group("shopfront select", "add_theme_color_override", "font_color", Color.WHITE)
 			
@@ -921,6 +963,7 @@ func _process(delta: float) -> void:
 						for button in get_tree().get_nodes_in_group("item buy"):
 							if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
 								button.emit_signal("pressed")
+								$PressSFX.play()
 								break
 				if selected_shop_side == 1:
 					hovered_shop_button = clampi(hovered_shop_button, -1, len(Global.fleet_inventory) - 1)
@@ -929,6 +972,7 @@ func _process(delta: float) -> void:
 							for button in get_tree().get_nodes_in_group("item sell"):
 								if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
 									button.emit_signal("pressed")
+									$PressSFX.play()
 									break
 						else:
 							_ship_shop()
@@ -940,6 +984,7 @@ func _process(delta: float) -> void:
 							for button in get_tree().get_nodes_in_group("ship buy"):
 								if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
 									button.emit_signal("pressed")
+									$PressSFX.play()
 									break
 						else:
 							_item_shop()
@@ -949,6 +994,7 @@ func _process(delta: float) -> void:
 						for button in get_tree().get_nodes_in_group("ship sell"):
 							if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
 								button.emit_signal("pressed")
+								$PressSFX.play()
 								break
 			if hovered_shop_button == -1:
 				if selected_shop_side == 0:
@@ -962,6 +1008,7 @@ func _process(delta: float) -> void:
 
 # Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
+	time_paused = true
 	# Hide the options by default
 	for child in %Options.get_children():
 		child.hide()
@@ -1018,6 +1065,14 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + item_win_dialogues[id][1][i][0]
 			option_results.append(item_win_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
+	elif library == 6:
+		%DialogueText.text = enemy_running_dialogue[id][0]
+		max_option = len(enemy_running_dialogue[id][1])
+		# Options
+		for i in max_option:
+			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + enemy_running_dialogue[id][1][i][0]
+			option_results.append(enemy_running_dialogue[id][1][i][1])
+			%Options.get_node("Option" + str(i + 1)).show()
 	$Dialogue.show()
 	dialogue_showing = true
 	ready_to_select = true
@@ -1026,6 +1081,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 func _galaxy_map() -> void:
 	if not action_menu_showing and not info_menu_showing and not dialogue_showing and not shop_showing and main.warp_charge >= 100 and not warping:
 		galaxy_map_showing = not galaxy_map_showing
+		$PressSFX.play()
 		if galaxy_map_showing:
 			if Global.galaxy_data[Global.current_system]["position"].x > 900:
 				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
@@ -1037,11 +1093,13 @@ func _galaxy_map() -> void:
 func _action_menu() -> void:
 	if not galaxy_map_showing and not info_menu_showing and not dialogue_showing and not shop_showing and not warping:
 		action_menu_showing = not action_menu_showing
+		$PressSFX.play()
 
 
 func _time_pause() -> void:
 	if not galaxy_map_showing and not dialogue_showing and not warping:
 		time_paused = not time_paused
+		$PressSFX.play()
 
 
 func _pause() -> void:
@@ -1053,6 +1111,7 @@ func _pause() -> void:
 func _info_menu() -> void:
 	if not galaxy_map_showing and not action_menu_showing and not dialogue_showing and not shop_showing and not warping:
 		info_menu_showing = not info_menu_showing
+		$PressSFX.play()
 
 
 func upgrade_ship() -> void:
@@ -1061,6 +1120,7 @@ func upgrade_ship() -> void:
 	if Global.resources >= price:
 		resources(-price)
 		ship.upgrade()
+		$PressSFX.play()
 
 
 func _on_shop_setup_timeout() -> void:
@@ -1082,23 +1142,27 @@ func _on_shop_setup_timeout() -> void:
 func _shop() -> void:
 	if not galaxy_map_showing and not action_menu_showing and not info_menu_showing and not dialogue_showing and not warping and "shop presence" in main.system_properties:
 		shop_showing = not shop_showing
+		$PressSFX.play()
 
 
 func _hide_controls() -> void:
 	if not Global.joystick_control or (Global.joystick_control and not action_menu_showing and not info_menu_showing and not galaxy_map_showing and not dialogue_showing and not shop_showing):
 		Global.controls_showing = not Global.controls_showing
+		$PressSFX.play()
 
 
 func _item_shop() -> void:
 	$Shop/VBoxContainer/HBoxContainer/ShipShop.hide()
 	$Shop/VBoxContainer/HBoxContainer/ItemShop.show()
 	current_shopfront = 0
+	$PressSFX.play()
 
 
 func _ship_shop() -> void:
 	$Shop/VBoxContainer/HBoxContainer/ItemShop.hide()
 	$Shop/VBoxContainer/HBoxContainer/ShipShop.show()
 	current_shopfront = 1
+	$PressSFX.play()
 
 
 # Small interval before showing the warp in dialogue
@@ -1109,7 +1173,6 @@ func _on_warp_in_dialogue_timeout() -> void:
 				dialogue_set_up(3, 1)
 			else:
 				dialogue_set_up(3, 0)
-			time_paused = true
 			intro_dialogue = false
 		else:
 			close(Global.galaxy_data[Global.current_system]["enemy presence"])
@@ -1121,7 +1184,6 @@ func _on_warp_in_dialogue_timeout() -> void:
 			if i[0] == main.system_properties:
 				possible_dialogues.append(warp_in_dialogue.find(i))
 		dialogue_set_up(0, possible_dialogues.pick_random())
-		time_paused = true
 
 
 # Called when either fuel or resources are spent or gained
@@ -1177,6 +1239,7 @@ func select_dialogue(n: int) -> void:
 		callv(option_results[n - 1][0], args)
 	else:
 		call(option_results[n - 1][0])
+	$PressSFX.play()
 
 
 func hover_ship(n: int) -> void:
@@ -1197,18 +1260,22 @@ func hover_target(n: int) -> void:
 func select_target() -> void:
 	if main.get_node("FriendlyShips").get_child(selected_ship) != null:
 		main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+	$PressSFX.play()
 
 
 func hover_info(n: int) -> void:
 	hovered_at_ship_info = n
+	$HoverSFX.play()
 
 
 func select_info(n: int) -> void:
 	looking_at_ship_info = n
+	$PressSFX.play()
 
 
 func hover_shop(n: int) -> void:
 	hovered_shop_button = n
+	$HoverSFX.play()
 
 
 func buy_item(n: int) -> void:
@@ -1216,10 +1283,12 @@ func buy_item(n: int) -> void:
 	if len(Global.fleet_inventory) < Global.max_inventory and Global.resources >= price:
 		resources(-price)
 		Global.fleet_inventory.append(item_catalogue.pop_at(n))
+	$PressSFX.play()
 
 
 func sell_item(n: int) -> void:
 	resources(ceil(Global.weapon_list[Global.fleet_inventory.pop_at(n)]["Cost"] / 2), 0)
+	$PressSFX.play()
 
 
 func buy_ship(n: int) -> void:
@@ -1228,21 +1297,26 @@ func buy_ship(n: int) -> void:
 		resources(-price)
 		Global.create_new_starship(ship_catalogue[n][0], ship_catalogue[n][1])
 		ship_catalogue.remove_at(n)
+	$PressSFX.play()
 
 
 func sell_ship(n: int) -> void:
 	var sold_ship: Node = main.get_node("FriendlyShips").get_child(n)
 	resources((ceil(Global.starship_base_stats[sold_ship.type]["Cost"]) / 2) * sold_ship.level, 0)
 	sold_ship.hull = 0
+	$PressSFX.play()
 
 
 func ship_action(activate: bool) -> void:
 	if main.get_node("FriendlyShips").get_child(looking_at_ship_info) != null:
 		main.get_node("FriendlyShips").get_child(looking_at_ship_info).active = activate
+		$PressSFX.play()
 
 
 func abandon_ship() -> void:
-	main.get_node("FriendlyShips").get_child(looking_at_ship_info).hull = 0
+	if main.get_node("FriendlyShips").get_child(looking_at_ship_info) != null:
+		main.get_node("FriendlyShips").get_child(looking_at_ship_info).hull = 0
+		$PressSFX.play()
 
 
 func win_encounter() -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://b4sj2kgmpfsbh"]
+[gd_scene load_steps=88 format=3 uid="uid://b4sj2kgmpfsbh"]
 
 [ext_resource type="Script" uid="uid://d32hugf3q4pb0" path="res://user_interface.gd" id="1_kxhmu"]
 [ext_resource type="PackedScene" uid="uid://dvn3rjgv4sa7a" path="res://galaxy_map_token.tscn" id="2_i7dvk"]
@@ -6,6 +6,8 @@
 [ext_resource type="Shader" uid="uid://cr3v1xc6ek346" path="res://pause_blur.gdshader" id="3_juc2q"]
 [ext_resource type="Script" uid="uid://ni1tc18aeun7" path="res://info_tab.gd" id="3_up53h"]
 [ext_resource type="Script" uid="uid://ce27kdg4q1bat" path="res://misc_menu.gd" id="4_r3lf1"]
+[ext_resource type="AudioStream" uid="uid://b0jsfm75gc5lr" path="res://SFX/Press.ogg" id="7_hsgek"]
+[ext_resource type="AudioStream" uid="uid://cxdf76qs8hagk" path="res://SFX/Hover.ogg" id="8_f4522"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_up53h"]
 bg_color = Color(0.0313726, 0.0627451, 0.12549, 0.627451)
@@ -4404,6 +4406,7 @@ custom_minimum_size = Vector2(360, 50)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/slider = SubResource("StyleBoxFlat_1d1sx")
+max_value = 200.0
 value = 100.0
 scrollable = false
 
@@ -4430,6 +4433,7 @@ custom_minimum_size = Vector2(360, 50)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/slider = SubResource("StyleBoxFlat_1d1sx")
+max_value = 200.0
 value = 100.0
 scrollable = false
 
@@ -4500,6 +4504,16 @@ text = "FPS: 60"
 wait_time = 0.1
 one_shot = true
 autostart = true
+
+[node name="HoverSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_f4522")
+volume_db = -10.0
+bus = &"SFX"
+
+[node name="PressSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_hsgek")
+volume_db = -10.0
+bus = &"SFX"
 
 [connection signal="pressed" from="InfoTabs/HBoxContainer/ChargeProgress/Button" to="." method="_galaxy_map"]
 [connection signal="pressed" from="ControlTips/VBoxContainer/Main/AccessShop/Button" to="." method="_shop"]

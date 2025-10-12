@@ -7,6 +7,10 @@ const BUTTON_COLOUR_NORMAL: Color = Color(1.0, 1.0, 1.0)
 const BUTTON_COLOUR_HOVER: Color = Color(0.0, 0.749, 1.0)
 
 
+func _ready() -> void:
+	%Version/Label.text = "VERSION: " + ProjectSettings.get_setting("application/config/version")
+
+
 func _process(_delta: float) -> void:
 	if Global.joystick_control:
 		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
