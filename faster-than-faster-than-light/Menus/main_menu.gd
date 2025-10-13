@@ -32,6 +32,7 @@ func _process(_delta: float) -> void:
 
 
 func _on_new_game_pressed(tutorial: bool = false) -> void:
+	Global.continuing = false
 	Global.new_game(tutorial)
 
 
@@ -49,7 +50,7 @@ func _on_quit_pressed() -> void:
 	config.set_value("Settings", "sfx_volume", Global.sfx_volume)
 	config.set_value("Settings", "joystick_control", Global.joystick_control)
 	config.set_value("Settings", "dual_joysticks", Global.dual_joysticks)
-	config.save("user://scores.cfg")
+	config.save("user://settings.cfg")
 	get_tree().quit()
 
 

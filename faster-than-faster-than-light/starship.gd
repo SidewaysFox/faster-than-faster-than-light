@@ -72,8 +72,8 @@ var marker: StyleBoxFlat
 var set_level: int
 var targeting_strategy: int = randi_range(0, 2)
 
-const INFILTRATE_RECHARGE: float = 16.0
-const INFILTRATE_UPGRADE: float = 3.5
+const INFILTRATE_RECHARGE: float = 19.0
+const INFILTRATE_UPGRADE: float = 3.0
 const REPAIR_TIME: float = 15.0
 const REPAIR_UPGRADE: float = 3.0
 const DRONE_RESIZE: Vector3 = Vector3.ONE * 0.5
@@ -394,6 +394,7 @@ func _on_infiltrate_reload_timeout() -> void:
 	target.attacked = true
 	target.get_node("UnderAttack").start()
 	target.hull -= 1
+	$InfiltratingProcess.start()
 
 
 func _on_under_attack_timeout() -> void:

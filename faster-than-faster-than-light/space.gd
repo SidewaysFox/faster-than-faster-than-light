@@ -14,6 +14,7 @@ var bg_object_rotation: float = 5.0
 var enemy_ship_count: int
 var run_away: bool = false
 var enemy_aggression: int
+var warp_in_dialogue_needed: bool = true
 
 const MUSIC_FADE_RATE: float = 0.8
 const SOLAR_FLARE_SFX_DELAY: float = 2.05
@@ -140,6 +141,9 @@ func _ready() -> void:
 		Global.establish()
 		setup_complete.emit()
 		Global.initialising = false
+		if Global.continuing:
+			for ship in Global.fleet:
+				$FriendlyShips.add_child(ship.duplicate())
 	else:
 		# Spawn fleet
 		for ship in Global.fleet:
@@ -237,6 +241,7 @@ func _ready() -> void:
 					$Background.add_child(new_nebula)
 					nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))
 	else:
+		warp_in_dialogue_needed = false
 		# Load existing system data
 		$BGStars.material_override.set_shader_parameter("seed", Global.galaxy_data[Global.current_system]["bg parameters"][0])
 		$BGStars.material_override.set_shader_parameter("prob", Global.galaxy_data[Global.current_system]["bg parameters"][1])
@@ -276,20 +281,20 @@ func _ready() -> void:
 	# Are there enemies present?
 	if Global.galaxy_data[Global.current_system]["enemy presence"]:
 		system_properties.append("enemy presence")
-		if Global.current_system not in Global.visited_systems:
-			var enemy_fleet: Array
-			if Global.tutorial:
-				enemy_fleet = tutorial_enemy_fleet
-			else:
-				enemy_fleet = pirate_fleets[system_stage].pick_random()
-			enemy_ship_count = len(enemy_fleet)
-			enemy_aggression = randi_range(-1, enemy_ship_count)
-			enemy_fleet.shuffle()
-			for ship in enemy_fleet:
-				Global.create_enemy_ship(ship[0], ship[1], ship[2])
+		var enemy_fleet: Array
+		if Global.tutorial:
+			enemy_fleet = tutorial_enemy_fleet
+		elif Global.current_system not in Global.visited_systems:
+			enemy_fleet = pirate_fleets[system_stage].pick_random()
+			Global.galaxy_data[Global.current_system]["enemies"] = enemy_fleet
 		else:
-			for enemy in Global.galaxy_data[Global.current_system]["enemies"]:
-				$HostileShips.add_child(enemy)
+			enemy_fleet = Global.galaxy_data[Global.current_system]["enemies"]
+		enemy_ship_count = len(enemy_fleet)
+		Global.galaxy_data[Global.current_system]["enemy count"] = enemy_ship_count
+		enemy_aggression = randi_range(-1, enemy_ship_count)
+		enemy_fleet.shuffle()
+		for ship in enemy_fleet:
+			Global.create_enemy_ship(ship[0], ship[1], ship[2])
 	# Is there a shop?
 	if Global.galaxy_data[Global.current_system]["shop presence"]:
 		system_properties.append("shop presence")
@@ -297,6 +302,9 @@ func _ready() -> void:
 	if star_proximity and not Global.tutorial:
 		system_properties.append("star proximity")
 		$SolarFlare.start()
+	
+	Global.new_system(Global.current_system)
+	Global.save_game()
 
 
 func _process(delta: float) -> void:

@@ -274,8 +274,8 @@ var fleet_inventory: Array = [] # Stores the weapon ID
 
 
 func _ready() -> void:
-	var config = ConfigFile.new()
-	var err: Error = config.load("user://scores.cfg")
+	var config: ConfigFile = ConfigFile.new()
+	var err: Error = config.load("user://settings.cfg")
 	if err == OK:
 		music_volume = config.get_value("Settings", "music_volume")
 		sfx_volume = config.get_value("Settings", "sfx_volume")
@@ -292,8 +292,38 @@ func establish() -> void:
 	# Establish the game
 	playing = true
 	in_combat = false
-	if continuing:
-		pass
+	var config: ConfigFile = ConfigFile.new()
+	var err: Error = config.load("user://save.cfg")
+	if continuing and err == OK:
+		resources = config.get_value("Game", "resources")
+		fuel = config.get_value("Game", "fuel")
+		max_inventory = config.get_value("Game", "max_inventory")
+		galaxy_data = config.get_value("Game", "galaxy_data")
+		visited_systems = config.get_value("Game", "visited_systems")
+		unique_visits = config.get_value("Game", "unique_visits")
+		next_ship_id = config.get_value("Game", "next_ship_id")
+		fleet_inventory = config.get_value("Game", "fleet_inventory")
+		current_system = config.get_value("Game", "current_system")
+		
+		# Because config files can't store the starships properly when the game has been closed
+		fleet = []
+		for ship in config.get_value("Game", "fleet"):
+			var new_ship: Node = starship.instantiate()
+			new_ship.id = ship.id
+			new_ship.team = ship.team
+			new_ship.type = ship.type
+			new_ship.alignment = ship.alignment
+			new_ship.ship_name = ship.ship_name
+			new_ship.level = ship.level
+			new_ship.hull_strength = ship.hull_strength
+			new_ship.hull = ship.hull
+			new_ship.agility = ship.agility
+			new_ship.weapons = ship.weapons
+			new_ship.drones = ship.drones
+			new_ship.status = ship.status
+			new_ship.active = ship.active
+			new_ship.shield_layers = ship.shield_layers
+			fleet.append(new_ship)
 	else:
 		resources = STARTING_RESOURCES
 		fuel = STARTING_FUEL
@@ -447,7 +477,10 @@ func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = 
 	new_enemy.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_enemy.hull = starship_base_stats[type]["Hull Strength"]
 	new_enemy.agility = starship_base_stats[type]["Agility"]
-	new_enemy.weapons = weapons
+	if type == 7:
+		new_enemy.drones = weapons
+	else:
+		new_enemy.weapons = weapons
 	new_enemy.set_level = level
 	new_enemy.creator_id = creator_id
 	if type < 8:
@@ -468,4 +501,5 @@ func save_game() -> void:
 	config.set_value("Game", "next_ship_id", next_ship_id)
 	config.set_value("Game", "fleet_inventory", fleet_inventory)
 	config.set_value("Game", "destination", destination)
-	config.save("user://scores.cfg")
+	config.set_value("Game", "current_system", current_system)
+	config.save("user://save.cfg")

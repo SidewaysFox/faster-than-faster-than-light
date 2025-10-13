@@ -153,7 +153,7 @@ GAME DEVELOPED BY:
 BEN WHALEY
 
 TESTED BY:
-HUNTER JONES, MICHAEL XUE"
+SYLVIA HAGEN, HUNTER JONES, EVELYN MITCHELL, JOE MITCHELL, ANSEL WEATHERALL, MICHAEL XUE"
 autowrap_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Credits/Thing/MarginContainer/VBoxContainer"]

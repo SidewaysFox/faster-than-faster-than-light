@@ -455,7 +455,10 @@ func _process(delta: float) -> void:
 				if "enemy presence" in main.system_properties:
 					Global.galaxy_data[Global.current_system]["enemies"] = []
 					for enemy in main.get_node("HostileShips").get_children():
-						Global.galaxy_data[Global.current_system]["enemies"].append(enemy.duplicate())
+						if enemy.type == 7:
+							Global.galaxy_data[Global.current_system]["enemies"].append([enemy.type, enemy.level, enemy.drones])
+						else:
+							Global.galaxy_data[Global.current_system]["enemies"].append([enemy.type, enemy.level, enemy.weapons])
 					Global.galaxy_data[Global.current_system]["enemy count"] = main.enemy_ship_count
 				Engine.time_scale = 1.0
 				warping = true
@@ -1004,7 +1007,8 @@ func _process(delta: float) -> void:
 	else:
 		$Shop.hide()
 	
-	prev_mouse_pos = get_global_mouse_position()
+	if get_viewport() != null:
+		prev_mouse_pos = get_global_mouse_position()
 
 # Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
@@ -1167,7 +1171,7 @@ func _ship_shop() -> void:
 
 # Small interval before showing the warp in dialogue
 func _on_warp_in_dialogue_timeout() -> void:
-	if Global.current_system in Global.visited_systems:
+	if main.warp_in_dialogue_needed:
 		if intro_dialogue:
 			if Global.tutorial:
 				dialogue_set_up(3, 1)
@@ -1175,15 +1179,15 @@ func _on_warp_in_dialogue_timeout() -> void:
 				dialogue_set_up(3, 0)
 			intro_dialogue = false
 		else:
-			close(Global.galaxy_data[Global.current_system]["enemy presence"])
+			# Search through options for the warp in dialogue and find which ones are
+			# appropriate for this system
+			var possible_dialogues: Array = []
+			for i in warp_in_dialogue:
+				if i[0] == main.system_properties:
+					possible_dialogues.append(warp_in_dialogue.find(i))
+			dialogue_set_up(0, possible_dialogues.pick_random())
 	else:
-		# Search through options for the warp in dialogue and find which ones are
-		# appropriate for this system
-		var possible_dialogues: Array = []
-		for i in warp_in_dialogue:
-			if i[0] == main.system_properties:
-				possible_dialogues.append(warp_in_dialogue.find(i))
-		dialogue_set_up(0, possible_dialogues.pick_random())
+		close(Global.galaxy_data[Global.current_system]["enemy presence"])
 
 
 # Called when either fuel or resources are spent or gained
@@ -1347,6 +1351,7 @@ func lose() -> void:
 
 # Quit to the main menu
 func quit_to_menu() -> void:
+	# Adds the current system to the database
 	Global.playing = false
 	Global.menu_music_progress = 0.0
 	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
