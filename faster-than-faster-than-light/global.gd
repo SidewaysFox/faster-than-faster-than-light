@@ -5,9 +5,9 @@ var starship: PackedScene = preload("res://starship.tscn")
 var joystick_control: bool = false
 var dual_joysticks: bool = false
 var music_volume: float = 100.0
+var sfx_volume: float = 100.0
 var menu_music_progress: float = 0.0
 var game_music_progress: float = 0.0
-var sfx_volume: float = 100.0
 var initialising: bool = true
 var playing: bool = false
 var tutorial: bool = false
@@ -29,11 +29,12 @@ var joystick_sens: float = 1.5
 var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
+var continuing: bool = false
 
 const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2] # Default [0, 1, 1, 2]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]#Default [0, 1, 1, 2, 3, 4, 5, 6]
-const STARTING_RESOURCES: int = 32 # Default 32
-const STARTING_FUEL: int = 25 # Default 25
+const STARTING_RESOURCES: int = 25 # Default 32
+const STARTING_FUEL: int = 32 # Default 25
 const STARTING_INVENTORY: Array[int] = [] # Default []
 const TUTORIAL_INVENTORY: Array[int] = [1, 6] # Default [1, 6]
 const DEFAULT_INV_SIZE: int = 4 # Default 4
@@ -272,6 +273,16 @@ var weapon_types: Array[String] = ["LASER", "PHYSICAL", "EMP", "DRONE"]
 var fleet_inventory: Array = [] # Stores the weapon ID
 
 
+func _ready() -> void:
+	var config = ConfigFile.new()
+	var err: Error = config.load("user://scores.cfg")
+	if err == OK:
+		music_volume = config.get_value("Settings", "music_volume")
+		sfx_volume = config.get_value("Settings", "sfx_volume")
+		joystick_control = config.get_value("Settings", "joystick_control")
+		dual_joysticks = config.get_value("Settings", "dual_joysticks")
+
+
 func _process(_delta: float) -> void:
 	AudioServer.set_bus_volume_linear(1, music_volume / 100.0)
 	AudioServer.set_bus_volume_linear(2, sfx_volume / 100.0)
@@ -280,117 +291,103 @@ func _process(_delta: float) -> void:
 func establish() -> void:
 	# Establish the game
 	playing = true
-	resources = STARTING_RESOURCES
-	fuel = STARTING_FUEL
-	max_inventory = DEFAULT_INV_SIZE
-	fleet = []
-	galaxy_data = []
-	visited_systems = []
-	unique_visits = 0
-	next_ship_id = -1
 	in_combat = false
-	if tutorial:
-		starting_fleet = DEFAULT_TUTORIAL_FLEET
-		fleet_inventory = TUTORIAL_INVENTORY.duplicate()
-		galaxy_data = [
-			{
-				"id": 0,
-				"position": Vector2(155, 310),
-				"sector": 0,
-				"enemy presence": false,
-				"shop presence": false,
-			},
-			{
-				"id": 1,
-				"position": Vector2(235, 310),
-				"sector": 1,
-				"enemy presence": true,
-				"shop presence": false,
-			},
-			{
-				"id": 2,
-				"position": Vector2(360, 310),
-				"sector": 2,
-				"enemy presence": false,
-				"shop presence": true,
-			},
-			{
-				"id": 3,
-				"position": Vector2(450, 310),
-				"sector": 3,
-				"enemy presence": false,
-				"shop presence": false,
-			},
-			]
+	if continuing:
+		pass
 	else:
-		starting_fleet = DEFAULT_STARTING_FLEET
-		fleet_inventory = STARTING_INVENTORY.duplicate()
-		var system_id: int = 0
-		# Generate galaxy map
-		for row in SECTOR_ROWS:
-			for column in SECTOR_COLUMNS:
-				for index in randi_range(0, MAX_SECTOR_SYSTEMS):
-					var system_type: int = randi_range(0, 19)
-					var enemy_presence: bool = false
-					var shop_presence: bool = false
-					if system_type >= ENEMY_THRESHOLD:
-						enemy_presence = true
-					elif system_type < ENEMY_THRESHOLD and system_type >= SHOP_THRESHOLD:
-						shop_presence = true
-					# Set up and store data
-					galaxy_data.append({
-						"id": system_id,
-						"position": Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y)),
-						"sector": column,
-						"enemy presence": enemy_presence,
-						"shop presence": shop_presence,
-					})
-					system_id += 1
+		resources = STARTING_RESOURCES
+		fuel = STARTING_FUEL
+		max_inventory = DEFAULT_INV_SIZE
+		fleet = []
+		galaxy_data = []
+		visited_systems = []
+		unique_visits = 0
+		next_ship_id = -1
+		if tutorial:
+			starting_fleet = DEFAULT_TUTORIAL_FLEET
+			fleet_inventory = TUTORIAL_INVENTORY.duplicate()
+			galaxy_data = [
+				{
+					"id": 0,
+					"position": Vector2(155, 310),
+					"sector": 0,
+					"enemy presence": false,
+					"shop presence": false,
+				},
+				{
+					"id": 1,
+					"position": Vector2(235, 310),
+					"sector": 1,
+					"enemy presence": true,
+					"shop presence": false,
+				},
+				{
+					"id": 2,
+					"position": Vector2(360, 310),
+					"sector": 2,
+					"enemy presence": false,
+					"shop presence": true,
+				},
+				{
+					"id": 3,
+					"position": Vector2(450, 310),
+					"sector": 3,
+					"enemy presence": false,
+					"shop presence": false,
+				},
+				]
+		else:
+			starting_fleet = DEFAULT_STARTING_FLEET
+			fleet_inventory = STARTING_INVENTORY.duplicate()
+			var system_id: int = 0
+			# Generate galaxy map
+			for row in SECTOR_ROWS:
+				for column in SECTOR_COLUMNS:
+					for index in randi_range(0, MAX_SECTOR_SYSTEMS):
+						var system_type: int = randi_range(0, 19)
+						var enemy_presence: bool = false
+						var shop_presence: bool = false
+						if system_type >= ENEMY_THRESHOLD:
+							enemy_presence = true
+						elif system_type < ENEMY_THRESHOLD and system_type >= SHOP_THRESHOLD:
+							shop_presence = true
+						# Set up and store data
+						galaxy_data.append({
+							"id": system_id,
+							"position": Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y)),
+							"sector": column,
+							"enemy presence": enemy_presence,
+							"shop presence": shop_presence,
+						})
+						system_id += 1
 		
-		#for c in SECTOR_COLUMNS:
-			#for n in MAX_SECTOR_SYSTEMS: # ID, position, sector, enemy presence
-				#var enemy_presence: bool
-				#if randi_range(1, 3) == 3:
-					#enemy_presence = true
-				#else:
-					#enemy_presence = false
-				## Set up and store the data
-				#galaxy_data.append({
-					#"id": system_id,
-					#"position": Vector2((sector * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), randf_range(GMAP_TOP, GMAP_BOT)),
-					#"sector": c,
-					#"enemy presence": enemy_presence
-					#})
-				#system_id += 1
-			#sector += 1
-	
-	# Check which system is furthest to the left
-	# Same for which is furthest to the right
-	var starting_system: Array = [0, 800.0]
-	var end_system: Array = [0, 400.0]
-	for i in galaxy_data:
-		if i["position"].x < starting_system[1]:
-			starting_system = [i["id"], i["position"].x]
-		elif i["position"].x > end_system[1]:
-			end_system = [i["id"], i["position"].x]
-	current_system = starting_system[0]
-	destination = end_system[0]
-	galaxy_data[current_system]["enemy presence"] = false
-	galaxy_data[destination]["enemy presence"] = false
-	galaxy_data[destination]["shop presence"] = false
-	new_system(current_system)
-	
-	# Create the fleet
-	for ship in starting_fleet:
-		create_new_starship(ship)
+		# Check which system is furthest to the left
+		# Same for which is furthest to the right
+		var starting_system: Array = [0, 800.0]
+		var end_system: Array = [0, 400.0]
+		for i in galaxy_data:
+			if i["position"].x < starting_system[1]:
+				starting_system = [i["id"], i["position"].x]
+			elif i["position"].x > end_system[1]:
+				end_system = [i["id"], i["position"].x]
+		current_system = starting_system[0]
+		destination = end_system[0]
+		galaxy_data[current_system]["enemy presence"] = false
+		galaxy_data[destination]["enemy presence"] = false
+		galaxy_data[destination]["shop presence"] = false
+		new_system(current_system)
+		
+		# Create the fleet
+		for ship in starting_fleet:
+			create_new_starship(ship)
 	
 	stats_update()
 
 
-func new_game(tutor: bool = false) -> void:
+func new_game(is_tutorial: bool = false) -> void:
 	print("NEW GAME")
 	initialising = true
-	tutorial = tutor
+	tutorial = is_tutorial
 	get_tree().change_scene_to_file("res://space.tscn")
 
 
@@ -457,3 +454,18 @@ func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = 
 		get_node("/root/Space/HostileShips").add_child(new_enemy)
 	else:
 		get_node("/root/Space/Drones").add_child(new_enemy)
+
+
+func save_game() -> void:
+	var config: ConfigFile = ConfigFile.new()
+	config.set_value("Game", "resources", resources)
+	config.set_value("Game", "fuel", fuel)
+	config.set_value("Game", "max_inventory", max_inventory)
+	config.set_value("Game", "fleet", fleet)
+	config.set_value("Game", "galaxy_data", galaxy_data)
+	config.set_value("Game", "visited_systems", visited_systems)
+	config.set_value("Game", "unique_visits", unique_visits)
+	config.set_value("Game", "next_ship_id", next_ship_id)
+	config.set_value("Game", "fleet_inventory", fleet_inventory)
+	config.set_value("Game", "destination", destination)
+	config.save("user://scores.cfg")

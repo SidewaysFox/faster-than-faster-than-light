@@ -320,8 +320,6 @@ func _process(delta: float) -> void:
 			Global.in_combat = false
 			%UserInterface.lose()
 	
-	Global.game_music_progress += delta
-	
 	if Global.in_combat:
 		warp_charge += Global.charge_rate * delta
 		$MusicExplore.volume_linear = move_toward($MusicExplore.volume_linear, 0.0, delta * MUSIC_FADE_RATE)

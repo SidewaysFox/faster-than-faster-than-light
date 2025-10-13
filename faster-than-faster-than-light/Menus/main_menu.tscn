@@ -294,7 +294,7 @@ stream = ExtResource("5_cxdly")
 bus = &"Music"
 
 [connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/NewGame/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/ContinueGame/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/ContinueGame/Button" to="CanvasLayer/MainControl" method="_on_continue_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Tutorial/Button" to="CanvasLayer/MainControl" method="_on_new_game_pressed" binds= [true]]
 [connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Settings/Button" to="CanvasLayer/MainControl" method="_on_settings_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainControl/HBoxContainer/RightSide/Buttons/Credits/Button" to="CanvasLayer/MainControl" method="_on_credits_pressed"]

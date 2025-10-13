@@ -44,4 +44,15 @@ func _on_credits_pressed() -> void:
 
 
 func _on_quit_pressed() -> void:
+	var config: ConfigFile = ConfigFile.new()
+	config.set_value("Settings", "music_volume", Global.music_volume)
+	config.set_value("Settings", "sfx_volume", Global.sfx_volume)
+	config.set_value("Settings", "joystick_control", Global.joystick_control)
+	config.set_value("Settings", "dual_joysticks", Global.dual_joysticks)
+	config.save("user://scores.cfg")
 	get_tree().quit()
+
+
+func _on_continue_pressed() -> void:
+	Global.continuing = true
+	Global.new_game()
