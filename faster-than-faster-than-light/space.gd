@@ -5,7 +5,7 @@ extends Node3D
 @export var starship: PackedScene
 var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
 var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(0.9, 0.9, 0.9), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
-var main_star_count: String # Trust me, it just has to be this way
+var main_star_count: String # Needs to be a string for use in other applications
 var system_properties: Array = []
 var system_stage: String
 var star_proximity: bool = false
@@ -16,8 +16,38 @@ var run_away: bool = false
 var enemy_aggression: int
 var warp_in_dialogue_needed: bool = true
 
+const LATE_GAME: float = 2400.0
+const MID_GAME: float = 1600.0
+const EARLY_GAME: float = 800.0
 const MUSIC_FADE_RATE: float = 0.8
 const SOLAR_FLARE_SFX_DELAY: float = 2.05
+const MAX_SOLAR_FLARE_DAMAGE: int = 2
+const SOLAR_FLARE_ALPHA: float = 0.4
+
+const BG_STARS_SEED: Vector2 = Vector2(0.01, 100.0)
+const BG_STARS_PROB: Vector2 = Vector2(0.91, 1.0)
+const BG_STARS_SIZE: Vector2 = Vector2(50.0, 120.0)
+const RADIUS_RANGE: Vector2 = Vector2(40.0, 250.0)
+const HEIGHT_FACTOR: float = 2.0
+const STAR_POS_Z: Vector2 = Vector2(-2500, -300)
+const STAR_X_FACTOR: float = 1.1
+const STAR_Y_FACTOR: Vector2 = Vector2(0.8, -2.3)
+const STAR_PROXIMITY_THRESHOLD: float = 0.21
+const PROXIMITY_RADIUS_WEIGHT: float = 0.5
+const NEB_COL: Vector2 = Vector2(0.1, 1.0)
+const NEB_ALPHA: Vector2 = Vector2(0.04, 0.2)
+const NEB_COUNT: Vector2i = Vector2i(1, 25)
+const NEB_POS_X: Vector2 = Vector2(-2000, 2000)
+const NEB_POS_Y: Vector2 = Vector2(-1000, 800)
+const NEB_POS_Z: Vector2 = Vector2(-2000, -800)
+const NEB_RADIUS: Vector2 = Vector2(20, 50)
+const NEB_POS_SHIFT: float = 50.0
+const NEB_COL_SHIFT: float = 0.1
+const NEB_ALPHA_SHIFT: float = 0.05
+const LARGE_NEB_CHANCE: int = 30
+const LARGE_NEB_SIZE: Vector2i = Vector2i(50, 300)
+const SMALL_NEB_SIZE: Vector2i = Vector2i(1, 20)
+const STAR_RENDER_DISTANCE: float = 3500.0
 
 var tutorial_enemy_fleet: Array[Array] = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
@@ -152,11 +182,11 @@ func _ready() -> void:
 	$MusicExplore.play(Global.game_music_progress)
 	$MusicCombat.play(Global.game_music_progress)
 	
-	if Global.galaxy_data[Global.current_system]["position"].x > 2400:
+	if Global.galaxy_data[Global.current_system]["position"].x > LATE_GAME:
 		system_stage = "late"
-	elif Global.galaxy_data[Global.current_system]["position"].x > 1600:
+	elif Global.galaxy_data[Global.current_system]["position"].x > MID_GAME:
 		system_stage = "middle"
-	elif Global.galaxy_data[Global.current_system]["position"].x > 800:
+	elif Global.galaxy_data[Global.current_system]["position"].x > EARLY_GAME:
 		system_stage = "early"
 	else:
 		system_stage = "start"
@@ -166,11 +196,13 @@ func _ready() -> void:
 	if Global.current_system not in Global.visited_systems or Global.unique_visits == 1:
 		# Generate new system
 		# Pass information to the BGStar GLSL script
-		var bg_parameters: Array[float] = [randf_range(0.01, 100.0), randf_range(0.91, 1.0), randf_range(50.0, 120.0)]
-		$BGStars.material_override.set_shader_parameter("seed", bg_parameters[0])
-		$BGStars.material_override.set_shader_parameter("prob", bg_parameters[1])
-		$BGStars.material_override.set_shader_parameter("size", bg_parameters[2])
-		Global.galaxy_data[Global.current_system]["bg parameters"] = bg_parameters
+		var bg_seed: float = randf_range(BG_STARS_SEED.x, BG_STARS_SEED.y)
+		var bg_prob: float = randf_range(BG_STARS_PROB.x, BG_STARS_PROB.y)
+		var bg_size: float = randf_range(BG_STARS_SIZE.x, BG_STARS_SIZE.y)
+		$BGStars.material_override.set_shader_parameter("seed", bg_seed)
+		$BGStars.material_override.set_shader_parameter("prob", bg_prob)
+		$BGStars.material_override.set_shader_parameter("size", bg_size)
+		Global.galaxy_data[Global.current_system]["bg parameters"] = [bg_seed, bg_prob, bg_size]
 		# Establish this system's star(s)
 		main_star_count = str(system_types.pick_random())
 		Global.galaxy_data[Global.current_system]["main star count"] = main_star_count
@@ -181,9 +213,9 @@ func _ready() -> void:
 			star.mesh.material.emission = colour
 			Global.galaxy_data[Global.current_system]["star" + str(star_index) + " colour"] = colour
 			# Set star size
-			var radius: float = randf_range(40.0, 250.0)
+			var radius: float = randf_range(RADIUS_RANGE.x, RADIUS_RANGE.y)
 			star.mesh.radius = radius
-			star.mesh.height = radius * 2.0
+			star.mesh.height = radius * HEIGHT_FACTOR
 			Global.galaxy_data[Global.current_system]["star" + str(star_index) + " radius"] = radius
 			# Set positioning
 			var star_position: Vector3 = star_reposition()
@@ -199,34 +231,34 @@ func _ready() -> void:
 			# This doesn't need to be saved since it's pretty minor so I'm not gonna save it
 			star.mesh.material.emission_texture.noise.seed = randi()
 			# It took way too much rigorous testing to get this number
-			if (radius / 2.0) / star_position.distance_to(Vector3.ZERO) > 0.21:
+			if (radius * PROXIMITY_RADIUS_WEIGHT) / star_position.distance_to(Vector3.ZERO) > STAR_PROXIMITY_THRESHOLD:
 				star_proximity = true
 				%UserInterface.get_node("SolarFlareFlash").color = colour
 			star_index += 1
 		# Create nebulae
 		var nebula_pos: Vector3
-		var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
+		var nebula_colour: Color = Color(randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_ALPHA.x, NEB_ALPHA.y))
 		Global.galaxy_data[Global.current_system]["nebulae"] = []
 		for i in randi_range(1, 22):
 			# Not as important that it remains in bounds
-			nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
-			nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.05, 0.05))
-			nebula_colour.a = clamp(nebula_colour.a, 0.04, 0.2)
+			nebula_pos = Vector3(randf_range(NEB_POS_X.x, NEB_POS_X.y), randf_range(NEB_POS_Y.x, NEB_POS_Y.y), randf_range(NEB_POS_Z.x, NEB_POS_Z.y))
+			nebula_colour += Color(randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_ALPHA_SHIFT, NEB_ALPHA_SHIFT))
+			nebula_colour.a = clamp(nebula_colour.a, NEB_ALPHA.x, NEB_ALPHA.y)
 			# Big or small nebula
 			Global.galaxy_data[Global.current_system]["nebulae"].append([])
-			if randi_range(0, 40) == 4: # Because I like the number 4
+			if randi_range(0, LARGE_NEB_CHANCE) == 0:
 				# Big
-				for j in randi_range(50, 300):
+				for cloud in randi_range(LARGE_NEB_SIZE.x, LARGE_NEB_SIZE.y):
 					var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 					new_nebula.position = nebula_pos
 					new_nebula.mesh.material.albedo_color = nebula_colour
 					new_nebula.mesh.material.emission = nebula_colour
-					var neb_radius: float = randf_range(20.0, 50.0)
+					var neb_radius: float = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
 					new_nebula.mesh.radius = neb_radius
-					new_nebula.mesh.height = neb_radius * 2.0
+					new_nebula.mesh.height = neb_radius * HEIGHT_FACTOR
 					Global.galaxy_data[Global.current_system]["nebulae"][i].append([nebula_pos, nebula_colour, neb_radius])
 					$Background.add_child(new_nebula)
-					nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
+					nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 			else:
 				# Small
 				for j in randi_range(1, 20):
@@ -239,7 +271,7 @@ func _ready() -> void:
 					new_nebula.mesh.height = neb_radius * 2.0
 					Global.galaxy_data[Global.current_system]["nebulae"][i].append([nebula_pos, nebula_colour, neb_radius])
 					$Background.add_child(new_nebula)
-					nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))
+					nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 	else:
 		warp_in_dialogue_needed = false
 		# Load existing system data
@@ -254,10 +286,10 @@ func _ready() -> void:
 			star.mesh.material.emission = colour
 			var radius: float = Global.galaxy_data[Global.current_system]["star" + str(star_index) + " radius"]
 			star.mesh.radius = radius
-			star.mesh.height = radius * 2.0
+			star.mesh.height = radius * HEIGHT_FACTOR
 			# Not saved because it's not important enough (ouch)
 			star.mesh.material.emission_texture.noise.seed = randi()
-			if (radius / 2.0) / star_position.distance_to(Vector3.ZERO) > 0.21:
+			if (radius * PROXIMITY_RADIUS_WEIGHT) / star_position.distance_to(Vector3.ZERO) > STAR_PROXIMITY_THRESHOLD:
 				star_proximity = true
 			star_index += 1
 		for nebula in Global.galaxy_data[Global.current_system]["nebulae"]:
@@ -267,7 +299,7 @@ func _ready() -> void:
 				new_nebula.mesh.material.albedo_color = sphere[1]
 				new_nebula.mesh.material.emission = sphere[1]
 				new_nebula.mesh.radius = sphere[2]
-				new_nebula.mesh.height = sphere[2] * 2.0
+				new_nebula.mesh.height = sphere[2] * HEIGHT_FACTOR
 				$Background.add_child(new_nebula)
 	
 	# Set up conditions for the warp in dialogue
@@ -338,7 +370,7 @@ func _process(delta: float) -> void:
 			%UserInterface.win_encounter()
 		elif not run_away and $HostileShips.get_child_count() < enemy_aggression:
 			run_away = true
-			%UserInterface.dialogue_set_up(6, randi_range(0, len(%UserInterface.enemy_running_dialogue) - 1))
+			%UserInterface.dialogue_set_up(%UserInterface.DialogueTypes.ENEMY_RUNNING, randi_range(0, len(%UserInterface.enemy_running_dialogue) - 1))
 			$RunAway.start()
 	else:
 		$MusicExplore.volume_linear = move_toward($MusicExplore.volume_linear, 1.0, delta * MUSIC_FADE_RATE)
@@ -361,8 +393,8 @@ func _on_solar_flare_timeout() -> void:
 		$SolarFlareSFX.play()
 		await get_tree().create_timer(SOLAR_FLARE_SFX_DELAY).timeout
 		for existing_starship in get_tree().get_nodes_in_group("starships"):
-			existing_starship.hull -= randi_range(0, 2)
-		%UserInterface.get_node("SolarFlareFlash").self_modulate.a = 0.4
+			existing_starship.hull -= randi_range(0, MAX_SOLAR_FLARE_DAMAGE)
+		%UserInterface.get_node("SolarFlareFlash").self_modulate.a = SOLAR_FLARE_ALPHA
 
 
 func _on_run_away_timeout() -> void:
@@ -374,12 +406,12 @@ func star_reposition() -> Vector3:
 	var x: float
 	var y: float
 	var z: float
-	z = randf_range(-2500, -300)
-	x = randf_range(z * -1.1, z * 1.1)
-	y = randf_range(z / 0.8, z / -2.3)
+	z = randf_range(STAR_POS_Z.x, STAR_POS_Z.y)
+	x = randf_range(z * -STAR_X_FACTOR, z * STAR_X_FACTOR)
+	y = randf_range(z / STAR_Y_FACTOR.x, z / STAR_Y_FACTOR.y)
 	# Make sure the star is within bounds. because I cannot be bothered to do the math for this
-	while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
-		z = randf_range(-2500, -300)
-		x = randf_range(z * -1.1, z * 1.1)
-		y = randf_range(z / 0.8, z / -2.3)
+	while Vector3(x, y, z).distance_to(Vector3.ZERO) > STAR_RENDER_DISTANCE:
+		z = randf_range(STAR_POS_Z.x, STAR_POS_Z.y)
+		x = randf_range(z * -STAR_X_FACTOR, z * STAR_X_FACTOR)
+		y = randf_range(z / STAR_Y_FACTOR.x, z / STAR_Y_FACTOR.y)
 	return Vector3(x, y, z)

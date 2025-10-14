@@ -4,6 +4,7 @@ extends Node
 var starship: PackedScene = preload("res://starship.tscn")
 var joystick_control: bool = false
 var dual_joysticks: bool = false
+var joystick_sens: float = 1.5
 var music_volume: float = 100.0
 var sfx_volume: float = 100.0
 var menu_music_progress: float = 0.0
@@ -25,7 +26,6 @@ var current_system: int
 var system_position: Vector2
 var visited_systems: Array[int] = []
 var unique_visits: int = 0
-var joystick_sens: float = 1.5
 var next_ship_id: int = -1
 var in_combat: bool = false
 var controls_showing: bool = true
@@ -33,6 +33,7 @@ var continuing: bool = false
 
 const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2] # Default [0, 1, 1, 2]
 const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]#Default [0, 1, 1, 2, 3, 4, 5, 6]
+const MAX_FLEET_SIZE: int = 8 # Default 8
 const STARTING_RESOURCES: int = 25 # Default 32
 const STARTING_FUEL: int = 32 # Default 25
 const STARTING_INVENTORY: Array[int] = [] # Default []
@@ -41,16 +42,47 @@ const DEFAULT_INV_SIZE: int = 4 # Default 4
 const DEFAULT_JUMP_DISTANCE: float = 140.0 # Default 140.0
 const DEFAULT_CHARGE_RATE: float = 3.0 # Default 3.0
 const DEFAULT_CRIT_CHANCE: float = 0.0 # Default 0.0
+const JUMP_DISTANCE_UPGRADE: float = 20.0 # Default 20.0
+const CRIT_CHANCE_UPGRADE: float = 0.05 # Default 0.05
 
-const SECTOR_ROWS: int = 8
-const SECTOR_COLUMNS: int = 32
-const SECTOR_SIZE: Vector2 = Vector2(100, 70)
-const MAX_SECTOR_SYSTEMS: int = 3
-const GMAP_TOP: float = 30.0
-const GMAP_BOT: float = 590.0
+const SECTOR_ROWS: int = 8 # Default 8
+const SECTOR_COLUMNS: int = 32 # Default 32
+const SECTOR_SIZE: Vector2 = Vector2(100, 70) # Default (100, 70)
+const MAX_SECTOR_SYSTEMS: int = 3 # Default 3
+const GMAP_TOP: float = 30.0 # Default 30.0
+const GMAP_BOT: float = 590.0 # Default 590.0
+const SYSTEM_TYPE_THRESHOLD: int = 19 # Default 19
 const ENEMY_THRESHOLD: int = 9 # Default 9
 const SHOP_THRESHOLD: int = 8 # Default 8
 const ITEM_WIN_THRESHOLD: int = 17 # Default 17
+
+const VOLUME_FACTOR: float = 100.0
+
+enum Teams {
+	HOSTILE = -1,
+	NEUTRAL,
+	FRIENDLY
+}
+
+enum StarshipTypes {
+	COMMAND_SHIP,
+	FIGHTER,
+	SHIELD,
+	INFILTRATION,
+	REPAIR,
+	SCANNER,
+	RELAY,
+	DRONE_COMMAND,
+	FIGHTER_DRONE,
+	REPAIR_DRONE
+	}
+
+enum Alignments {
+	ALLIANCE,
+	CIVILIAN,
+	REBEL,
+	PIRATE
+}
 
 var starship_base_stats: Array[Dictionary] = [
 	{
@@ -266,11 +298,53 @@ var weapon_list: Array[Dictionary] = [
 	},
 ]
 
-const WINNABLE_WEAPONS: Array[int] = [0, 1, 2, 3, 5, 6, 7, 9, 10]
-
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "EMP", "DRONE"]
 
+enum WeaponTypes {
+	LASER,
+	PHYSICAL,
+	EMP,
+	DRONE
+}
+
 var fleet_inventory: Array = [] # Stores the weapon ID
+
+const WINNABLE_WEAPONS: Array[int] = [0, 1, 2, 3, 5, 6, 7, 9, 10]
+
+const ENEMY_TARGETERS: Array[int] = [1, 3, 5]
+
+const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
+
+const TUTORIAL_GALAXY: Array[Dictionary] = [
+				{
+					"id": 0,
+					"position": Vector2(155, 310),
+					"sector": 0,
+					"enemy presence": false,
+					"shop presence": false,
+				},
+				{
+					"id": 1,
+					"position": Vector2(235, 310),
+					"sector": 1,
+					"enemy presence": true,
+					"shop presence": false,
+				},
+				{
+					"id": 2,
+					"position": Vector2(360, 310),
+					"sector": 2,
+					"enemy presence": false,
+					"shop presence": true,
+				},
+				{
+					"id": 3,
+					"position": Vector2(450, 310),
+					"sector": 3,
+					"enemy presence": false,
+					"shop presence": false,
+				},
+				]
 
 
 func _ready() -> void:
@@ -284,8 +358,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	AudioServer.set_bus_volume_linear(1, music_volume / 100.0)
-	AudioServer.set_bus_volume_linear(2, sfx_volume / 100.0)
+	AudioServer.set_bus_volume_linear(1, music_volume / VOLUME_FACTOR)
+	AudioServer.set_bus_volume_linear(2, sfx_volume / VOLUME_FACTOR)
 
 
 func establish() -> void:
@@ -336,36 +410,7 @@ func establish() -> void:
 		if tutorial:
 			starting_fleet = DEFAULT_TUTORIAL_FLEET
 			fleet_inventory = TUTORIAL_INVENTORY.duplicate()
-			galaxy_data = [
-				{
-					"id": 0,
-					"position": Vector2(155, 310),
-					"sector": 0,
-					"enemy presence": false,
-					"shop presence": false,
-				},
-				{
-					"id": 1,
-					"position": Vector2(235, 310),
-					"sector": 1,
-					"enemy presence": true,
-					"shop presence": false,
-				},
-				{
-					"id": 2,
-					"position": Vector2(360, 310),
-					"sector": 2,
-					"enemy presence": false,
-					"shop presence": true,
-				},
-				{
-					"id": 3,
-					"position": Vector2(450, 310),
-					"sector": 3,
-					"enemy presence": false,
-					"shop presence": false,
-				},
-				]
+			galaxy_data = TUTORIAL_GALAXY
 		else:
 			starting_fleet = DEFAULT_STARTING_FLEET
 			fleet_inventory = STARTING_INVENTORY.duplicate()
@@ -374,7 +419,7 @@ func establish() -> void:
 			for row in SECTOR_ROWS:
 				for column in SECTOR_COLUMNS:
 					for index in randi_range(0, MAX_SECTOR_SYSTEMS):
-						var system_type: int = randi_range(0, 19)
+						var system_type: int = randi_range(0, SYSTEM_TYPE_THRESHOLD)
 						var enemy_presence: bool = false
 						var shop_presence: bool = false
 						if system_type >= ENEMY_THRESHOLD:
@@ -415,10 +460,11 @@ func establish() -> void:
 
 
 func new_game(is_tutorial: bool = false) -> void:
+	var main_scene: String = "res://space.tscn"
 	print("NEW GAME")
 	initialising = true
 	tutorial = is_tutorial
-	get_tree().change_scene_to_file("res://space.tscn")
+	get_tree().change_scene_to_file(main_scene)
 
 
 func get_new_ship_id() -> int:
@@ -432,10 +478,10 @@ func stats_update() -> void:
 	charge_rate = DEFAULT_CHARGE_RATE
 	crit_chance = DEFAULT_CRIT_CHANCE
 	for ship in fleet:
-		if ship.type == 5:
-			crit_chance += 0.05 * ship.level
-		if ship.type == 6:
-			jump_distance += 20.0 * ship.level
+		if ship.type == StarshipTypes.SCANNER:
+			crit_chance += CRIT_CHANCE_UPGRADE * ship.level
+		if ship.type == StarshipTypes.RELAY:
+			jump_distance += JUMP_DISTANCE_UPGRADE * ship.level
 			charge_rate += ship.level
 
 
@@ -451,16 +497,16 @@ func new_system(system: int) -> void:
 func create_new_starship(type: int, ship_name: String = "Starship", creator_id: int = -1) -> void:
 	var new_ship: Node3D = starship.instantiate()
 	new_ship.id = get_new_ship_id()
-	new_ship.team = 1
+	new_ship.team = Teams.FRIENDLY
 	new_ship.type = type
-	new_ship.alignment = 0
+	new_ship.alignment = Alignments.ALLIANCE
 	new_ship.ship_name = ship_name
 	new_ship.level = 1
 	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_ship.hull = starship_base_stats[type]["Hull Strength"]
 	new_ship.agility = starship_base_stats[type]["Agility"]
 	new_ship.creator_id = creator_id
-	if type < 8:
+	if type < StarshipTypes.FIGHTER_DRONE:
 		fleet.append(new_ship)
 		get_node("/root/Space/FriendlyShips").add_child(new_ship.duplicate())
 	else:
@@ -470,20 +516,20 @@ func create_new_starship(type: int, ship_name: String = "Starship", creator_id: 
 func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = -1) -> void:
 	var new_enemy: Node3D = starship.instantiate()
 	new_enemy.id = get_new_ship_id()
-	new_enemy.team = -1
+	new_enemy.team = Teams.HOSTILE
 	new_enemy.type = type
-	new_enemy.alignment = 3
+	new_enemy.alignment = Alignments.PIRATE
 	new_enemy.level = 1
 	new_enemy.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_enemy.hull = starship_base_stats[type]["Hull Strength"]
 	new_enemy.agility = starship_base_stats[type]["Agility"]
-	if type == 7:
+	if type == StarshipTypes.DRONE_COMMAND:
 		new_enemy.drones = weapons
 	else:
 		new_enemy.weapons = weapons
 	new_enemy.set_level = level
 	new_enemy.creator_id = creator_id
-	if type < 8:
+	if type < StarshipTypes.FIGHTER_DRONE:
 		get_node("/root/Space/HostileShips").add_child(new_enemy)
 	else:
 		get_node("/root/Space/Drones").add_child(new_enemy)

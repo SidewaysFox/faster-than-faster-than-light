@@ -7,7 +7,6 @@ extends Control
 @export var galaxy_map_token: PackedScene
 var intro_dialogue: bool = false
 var fade_mode: int = -1
-var cursor_speed: float = 250
 var galaxy_map_showing: bool = false
 var dialogue_showing: bool = true
 var max_option: int = 3
@@ -32,16 +31,106 @@ var switch_weapon: Vector2i = Vector2i(0, 0)
 var warping = false
 var prev_mouse_pos: Vector2
 var item_catalogue = [0, 0, 0, 0]
-var ship_catalogue = [[1, "ship name", "desc"], [1, "ship name", "desc"], [1, "ship name", "desc"]]
+var ship_catalogue = [
+	{"Type": 1, "Name": "ship name", "Description": "desc"},
+	{"Type": 1, "Name": "ship name", "Description": "desc"},
+	{"Type": 1, "Name": "ship name", "Description": "desc"}
+	]
 var current_shopfront: int = 0
 var hovered_shop_button: int = 0
 var selected_shop_side: int = 0
 
 const HOVERED_COLOUR: Color = Color(0.0, 0.749, 1.0)
+const BLUE_PANEL_HOVER: Color = Color8(100, 100, 160)
+const BLUE_PANEL_NORMAL: Color = Color8(0, 0, 160)
+const RED_PANEL_HOVER: Color = Color8(160, 100, 100)
+const RED_PANEL_NORMAL: Color = Color8(160, 0, 0)
 const SHIP_CODES: Array[String] = ["CMND", "FGHT", "SHLD", "INFL", "REPR", "SCAN", "RLAY", "DRON", "FGHT", "REPR"]
 const TARGETING_OPTIONS: Array[String] = ["CANNOT TARGET", "TARGET", "CANNOT TARGET", "BOARD", "REPAIR", "MONITOR", "CANNOT TARGET", "DEPLOY"]
 const ACTIVE_TEXT: Array[String] = ["CURRENTLY INACTIVE", "CURRENTLY ACTIVE"]
 const MISC_TEXT: Array[String] = ["FLEET INVENTORY", "EQUIPPED WEAPONS", "N/A", "N/A", "N/A", "N/A", "N/A", "DEPLOYED DRONES"]
+const TECH_REWARDS: Vector2i = Vector2i(4, 8)
+const FUEL_REWARDS: Vector2i = Vector2i(3, 4)
+const REWARD_CHANCES: int = 19
+const SELL_MODIFIER: float = 0.5
+const RESOURCE_COLOUR_LERP: float = 0.05
+const SOLAR_FLARE_LERP: float = 0.02
+const TIME_SCALE_LERP: float = 0.15
+const CURSOR_LERP: float = 0.2
+const FPS_LABEL: String = "FPS: "
+const TECH_LABEL: String = "TECH: "
+const FUEL_LABEL: String = "FUEL: "
+const CHARGE_WAITING_TEXT: String = "WAITING"
+const WARP_CHARGING_TEXT: String = "WARP CHARGING"
+const WARP_CHARGED_TEXT: String = "WARP CHARGED"
+const MAX_WARP_CHARGE: float = 100.0
+const MAP_CURSOR_SPEED: float = 400.0
+const CURSOR_SPEED: float = 250.0
+const WARP_STAGE_A_TIME: float = 0.5
+const WARP_STAGE_B_TIME: float = 3.0
+const WARP_STAGE_C_TIME: float = 4.0
+const MAP_TOKENS_RANGE: Vector2 = Vector2(-2040.0, 45.0)
+const MAP_CURSOR_MIN: Vector2 = Vector2(385.0, 256.0)
+const MAP_CURSOR_MAX: Vector2 = Vector2(824.0, 1535.0)
+const ACTION_MENU_VERTICAL: int = 4
+const AGILITY_FACTOR: float = 100.0
+const SHIP_LIST_SEPARATOR: String = ": "
+const HULL_STRENGTH_TEXT: String = "HULL STRENGTH: "
+const CURRENT_HULL_TEXT: String = "CURRENT HULL: "
+const AGILITY_TEXT: String = "AGILITY: "
+const CURRENT_LEVEL_TEXT: String = "CURRENT LEVEL: "
+const UPGRADE_COST_TEXT: String = "UPGRADE COST: "
+const INVENTORY_CAPACITY_TEXT: String = "INVENTORY CAPACITY: "
+const ITEM_TEXT: String = " ITEM: "
+const TYPE_TEXT: String = " TYPE: "
+const VALUE_TEXT: String = " VALUE: "
+const TECH_SUFFIX: String = " TECH"
+const WEAPON_SLOTS_TEXT: String = "WEAPON SLOTS: "
+const DAMAGE_TEXT: String = " DAMAGE: "
+const RELOAD_TEXT: String = " RELOAD: "
+const DRONE_SLOTS_TEXT: String = "DRONE SLOTS: "
+const DRONE_TEXT: String = " DRONE: "
+const HULL_TEXT: String = " HULL: "
+const MAX_INSTRUCTION: int = 2
+const NAME_TEXT: String = " NAME: "
+const HULL_SUFFIX: String = " HULL"
+const SECONDS_SUFFIX: String = " SECONDS"
+const SELL_VALUE_TEXT: String = " SELL VALUE: "
+const LEVEL_TEXT: String = " LEVEL: "
+const MAP_AUTO_SCROLL_THRESHOLD: float = 900.0
+const MAP_SCROLL_OFFSET: float = 600.0
+const MAP_DEFAULT_SCROLL: float = 45.0
+const LOSE_DIALOGUE_ID: int = 3
+
+enum ActionMenu {
+	TOP_LEFT,
+	TOP_RIGHT = 3,
+	BOTTOM_LEFT,
+	BOTTOM_RIGHT = 7
+}
+
+enum InfoColumn {
+	SHIPS,
+	INFO_TABS,
+	INFO_VIEW
+}
+
+enum InfoTabs {
+	GENERAL,
+	LEVELING,
+	INSTRUCTIONS,
+	MISC
+}
+
+enum DialogueTypes {
+	WARP_IN,
+	RESPONSE,
+	ENCOUNTER_WIN,
+	INTRO,
+	TUTORIAL,
+	ITEM_WIN,
+	ENEMY_RUNNING
+}
 
 var control_tip_texts: Dictionary = {
 	"AccessShop": ["ACCESS SHOP (B)", "ACCESS SHOP (B5)"],
@@ -68,15 +157,15 @@ var shop_ship_descriptions: Array[String] = [
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[1, "tutorial", "enemy presence"],
 	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
-	[["Noted.", ["dialogue_set_up", 4, 6]]]
+	[["Noted.", ["dialogue_set_up", DialogueTypes.INTRO, 6]]]
 	],
 	[[2, "tutorial", "enemy presence"],
 	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
-	[["Noted.", ["dialogue_set_up", 4, 6]]]
+	[["Noted.", ["dialogue_set_up", DialogueTypes.INTRO, 6]]]
 	],
 	[[3, "tutorial", "enemy presence"],
 	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
-	[["Noted.", ["dialogue_set_up", 4, 6]]]
+	[["Noted.", ["dialogue_set_up", DialogueTypes.INTRO, 6]]]
 	],
 	[[1, "tutorial", "shop presence"],
 	"This star system has a shop present within it. You can initiate trade to purchase or sell weapons and starships in order to improve your fleet. Have a look around with the tech you have right now and see if you can afford anything.",
@@ -136,19 +225,19 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(10, 25), 0, true, 0, 1]], ["Leave it alone for now.", ["close", false]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(10, 25), 0, true, 0]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["dialogue_set_up", 1, 1]], ["Leave it alone for now.", ["close", false]]]
+	[["Scrap what's left of the freighter hulls.", ["dialogue_set_up", DialogueTypes.RESPONSE, 1]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(25, 40), 0, true, 2, 1]], ["Leave it alone for now.", ["close", false]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(25, 40), 0, true, 2]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1],
 	"As you warp into the system, your fleet finds itself surrounded by a number of large wreckages. It looks like pirates must have found good prey in a convoy of freighters.",
-	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(3, 16), 1, true, 4, 1]], ["Leave it alone for now.", ["close", false]]]
+	[["Scrap what's left of the freighter hulls.", ["resources", randi_range(3, 16), 1, true, 4]], ["Leave it alone for now.", ["close", false]]]
 	],
 	[[1, "enemy presence"],
 	"As your fleet exits warp, you're greeted by a radio transmission from an unknown starship fleet.\n\"Ahh... I see we've been blessed by the presence of a resource-rich fleet. We'll be taking that, thank you very much.\"\nAs communications are cut, the pirate fleet starts charging its weapons!",
@@ -280,28 +369,28 @@ var intro_dialogues: Array[Array] = [
 	[["Let's go.", ["close", false]]]
 	],
 	["Welcome, commander, to Fatal Fleet! You have been given authority of a small fleet of ships, and are expected to be able to adequately lead those ships through the cosmos.\nIn this tutorial, you will learn the ropes of fleet command, including the basics of combat.",
-	[["Continue", ["dialogue_set_up", 4, 0]]]
+	[["Continue", ["dialogue_set_up", DialogueTypes.INTRO, 0]]]
 	],
 ]
 
 var tutorial_dialogues: Array[Array] = [
 	["First and foremost, the right side of your interface shows your controls and their related keyboard shortcuts. You can hide or show this at will.\nAt the top of your interface, you can see how much \"tech\" (galactic currency) you currently have, as well as how much fuel you have ready to use. Each ship in your fleet requires one fuel canister to jump between star systems. The bar to the right of that displays your fleet's current warp charge progress. You will not be able to travel to another system until your warp drives have finished charging.\nYou can hide the entire interface at any time by holding \"~\".",
-	[["OK.", ["dialogue_set_up", 4, 1]], ["Back", ["dialogue_set_up", 3, 1]]]
+	[["OK.", ["dialogue_set_up", DialogueTypes.TUTORIAL, 1]], ["Back", ["dialogue_set_up", DialogueTypes.INTRO, 1]]]
 	],
 	["A crucial part of your toolset is the Fleet Information Menu. This panel can be accessed by pressing the Info Menu button and contains useful data about the starships in your fleet. You can also give instructions to them, upgrade them or possibly change up their equipment.",
-	[["OK.", ["dialogue_set_up", 4, 2]], ["Back", ["dialogue_set_up", 4, 0]]]
+	[["OK.", ["dialogue_set_up", DialogueTypes.TUTORIAL, 2]], ["Back", ["dialogue_set_up", DialogueTypes.TUTORIAL, 0]]]
 	],
-	["Speaking of starships, there are eight different types you should know about.\nCMND: Command Ship - Your fleet's flagship, within which you are seated. It is imperative that you protect this ship.\nFGHT: Fighter - Engages with and destroys threats as instructed by you. You can change which weapons it uses in the Fleet Info Menu.\nSHLD: Shield Ship: Protects your fleet from incoming projectiles. Can be bypassed by some projectiles and will need to recharge upon successfully blocking one.",
-	[["Continue", ["dialogue_set_up", 4, 3]], ["Back", ["dialogue_set_up", 4, 1]]]
+	["Speaking of starships, there are eight different types you should know about.\nCMND: Command Ship - Your fleet's flagship, within which you are seated. It is imperative that you protect this ship.\nFGHT: Fighter - Engages with and destroys threats as instructed by you. You can change which weapons it uses in the Fleet Info Menu.\nSHLD: Shield Ship - Protects your fleet from incoming projectiles. Can be bypassed by some projectiles and will need to recharge upon successfully blocking one.",
+	[["Continue", ["dialogue_set_up", DialogueTypes.TUTORIAL, 3]], ["Back", ["dialogue_set_up", DialogueTypes.TUTORIAL, 1]]]
 	],
-	["INFL - Infiltration Ship: Teleports troops onto enemy starships to temporarily disable them.\nREPR - Repair Ship: Gradually repairs your starships' hulls in and out of combat.\nSCAN - Scanner Ship: Scans enemy starships, revealing information about them and searching for weak spots.",
-	[["Continue", ["dialogue_set_up", 4, 4]], ["Back", ["dialogue_set_up", 4, 2]]]
+	["INFL: Infiltration Ship - Teleports troops onto enemy starships to temporarily disable them.\nREPR: Repair Ship - Gradually repairs your starships' hulls in and out of combat.\nSCAN: Scanner Ship - Scans enemy starships, revealing information about them and searching for weak spots.",
+	[["Continue", ["dialogue_set_up", DialogueTypes.TUTORIAL, 4]], ["Back", ["dialogue_set_up", DialogueTypes.TUTORIAL, 2]]]
 	],
-	["RLAY - Relay Ship: Boosts your warp drive charge rate and increases the distance you can travel in one jump.\nDRON - Drone Command Ship: Deploys drones to autonomously aid you in battle. Can operate fighter or repair drones, depending on its upgrade level.",
-	[["OK.", ["dialogue_set_up", 4, 5]], ["Back", ["dialogue_set_up", 4, 3]]]
+	["RLAY: Relay Ship - Boosts your warp drive charge rate and increases the distance you can travel in one jump.\nDRON: Drone Command Ship - Deploys drones to autonomously aid you in battle. Can operate fighter or repair drones, depending on its upgrade level.",
+	[["OK.", ["dialogue_set_up", DialogueTypes.TUTORIAL, 5]], ["Back", ["dialogue_set_up", DialogueTypes.TUTORIAL, 3]]]
 	],
 	["That's all for now. Have a play around with the menus and, when ready, open the Galaxy Map with the Galaxy Map button to warp to the next system.",
-	[["OK.", ["close", false]], ["Back", ["dialogue_set_up", 4, 4]]]
+	[["OK.", ["close", false]], ["Back", ["dialogue_set_up", DialogueTypes.TUTORIAL, 4]]]
 	],
 	["After pausing time, open the Ship Action Menu with the Action Menu button to give each of your ships a target to focus on.\nRepair ships will focus on starships within your own fleet.",
 	[["OK.", ["close", true]]]
@@ -331,13 +420,13 @@ func _process(delta: float) -> void:
 		$FPS.show()
 	else:
 		$FPS.hide()
-	$FPS.text = "FPS: " + str(1 / delta)
+	$FPS.text = FPS_LABEL + str(1 / delta)
 	
 	# Update fuel and resource UI elements
-	%ResourcesLabel.text = "TECH: " + str(Global.resources)
-	%ResourcesLabel.add_theme_color_override("font_color", lerp(%ResourcesLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
-	%FuelLabel.text = "FUEL: " + str(Global.fuel)
-	%FuelLabel.add_theme_color_override("font_color", lerp(%FuelLabel.get_theme_color("font_color"), Color(1, 1, 1), 0.05))
+	%ResourcesLabel.text = TECH_LABEL + str(Global.resources)
+	%ResourcesLabel.add_theme_color_override("font_color", lerp(%ResourcesLabel.get_theme_color("font_color"), Color.WHITE, RESOURCE_COLOUR_LERP))
+	%FuelLabel.text = FUEL_LABEL + str(Global.fuel)
+	%FuelLabel.add_theme_color_override("font_color", lerp(%FuelLabel.get_theme_color("font_color"), Color.WHITE, RESOURCE_COLOUR_LERP))
 	
 	%ChargeProgress.value = main.warp_charge
 	
@@ -345,7 +434,7 @@ func _process(delta: float) -> void:
 	$ScreenFade.color.a += fade_mode * delta
 	$ScreenFade.color.a = clamp($ScreenFade.color.a, 0, 1)
 	
-	$SolarFlareFlash.self_modulate.a = lerp($SolarFlareFlash.self_modulate.a, 0.0, 0.02)
+	$SolarFlareFlash.self_modulate.a = lerp($SolarFlareFlash.self_modulate.a, 0.0, SOLAR_FLARE_LERP)
 	
 	if (Input.is_action_just_pressed("action menu") and not Global.joystick_control) or (Global.joystick_control and (Input.is_action_just_pressed("2") or Input.is_action_just_pressed("B"))):
 		_action_menu()
@@ -390,20 +479,20 @@ func _process(delta: float) -> void:
 			# Appropriately colour the selected option
 			for i in max_option:
 				if i + 1 == current_dialogue_selection:
-					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(0, 0.75, 1.0))
+					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", HOVERED_COLOUR)
 				else:
-					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color.WHITE)
 		else:
 			# Check for numerical inputs
 			for i in max_option:
 				if Input.is_action_just_pressed(str(i + 1)) and ready_to_select:
 					%Options.get_node("Option" + str(i + 1)).emit_signal("pressed")
-		%ChargeProgress/Label.text = "WAITING"
+		%ChargeProgress/Label.text = CHARGE_WAITING_TEXT
 	else:
-		if main.warp_charge < 100:
-			%ChargeProgress/Label.text = "WARP CHARGING"
+		if main.warp_charge < MAX_WARP_CHARGE:
+			%ChargeProgress/Label.text = WARP_CHARGING_TEXT
 		else:
-			%ChargeProgress/Label.text = "WARP CHARGED"
+			%ChargeProgress/Label.text = WARP_CHARGED_TEXT
 	
 	for tip in $ControlTips/VBoxContainer/Main.get_children():
 		tip.get_child(0).text = control_tip_texts[tip.name][int(Global.joystick_control)]
@@ -413,10 +502,10 @@ func _process(delta: float) -> void:
 		$ControlTips/VBoxContainer/HideControlTips/Button.text = control_tip_texts["ShowControlTips"][int(Global.joystick_control)]
 	
 	if time_paused:
-		Engine.time_scale = lerp(Engine.time_scale, 0.0, 0.15)
+		Engine.time_scale = lerp(Engine.time_scale, 0.0, TIME_SCALE_LERP)
 		$TimeIndicator.show()
 	else:
-		Engine.time_scale = lerp(Engine.time_scale, 1.0, 0.15)
+		Engine.time_scale = lerp(Engine.time_scale, 1.0, TIME_SCALE_LERP)
 		$TimeIndicator.hide()
 	
 	# Galaxy map stuff
@@ -428,28 +517,32 @@ func _process(delta: float) -> void:
 		$GalaxyMapControls.show()
 		# Left/right scrolling
 		if Input.is_action_pressed("right2"):
-			$GalaxyMap/Tokens.position.x -= 400 * delta * Global.joystick_sens
+			$GalaxyMap/Tokens.position.x -= MAP_CURSOR_SPEED * delta * Global.joystick_sens
 		if Input.is_action_pressed("left2"):
-			$GalaxyMap/Tokens.position.x += 400 * delta * Global.joystick_sens
-		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")).normalized() * cursor_speed * Global.joystick_sens * delta
+			$GalaxyMap/Tokens.position.x += MAP_CURSOR_SPEED * delta * Global.joystick_sens
+		%Cursor.position += Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")).normalized() * CURSOR_SPEED * Global.joystick_sens * delta
 		# Move the map cursor if the mouse is detected to be moving
 		if get_global_mouse_position() != prev_mouse_pos and not Global.joystick_control:
 			%Cursor.global_position = get_global_mouse_position()
 		# Cursor snapping
 		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
 			var in_warp_range: bool = false
-			var closest_token: Array = [0, 400]
+			var closest_token: Dictionary = {"No": 0, "Distance": 400.0, "id": 0}
 			var n: int = 0
 			for token in %Cursor.get_overlapping_areas():
-				var x = [n, %Cursor.position.distance_squared_to(token.position), token.id]
-				if x[1] < closest_token[1]:
+				var x: Dictionary = {
+					"No": n,
+					"Distance": %Cursor.position.distance_squared_to(token.position),
+					"id": token.id
+					}
+				if x["Distance"] < closest_token["Distance"]:
 					closest_token = x
 					if token.position.distance_to(Global.system_position) <= Global.jump_distance:
 						in_warp_range = true
 				n += 1
-			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, 0.2)
+			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, CURSOR_LERP)
 			# Warping input
-			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token[2] != Global.current_system and Global.fuel >= len(Global.fleet):
+			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token["id"] != Global.current_system and Global.fuel >= len(Global.fleet):
 				$PressSFX.play()
 				if "shop presence" in main.system_properties:
 					Global.galaxy_data[Global.current_system]["item shop"] = item_catalogue
@@ -457,7 +550,7 @@ func _process(delta: float) -> void:
 				if "enemy presence" in main.system_properties:
 					Global.galaxy_data[Global.current_system]["enemies"] = []
 					for enemy in hostile_ships.get_children():
-						if enemy.type == 7:
+						if enemy.type == Global.StarshipTypes.DRONE_COMMAND:
 							Global.galaxy_data[Global.current_system]["enemies"].append([enemy.type, enemy.level, enemy.drones])
 						else:
 							Global.galaxy_data[Global.current_system]["enemies"].append([enemy.type, enemy.level, enemy.weapons])
@@ -469,19 +562,19 @@ func _process(delta: float) -> void:
 				Global.in_combat = false
 				Global.fuel -= len(Global.fleet)
 				_quantity_change(1, false)
-				Global.new_system(closest_token[2])
+				Global.new_system(closest_token["id"])
 				# Warp sequence
-				await get_tree().create_timer(0.5).timeout
+				await get_tree().create_timer(WARP_STAGE_A_TIME).timeout
 				main.commence_warp()
-				await get_tree().create_timer(3.0).timeout
+				await get_tree().create_timer(WARP_STAGE_B_TIME).timeout
 				fade_mode = 1
-				await get_tree().create_timer(4.0).timeout
+				await get_tree().create_timer(WARP_STAGE_C_TIME).timeout
 				Global.game_music_progress = main.get_node("MusicExplore").get_playback_position()
 				main.get_tree().reload_current_scene()
 		# Clamping
-		$GalaxyMap/Tokens.position.x = clampf($GalaxyMap/Tokens.position.x, -2040.0, 45.0)
-		%Cursor.global_position.x = clampf(%Cursor.global_position.x, 385.0, 1535.0)
-		%Cursor.global_position.y = clampf(%Cursor.global_position.y, 256.0, 824.0)
+		$GalaxyMap/Tokens.position.x = clampf($GalaxyMap/Tokens.position.x, MAP_TOKENS_RANGE.x, MAP_TOKENS_RANGE.y)
+		%Cursor.global_position.x = clampf(%Cursor.global_position.x, MAP_CURSOR_MIN.x, MAP_CURSOR_MAX.x)
+		%Cursor.global_position.y = clampf(%Cursor.global_position.y, MAP_CURSOR_MIN.y, MAP_CURSOR_MAX.y)
 	else:
 		# Not showing
 		$GalaxyMap.hide()
@@ -500,10 +593,10 @@ func _process(delta: float) -> void:
 					selected_ship += 1
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("down1"):
-					selected_ship += 4
+					selected_ship += ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
-					selected_ship -= 4
+					selected_ship -= ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("left2"):
 					hovered_target -= 1
@@ -512,66 +605,66 @@ func _process(delta: float) -> void:
 					hovered_target += 1
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("down2"):
-					hovered_target += 4
+					hovered_target += ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("up2"):
-					hovered_target -= 4
+					hovered_target -= ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 				selected_ship = clampi(selected_ship, 0, friendly_ships.get_child_count() - 1)
 				select_ship()
 			elif left_action_menu:
 				if Input.is_action_just_pressed("left1"):
-					if hovered_ship == 0 and %ActionTargetShips/GridContainer/Ship3.visible:
+					if hovered_ship == ActionMenu.TOP_LEFT and %ActionTargetShips/GridContainer/Ship3.visible:
 						left_action_menu = false
-						hovered_target = 3
-					elif hovered_ship == 4 and %ActionTargetShips/GridContainer/Ship7.visible:
+						hovered_target = ActionMenu.TOP_RIGHT
+					elif hovered_ship == ActionMenu.BOTTOM_LEFT and %ActionTargetShips/GridContainer/Ship7.visible:
 						left_action_menu = false
-						hovered_target = 7
+						hovered_target = ActionMenu.BOTTOM_RIGHT
 					else:
 						hovered_ship -= 1
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1"):
-					if hovered_ship == 3 and %ActionTargetShips/GridContainer/Ship0.visible:
+					if hovered_ship == ActionMenu.TOP_RIGHT and %ActionTargetShips/GridContainer/Ship0.visible:
 						left_action_menu = false
-						hovered_target = 0
-					elif hovered_ship == 7 and %ActionTargetShips/GridContainer/Ship4.visible:
+						hovered_target = ActionMenu.TOP_LEFT
+					elif hovered_ship == ActionMenu.BOTTOM_RIGHT and %ActionTargetShips/GridContainer/Ship4.visible:
 						left_action_menu = false
-						hovered_target = 4
+						hovered_target = ActionMenu.BOTTOM_LEFT
 					else:
 						hovered_ship += 1
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("down1"):
-					hovered_ship += 4
+					hovered_ship += ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
-					hovered_ship -= 4
+					hovered_ship -= ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 			elif not left_action_menu:
 				if Input.is_action_just_pressed("left1"):
-					if hovered_target == 0 and %ActionFriendlyShips/GridContainer/Ship3.visible:
+					if hovered_target == ActionMenu.TOP_LEFT and %ActionFriendlyShips/GridContainer/Ship3.visible:
 						left_action_menu = true
-						hovered_ship = 3
-					elif hovered_target == 4 and %ActionFriendlyShips/GridContainer/Ship7.visible:
+						hovered_ship = ActionMenu.TOP_RIGHT
+					elif hovered_target == ActionMenu.BOTTOM_LEFT and %ActionFriendlyShips/GridContainer/Ship7.visible:
 						left_action_menu = true
-						hovered_ship = 7
+						hovered_ship = ActionMenu.BOTTOM_RIGHT
 					else:
 						hovered_target -= 1
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("right1"):
-					if hovered_target == 3:
+					if hovered_target == ActionMenu.TOP_RIGHT:
 						left_action_menu = true
-						hovered_ship = 0
-					elif hovered_target == 7 and %ActionFriendlyShips/GridContainer/Ship4.visible:
+						hovered_ship = ActionMenu.TOP_LEFT
+					elif hovered_target == ActionMenu.BOTTOM_RIGHT and %ActionFriendlyShips/GridContainer/Ship4.visible:
 						left_action_menu = true
-						hovered_ship = 4
+						hovered_ship = ActionMenu.BOTTOM_LEFT
 					else:
 						hovered_target += 1
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("down1"):
-					hovered_target += 4
+					hovered_target += ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 				if Input.is_action_just_pressed("up1"):
-					hovered_target -= 4
+					hovered_target -= ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 			hovered_ship = clamp(hovered_ship, 0, friendly_ships.get_child_count() - 1)
 		for i in %ActionTargetShips/GridContainer.get_children():
@@ -579,7 +672,7 @@ func _process(delta: float) -> void:
 		for i in %ActionFriendlyShips/GridContainer.get_children():
 			i.hide()
 		var index: int = 0
-		if targeting_mode == 1 or targeting_mode == 3 or targeting_mode == 5:
+		if targeting_mode in Global.ENEMY_TARGETERS:
 			var hostiles_count: int = hostile_ships.get_child_count()
 			if hostiles_count > 0:
 				%ActionTargetShips/NoTargets.hide()
@@ -589,9 +682,9 @@ func _process(delta: float) -> void:
 					var stylebox: Resource = box.get_theme_stylebox("panel")
 					box.get_node("Code").text = SHIP_CODES[ship.type]
 					if index == hovered_target and (Global.joystick_control and (Global.dual_joysticks or (not Global.dual_joysticks and not left_action_menu)) or not Global.joystick_control):
-						stylebox.border_color = Color8(100, 100, 160)
+						stylebox.border_color = BLUE_PANEL_HOVER
 					else:
-						stylebox.border_color = Color8(0, 0, 160)
+						stylebox.border_color = BLUE_PANEL_NORMAL
 					if selected_ship < friendly_ships.get_child_count():
 						var friendly: Node3D = friendly_ships.get_child(selected_ship)
 						if friendly != null:
@@ -604,16 +697,16 @@ func _process(delta: float) -> void:
 						index += 1
 			else:
 				%ActionTargetShips/NoTargets.show()
-		elif targeting_mode == 4:
+		elif targeting_mode == Global.StarshipTypes.REPAIR:
 			%ActionTargetShips/NoTargets.hide()
 			for ship in friendly_ships.get_children():
 				var box: PanelContainer = %ActionTargetShips/GridContainer.get_child(index)
 				var stylebox: Resource = box.get_theme_stylebox("panel")
 				box.get_node("Code").text = SHIP_CODES[ship.type]
 				if index == hovered_target and (Global.joystick_control and (Global.dual_joysticks or (not Global.dual_joysticks and not left_action_menu)) or not Global.joystick_control):
-					stylebox.border_color = Color8(100, 100, 160)
+					stylebox.border_color = BLUE_PANEL_HOVER
 				else:
-					stylebox.border_color = Color8(0, 0, 160)
+					stylebox.border_color = BLUE_PANEL_NORMAL
 				var friendly: Node3D = friendly_ships.get_child(selected_ship)
 				if friendly != null:
 					if friendly.target != null:
@@ -632,9 +725,9 @@ func _process(delta: float) -> void:
 			box.get_node("Code").text = SHIP_CODES[ship.type]
 			#box.set_meta("type", ship.type)
 			if index == hovered_ship and ((Global.joystick_control and not Global.dual_joysticks and left_action_menu) or not Global.joystick_control):
-				stylebox.border_color = Color8(160, 100, 100)
+				stylebox.border_color = RED_PANEL_HOVER
 			else:
-				stylebox.border_color = Color8(160, 0, 0)
+				stylebox.border_color = RED_PANEL_NORMAL
 			if index == selected_ship:
 				stylebox.draw_center = true
 			else:
@@ -663,21 +756,21 @@ func _process(delta: float) -> void:
 			if index < fleet_size:
 				var ship: Node3D = friendly_ships.get_child(index)
 				button.show()
-				button.get_child(0).text = SHIP_CODES[ship.type] + ": " + ship.ship_name.to_upper()
+				button.get_child(0).text = SHIP_CODES[ship.type] + SHIP_LIST_SEPARATOR + ship.ship_name.to_upper()
 				var stylebox: Resource = button.get_theme_stylebox("panel")
 				if index == hovered_at_ship_info and (not Global.joystick_control or (Global.joystick_control and info_menu_column == 0)):
-					stylebox.border_color = Color8(160, 100, 100)
+					stylebox.border_color = RED_PANEL_HOVER
 				else:
-					stylebox.border_color = Color8(160, 0, 0)
+					stylebox.border_color = RED_PANEL_NORMAL
 				if index == looking_at_ship_info:
 					stylebox.draw_center = true
-					%Information/General/HullStrength/Label.text = "HULL STRENGTH: " + str(ship.hull_strength)
-					%Information/General/Hull/Label.text = "CURRENT HULL: " + str(ship.hull)
-					%Information/General/Agility/Label.text = "AGILITY: " + str(ship.agility * 100) + "%"
-					%Information/General/Status/Label.text = "STATUS: OK"
-					%Information/Leveling/CurrentLevel/Label.text = "CURRENT LEVEL: " + str(ship.level)
-					if ship.level < 3 and not Global.in_combat:
-						%Information/Leveling/Cost/Label.text = "UPGRADE COST: " + str(Global.upgrade_costs[ship.type][ship.level - 1])
+					%Information/General/HullStrength/Label.text = HULL_STRENGTH_TEXT + str(ship.hull_strength)
+					%Information/General/Hull/Label.text = CURRENT_HULL_TEXT + str(ship.hull)
+					%Information/General/Agility/Label.text = AGILITY_TEXT + str(ship.agility * AGILITY_FACTOR) + "%"
+					%Information/General/Status/Label.text = Global.STATUS_MESSAGES[int(ship.attacked)]
+					%Information/Leveling/CurrentLevel/Label.text = CURRENT_LEVEL_TEXT + str(ship.level)
+					if ship.level < ship.MAX_LEVEL and not Global.in_combat:
+						%Information/Leveling/Cost/Label.text = UPGRADE_COST_TEXT + str(Global.upgrade_costs[ship.type][ship.level - 1])
 						%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
 						%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
 						%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
@@ -690,23 +783,23 @@ func _process(delta: float) -> void:
 					%Information/Misc/RelatedStat/Label.text = MISC_TEXT[ship.type]
 					for child in %MiscMenu.get_children():
 						child.hide()
-					if ship.type == 0:
+					if ship.type == Global.StarshipTypes.COMMAND_SHIP:
 						%Information/Misc/RelatedStat2.show()
 						%MiscMenu/CommandShip.show()
-						%Information/Misc/RelatedStat2/Label.text = "INVENTORY CAPACITY: " + str(Global.max_inventory)
+						%Information/Misc/RelatedStat2/Label.text = INVENTORY_CAPACITY_TEXT + str(Global.max_inventory)
 						for child in %MiscMenu/CommandShip.get_children():
 							child.hide()
 						var child_index: int = 0
 						for item in Global.fleet_inventory:
 							%MiscMenu/CommandShip.get_child(child_index).show()
-							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Name").text = " ITEM: " + Global.weapon_list[item]["Name"]
-							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Type").text = " TYPE: " + Global.weapon_types[Global.weapon_list[item]["Type"]]
-							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Value").text = " VALUE: " + str(Global.weapon_list[item]["Cost"]) + " TECH"
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Name").text = ITEM_TEXT + Global.weapon_list[item]["Name"]
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Type").text = TYPE_TEXT + Global.weapon_types[Global.weapon_list[item]["Type"]]
+							%MiscMenu/CommandShip.get_child(child_index).get_node("Labels/Value").text = VALUE_TEXT + str(Global.weapon_list[item]["Cost"]) + TECH_SUFFIX
 							child_index += 1
-					elif ship.type == 1:
+					elif ship.type == Global.StarshipTypes.FIGHTER:
 						%Information/Misc/RelatedStat2.show()
 						%MiscMenu/Fighter.show()
-						%Information/Misc/RelatedStat2/Label.text = "WEAPON SLOTS: " + str(ship.level)
+						%Information/Misc/RelatedStat2/Label.text = WEAPON_SLOTS_TEXT + str(ship.level)
 						for child in %MiscMenu/Fighter.get_children():
 							child.hide()
 						var child_index: int = 0
@@ -714,15 +807,15 @@ func _process(delta: float) -> void:
 							%MiscMenu/Fighter.get_child(child_index).show()
 							%MiscMenu/Fighter.get_child(child_index + 1).show()
 							%MiscMenu/Fighter.get_child(child_index).get_node("HBoxContainer/Label").text = Global.weapon_list[weapon]["Name"]
-							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = " TYPE: " + str(Global.weapon_types[Global.weapon_list[weapon]["Type"]])
-							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = " DAMAGE: " + str(Global.weapon_list[weapon]["Damage"])
-							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").text = " RELOAD: " + str(Global.weapon_list[weapon]["Reload time"])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = TYPE_TEXT + str(Global.weapon_types[Global.weapon_list[weapon]["Type"]])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = DAMAGE_TEXT + str(Global.weapon_list[weapon]["Damage"])
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").text = RELOAD_TEXT + str(Global.weapon_list[weapon]["Reload time"])
 							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").show() # May have been hidden by the drone view
 							child_index += 2
-					elif ship.type == 7:
+					elif ship.type == Global.StarshipTypes.DRONE_COMMAND:
 						%Information/Misc/RelatedStat2.show()
 						%MiscMenu/Fighter.show()
-						%Information/Misc/RelatedStat2/Label.text = "DRONE SLOTS: " + str(ship.level)
+						%Information/Misc/RelatedStat2/Label.text = DRONE_SLOTS_TEXT + str(ship.level)
 						for child in %MiscMenu/Fighter.get_children():
 							child.hide()
 						var child_index: int = 0
@@ -730,9 +823,9 @@ func _process(delta: float) -> void:
 							%MiscMenu/Fighter.get_child(child_index).show()
 							%MiscMenu/Fighter.get_child(child_index + 1).show()
 							@warning_ignore("integer_division") # Always divisible by 2
-							%MiscMenu/Fighter.get_child(child_index).get_node("HBoxContainer/Label").text = "DRONE " + str((child_index / 2) + 1)
-							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = " TYPE: " + SHIP_CODES[Global.weapon_list[drone]["Ship type"]]
-							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = " HULL: " + str(Global.starship_base_stats[Global.weapon_list[drone]["Ship type"]]["Hull Strength"])
+							%MiscMenu/Fighter.get_child(child_index).get_node("HBoxContainer/Label").text = DRONE_TEXT + str((child_index / 2) + 1)
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Type").text = TYPE_TEXT + SHIP_CODES[Global.weapon_list[drone]["Ship type"]]
+							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Damage").text = HULL_TEXT + str(Global.starship_base_stats[Global.weapon_list[drone]["Ship type"]]["Hull Strength"])
 							%MiscMenu/Fighter.get_child(child_index + 1).get_node("Labels/Reload").hide()
 							child_index += 2
 					else:
@@ -751,7 +844,7 @@ func _process(delta: float) -> void:
 		get_tree().call_group("info menu buttons", "add_theme_color_override", "font_color", Color.WHITE)
 		# What the hell
 		if Global.joystick_control:
-			if info_menu_column == 0:
+			if info_menu_column == InfoColumn.SHIPS:
 				if Input.is_action_just_pressed("down1"):
 					looking_at_ship_info += 1
 					$HoverSFX.play()
@@ -763,7 +856,7 @@ func _process(delta: float) -> void:
 					$HoverSFX.play()
 				hovered_at_ship_info = looking_at_ship_info
 			var this_ship: Node3D = friendly_ships.get_child(looking_at_ship_info)
-			if info_menu_column == 1:
+			if info_menu_column == InfoColumn.INFO_TABS:
 				if Input.is_action_just_pressed("down1"):
 					info_showing += 1
 					$HoverSFX.play()
@@ -773,21 +866,21 @@ func _process(delta: float) -> void:
 				if Input.is_action_just_pressed("left1"):
 					info_menu_column -= 1
 					$HoverSFX.play()
-				if Input.is_action_just_pressed("right1") and ((info_showing == 1 and this_ship.level < 3) or info_showing == 2 or (info_showing == 3 and this_ship.type == 1)):
+				if Input.is_action_just_pressed("right1") and ((info_showing == InfoTabs.LEVELING and this_ship.level < this_ship.MAX_LEVEL) or info_showing == InfoTabs.INSTRUCTIONS or (info_showing == InfoTabs.MISC and (this_ship.type == Global.StarshipTypes.FIGHTER or this_ship.type == Global.StarshipTypes.DRONE_COMMAND))):
 					info_menu_column += 1
 					$HoverSFX.play()
-			elif info_menu_column == 2:
-				if info_showing == 1:
+			elif info_menu_column == InfoColumn.INFO_VIEW:
+				if info_showing == InfoTabs.LEVELING:
 					%Information/Leveling/Upgrade/Button.add_theme_color_override("font_color", HOVERED_COLOUR)
 					if Input.is_action_just_pressed("left1"):
 						info_menu_column -= 1
 						$HoverSFX.play()
 					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 						upgrade_ship()
-						if this_ship.level >= 3:
+						if this_ship.level >= this_ship.MAX_LEVEL:
 							info_menu_column -= 1
-				elif info_showing == 2:
-					if Input.is_action_just_pressed("down1") and hovered_instruction < 2:
+				elif info_showing == InfoTabs.INSTRUCTIONS:
+					if Input.is_action_just_pressed("down1") and hovered_instruction < MAX_INSTRUCTION:
 						hovered_instruction += 1
 						$HoverSFX.play()
 					if Input.is_action_just_pressed("up1") and hovered_instruction > 0:
@@ -800,11 +893,11 @@ func _process(delta: float) -> void:
 						info_menu_column -= 1
 						$HoverSFX.play()
 					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
-						if hovered_instruction < 2:
+						if hovered_instruction < MAX_INSTRUCTION:
 							ship_action(not bool(hovered_instruction))
 						else:
 							abandon_ship()
-				elif info_showing == 3:
+				elif info_showing == InfoTabs.MISC:
 					if Input.is_action_just_pressed("left1"):
 						if switch_weapon.x == 0:
 							info_menu_column -= 1
@@ -825,8 +918,8 @@ func _process(delta: float) -> void:
 							button.add_theme_color_override("font_color", HOVERED_COLOUR)
 							if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 								button.emit_signal("pressed")
-			info_showing = clampi(info_showing, 0, 3)
-			info_menu_column = clampi(info_menu_column, 0, 2)
+			info_showing = clampi(info_showing, 0, InfoTabs.MISC)
+			info_menu_column = clampi(info_menu_column, 0, InfoColumn.INFO_VIEW)
 		looking_at_ship_info = clampi(looking_at_ship_info, 0, friendly_ships.get_child_count() - 1)
 	else:
 		$FleetInfoMenu.hide()
@@ -842,21 +935,21 @@ func _process(delta: float) -> void:
 				var stylebox: Resource = child.get_theme_stylebox("panel")
 				if Global.joystick_control:
 					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 0:
-						stylebox.border_color = Color8(160, 100, 100)
+						stylebox.border_color = RED_PANEL_HOVER
 					else:
-						stylebox.border_color = Color8(160, 0, 0)
+						stylebox.border_color = RED_PANEL_NORMAL
 				elif index == hovered_shop_button:
-					stylebox.border_color = Color8(160, 100, 100)
+					stylebox.border_color = RED_PANEL_HOVER
 				else:
-					stylebox.border_color = Color8(160, 0, 0)
+					stylebox.border_color = RED_PANEL_NORMAL
 		var child_index: int = 1
 		for item in item_catalogue:
 			%ItemBuy.get_child(child_index).show()
-			%ItemBuy.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + Global.weapon_list[item]["Name"]
-			%ItemBuy.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + Global.weapon_types[Global.weapon_list[item]["Type"]]
-			%ItemBuy.get_child(child_index).get_node("Row/Col1/Damage").text = " DAMAGE: " + str(Global.weapon_list[item]["Damage"]) + " HULL"
-			%ItemBuy.get_child(child_index).get_node("Row/Col1/Reload").text = " RELOAD: " + str(Global.weapon_list[item]["Reload time"]) + " SECONDS"
-			%ItemBuy.get_child(child_index).get_node("Row/Col1/Value").text = " VALUE: " + str(Global.weapon_list[item]["Cost"]) + " TECH"
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Name").text = NAME_TEXT + Global.weapon_list[item]["Name"]
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Type").text = TYPE_TEXT + Global.weapon_types[Global.weapon_list[item]["Type"]]
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Damage").text = DAMAGE_TEXT + str(Global.weapon_list[item]["Damage"]) + HULL_SUFFIX
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Reload").text = RELOAD_TEXT + str(Global.weapon_list[item]["Reload time"]) + SECONDS_SUFFIX
+			%ItemBuy.get_child(child_index).get_node("Row/Col1/Value").text = VALUE_TEXT + str(Global.weapon_list[item]["Cost"]) + TECH_SUFFIX
 			%ItemBuy.get_child(child_index).get_node("Row/Col2/Text").text = Global.weapon_list[item]["Description"]
 			child_index += 1
 		
@@ -868,21 +961,21 @@ func _process(delta: float) -> void:
 				var stylebox: Resource = child.get_theme_stylebox("panel")
 				if Global.joystick_control:
 					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 1:
-						stylebox.border_color = Color8(100, 100, 160)
+						stylebox.border_color = BLUE_PANEL_HOVER
 					else:
-						stylebox.border_color = Color8(0, 0, 160)
+						stylebox.border_color = BLUE_PANEL_NORMAL
 				elif index + %ItemBuy.get_child_count() == hovered_shop_button:
-					stylebox.border_color = Color8(100, 100, 160)
+					stylebox.border_color = BLUE_PANEL_HOVER
 				else:
-					stylebox.border_color = Color8(0, 0, 160)
+					stylebox.border_color = BLUE_PANEL_NORMAL
 		child_index = 1
 		for item in Global.fleet_inventory:
 			%ItemSell.get_child(child_index).show()
-			%ItemSell.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + Global.weapon_list[item]["Name"]
-			%ItemSell.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + Global.weapon_types[Global.weapon_list[item]["Type"]]
-			%ItemSell.get_child(child_index).get_node("Row/Col1/Value").text = " SELL VALUE: " + str((ceil(Global.weapon_list[item]["Cost"]) / 2)) + " TECH"
-			%ItemSell.get_child(child_index).get_node("Row/Col2/Damage").text = " DAMAGE: " + str(Global.weapon_list[item]["Damage"]) + " HULL"
-			%ItemSell.get_child(child_index).get_node("Row/Col2/Reload").text = " RELOAD: " + str(Global.weapon_list[item]["Reload time"]) + " SECONDS"
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Name").text = NAME_TEXT + Global.weapon_list[item]["Name"]
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Type").text = TYPE_TEXT + Global.weapon_types[Global.weapon_list[item]["Type"]]
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Value").text = SELL_VALUE_TEXT + str((ceil(Global.weapon_list[item]["Cost"]) * SELL_MODIFIER)) + TECH_SUFFIX
+			%ItemSell.get_child(child_index).get_node("Row/Col2/Damage").text = DAMAGE_TEXT + str(Global.weapon_list[item]["Damage"]) + HULL_SUFFIX
+			%ItemSell.get_child(child_index).get_node("Row/Col2/Reload").text = RELOAD_TEXT + str(Global.weapon_list[item]["Reload time"]) + SECONDS_SUFFIX
 			child_index += 1
 		
 		# Ship buying UI
@@ -893,20 +986,20 @@ func _process(delta: float) -> void:
 				var stylebox: Resource = child.get_theme_stylebox("panel")
 				if Global.joystick_control:
 					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 0:
-						stylebox.border_color = Color8(160, 100, 100)
+						stylebox.border_color = RED_PANEL_HOVER
 					else:
-						stylebox.border_color = Color8(160, 0, 0)
+						stylebox.border_color = RED_PANEL_NORMAL
 				elif index == hovered_shop_button:
-					stylebox.border_color = Color8(160, 100, 100)
+					stylebox.border_color = RED_PANEL_HOVER
 				else:
-					stylebox.border_color = Color8(160, 0, 0)
+					stylebox.border_color = RED_PANEL_NORMAL
 		child_index = 1
 		for ship in ship_catalogue:
 			%ShipBuy.get_child(child_index).show()
-			%ShipBuy.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + ship[1]
-			%ShipBuy.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + SHIP_CODES[ship[0]]
-			%ShipBuy.get_child(child_index).get_node("Row/Col1/Value").text = " VALUE: " + str(Global.starship_base_stats[ship[0]]["Cost"]) + " TECH"
-			%ShipBuy.get_child(child_index).get_node("Row/Col2/Text").text = ship[2]
+			%ShipBuy.get_child(child_index).get_node("Row/Col1/Name").text = NAME_TEXT + ship["Name"]
+			%ShipBuy.get_child(child_index).get_node("Row/Col1/Type").text = TYPE_TEXT + SHIP_CODES[ship["Type"]]
+			%ShipBuy.get_child(child_index).get_node("Row/Col1/Value").text = VALUE_TEXT + str(Global.starship_base_stats[ship["Type"]]["Cost"]) + TECH_SUFFIX
+			%ShipBuy.get_child(child_index).get_node("Row/Col2/Text").text = ship["Description"]
 			child_index += 1
 		
 		# Ship selling UI
@@ -917,22 +1010,22 @@ func _process(delta: float) -> void:
 				var stylebox: Resource = child.get_theme_stylebox("panel")
 				if Global.joystick_control:
 					if int(str(child.name)[-1]) - 1 == hovered_shop_button and selected_shop_side == 1:
-						stylebox.border_color = Color8(100, 100, 160)
+						stylebox.border_color = BLUE_PANEL_HOVER
 					else:
-						stylebox.border_color = Color8(0, 0, 160)
+						stylebox.border_color = BLUE_PANEL_NORMAL
 				elif index + %ShipBuy.get_child_count() == hovered_shop_button:
-					stylebox.border_color = Color8(100, 100, 160)
+					stylebox.border_color = BLUE_PANEL_HOVER
 				else:
-					stylebox.border_color = Color8(0, 0, 160)
+					stylebox.border_color = BLUE_PANEL_NORMAL
 		child_index = 1
 		for ship in friendly_ships.get_children():
-			if ship.type == 0:
+			if ship.type == Global.StarshipTypes.COMMAND_SHIP:
 				continue
 			%ShipSell.get_child(child_index).show()
-			%ShipSell.get_child(child_index).get_node("Row/Col1/Name").text = " NAME: " + ship.ship_name
-			%ShipSell.get_child(child_index).get_node("Row/Col1/Type").text = " TYPE: " + SHIP_CODES[ship.type]
-			%ShipSell.get_child(child_index).get_node("Row/Col2/Level").text = " LEVEL: " + str(ship.level)
-			%ShipSell.get_child(child_index).get_node("Row/Col2/Value").text = " SELL VALUE: " + str((ceil(Global.starship_base_stats[ship.type]["Cost"]) / 2) * ship.level) + " TECH"
+			%ShipSell.get_child(child_index).get_node("Row/Col1/Name").text = NAME_TEXT + ship.ship_name
+			%ShipSell.get_child(child_index).get_node("Row/Col1/Type").text = TYPE_TEXT + SHIP_CODES[ship.type]
+			%ShipSell.get_child(child_index).get_node("Row/Col2/Level").text = LEVEL_TEXT + str(ship.level)
+			%ShipSell.get_child(child_index).get_node("Row/Col2/Value").text = SELL_VALUE_TEXT + str((ceil(Global.starship_base_stats[ship.type]["Cost"]) * SELL_MODIFIER) * ship.level) + TECH_SUFFIX
 			child_index += 1
 		
 		if Global.joystick_control:
@@ -984,7 +1077,10 @@ func _process(delta: float) -> void:
 						else:
 							_item_shop()
 				if selected_shop_side == 1:
-					hovered_shop_button = clampi(hovered_shop_button, -1, len(Global.fleet) - 2)
+					# I genuinely don't know how else to make this non-magical since it's such a
+					# specific use-case
+					var max_shop_button: int = len(Global.fleet) - 2
+					hovered_shop_button = clampi(hovered_shop_button, -1, max_shop_button)
 					if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A") and hovered_shop_button >= 0:
 						for button in get_tree().get_nodes_in_group("ship sell"):
 							if int(str(button.get_parent().name)[-1]) - 1 == hovered_shop_button:
@@ -1010,7 +1106,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 		child.hide()
 	option_results = []
 	# Warp in dialogue
-	if library == 0:
+	if library == DialogueTypes.WARP_IN:
 		%DialogueText.text = warp_in_dialogue[id][1]
 		max_option = len(warp_in_dialogue[id][2])
 		# Options
@@ -1019,7 +1115,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			option_results.append(warp_in_dialogue[id][2][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
 	# Response dialogue
-	elif library == 1:
+	elif library == DialogueTypes.RESPONSE:
 		%DialogueText.text = response_dialogue[id][0]
 		max_option = len(response_dialogue[id][1])
 		# Options
@@ -1028,7 +1124,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			option_results.append(response_dialogue[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
 	# Encounter win dialogue
-	elif library == 2:
+	elif library == DialogueTypes.ENCOUNTER_WIN:
 		%DialogueText.text = encounter_win_dialogues[id][0]
 		max_option = len(encounter_win_dialogues[id][1])
 		# Options
@@ -1037,7 +1133,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			option_results.append(encounter_win_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
 	# Intro dialogue
-	elif library == 3:
+	elif library == DialogueTypes.INTRO:
 		%DialogueText.text = intro_dialogues[id][0]
 		max_option = len(intro_dialogues[id][1])
 		# Options
@@ -1045,7 +1141,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + intro_dialogues[id][1][i][0]
 			option_results.append(intro_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
-	elif library == 4:
+	elif library == DialogueTypes.TUTORIAL:
 		%DialogueText.text = tutorial_dialogues[id][0]
 		max_option = len(tutorial_dialogues[id][1])
 		# Options
@@ -1053,7 +1149,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + tutorial_dialogues[id][1][i][0]
 			option_results.append(tutorial_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
-	elif library == 5:
+	elif library == DialogueTypes.ITEM_WIN:
 		%DialogueText.text = item_win_dialogues[id][0] + bonus_text
 		max_option = len(item_win_dialogues[id][1])
 		# Options
@@ -1061,7 +1157,7 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + item_win_dialogues[id][1][i][0]
 			option_results.append(item_win_dialogues[id][1][i][1])
 			%Options.get_node("Option" + str(i + 1)).show()
-	elif library == 6:
+	elif library == DialogueTypes.ENEMY_RUNNING:
 		%DialogueText.text = enemy_running_dialogue[id][0]
 		max_option = len(enemy_running_dialogue[id][1])
 		# Options
@@ -1075,14 +1171,14 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 
 
 func _galaxy_map() -> void:
-	if not action_menu_showing and not info_menu_showing and not dialogue_showing and not shop_showing and main.warp_charge >= 100 and not warping:
+	if not action_menu_showing and not info_menu_showing and not dialogue_showing and not shop_showing and main.warp_charge >= MAX_WARP_CHARGE and not warping:
 		galaxy_map_showing = not galaxy_map_showing
 		$PressSFX.play()
 		if galaxy_map_showing:
-			if Global.galaxy_data[Global.current_system]["position"].x > 900:
-				$GalaxyMap/Tokens.position.x = 600 - Global.galaxy_data[Global.current_system]["position"].x
+			if Global.galaxy_data[Global.current_system]["position"].x > MAP_AUTO_SCROLL_THRESHOLD:
+				$GalaxyMap/Tokens.position.x = MAP_SCROLL_OFFSET - Global.galaxy_data[Global.current_system]["position"].x
 			else:
-				$GalaxyMap/Tokens.position.x = 45
+				$GalaxyMap/Tokens.position.x = MAP_DEFAULT_SCROLL
 			%Cursor.position = Global.galaxy_data[Global.current_system]["position"]
 
 
@@ -1130,9 +1226,9 @@ func _on_shop_setup_timeout() -> void:
 			for item in len(item_catalogue):
 				item_catalogue[item] = randi_range(0, len(Global.weapon_list) - 1)
 			for ship in len(ship_catalogue):
-				ship_catalogue[ship][0] = randi_range(1, 7)
-				ship_catalogue[ship][1] = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
-				ship_catalogue[ship][2] = shop_ship_descriptions.pick_random()
+				ship_catalogue[ship]["Type"] = randi_range(Global.StarshipTypes.FIGHTER, Global.StarshipTypes.DRONE_COMMAND)
+				ship_catalogue[ship]["Name"] = Global.possible_names.pop_at(randi_range(0, len(Global.possible_names) - 1))
+				ship_catalogue[ship]["Description"] = shop_ship_descriptions.pick_random()
 
 
 func _shop() -> void:
@@ -1166,9 +1262,9 @@ func _on_warp_in_dialogue_timeout() -> void:
 	if main.warp_in_dialogue_needed:
 		if intro_dialogue:
 			if Global.tutorial:
-				dialogue_set_up(3, 1)
+				dialogue_set_up(DialogueTypes.INTRO, 1)
 			else:
-				dialogue_set_up(3, 0)
+				dialogue_set_up(DialogueTypes.INTRO, 0)
 			intro_dialogue = false
 		else:
 			# Search through options for the warp in dialogue and find which ones are
@@ -1177,7 +1273,7 @@ func _on_warp_in_dialogue_timeout() -> void:
 			for i in warp_in_dialogue:
 				if i[0] == main.system_properties:
 					possible_dialogues.append(warp_in_dialogue.find(i))
-			dialogue_set_up(0, possible_dialogues.pick_random())
+			dialogue_set_up(DialogueTypes.WARP_IN, possible_dialogues.pick_random())
 	else:
 		close(Global.galaxy_data[Global.current_system]["enemy presence"])
 
@@ -1187,15 +1283,15 @@ func _quantity_change(quantity_type: int, up: bool) -> void:
 	# Resources
 	if quantity_type == 0:
 		if up:
-			%ResourcesLabel.add_theme_color_override("font_color", Color(0, 1, 0))
+			%ResourcesLabel.add_theme_color_override("font_color", Color.GREEN)
 		else:
-			%ResourcesLabel.add_theme_color_override("font_color", Color(1, 0, 0))
+			%ResourcesLabel.add_theme_color_override("font_color", Color.RED)
 	# Fuel
 	if quantity_type == 1:
 		if up:
-			%FuelLabel.add_theme_color_override("font_color", Color(0, 1, 0))
+			%FuelLabel.add_theme_color_override("font_color", Color.GREEN)
 		else:
-			%FuelLabel.add_theme_color_override("font_color", Color(1, 0, 0))
+			%FuelLabel.add_theme_color_override("font_color", Color.RED)
 
 
 # Close the dialogue box
@@ -1207,7 +1303,7 @@ func close(combat: bool, end: bool = false) -> void:
 	if combat:
 		Global.in_combat = true
 	else:
-		main.warp_charge = 100.0
+		main.warp_charge = MAX_WARP_CHARGE
 	# Is this the end of the game?
 	if end:
 		quit_to_menu()
@@ -1283,22 +1379,22 @@ func buy_item(n: int) -> void:
 
 
 func sell_item(n: int) -> void:
-	resources(ceil(Global.weapon_list[Global.fleet_inventory.pop_at(n)]["Cost"] / 2), 0)
+	resources(ceil(Global.weapon_list[Global.fleet_inventory.pop_at(n)]["Cost"] * SELL_MODIFIER), 0)
 	$PressSFX.play()
 
 
 func buy_ship(n: int) -> void:
-	var price: int = Global.starship_base_stats[ship_catalogue[n][0]]["Cost"]
-	if len(Global.fleet) < 8 and Global.resources >= price:
+	var price: int = Global.starship_base_stats[ship_catalogue[n]["Type"]]["Cost"]
+	if len(Global.fleet) < Global.MAX_FLEET_SIZE and Global.resources >= price:
 		resources(-price)
-		Global.create_new_starship(ship_catalogue[n][0], ship_catalogue[n][1])
+		Global.create_new_starship(ship_catalogue[n]["Type"], ship_catalogue[n]["Name"])
 		ship_catalogue.remove_at(n)
 	$PressSFX.play()
 
 
 func sell_ship(n: int) -> void:
 	var sold_ship: Node3D = friendly_ships.get_child(n)
-	resources((ceil(Global.starship_base_stats[sold_ship.type]["Cost"]) / 2) * sold_ship.level, 0)
+	resources((ceil(Global.starship_base_stats[sold_ship.type]["Cost"]) * SELL_MODIFIER) * sold_ship.level, 0)
 	sold_ship.hull = 0
 	$PressSFX.play()
 
@@ -1318,16 +1414,16 @@ func abandon_ship() -> void:
 func win_encounter() -> void:
 	Global.galaxy_data[Global.current_system]["enemy presence"] = false
 	# Tech
-	resources(randi_range(4 * main.enemy_ship_count, 8 * main.enemy_ship_count))
+	resources(randi_range(TECH_REWARDS.x * main.enemy_ship_count, TECH_REWARDS.y * main.enemy_ship_count))
 	# Fuel
-	resources(randi_range(3, 4 * len(Global.fleet) - 1), 1)
+	resources(randi_range(FUEL_REWARDS.x, FUEL_REWARDS.y * len(Global.fleet) - 1), 1)
 	# Potential item
-	if randi_range(0, 19) >= Global.ITEM_WIN_THRESHOLD and len(Global.fleet_inventory) < Global.max_inventory:
+	if randi_range(0, REWARD_CHANCES) >= Global.ITEM_WIN_THRESHOLD and len(Global.fleet_inventory) < Global.max_inventory:
 		var weapon_won: int = Global.WINNABLE_WEAPONS.pick_random()
 		Global.fleet_inventory.append(weapon_won)
-		dialogue_set_up(5, len(item_win_dialogues) - 1, Global.weapon_list[weapon_won]["Name"] + ".")
+		dialogue_set_up(DialogueTypes.ITEM_WIN, len(item_win_dialogues) - 1, Global.weapon_list[weapon_won]["Name"] + ".")
 	else:
-		dialogue_set_up(2, len(encounter_win_dialogues) - 1)
+		dialogue_set_up(DialogueTypes.ENCOUNTER_WIN, len(encounter_win_dialogues) - 1)
 
 
 func lose() -> void:
@@ -1338,7 +1434,7 @@ func lose() -> void:
 	$ShipActionMenu.hide()
 	info_menu_showing = false
 	$FleetInfoMenu.hide()
-	dialogue_set_up(1, 3)
+	dialogue_set_up(DialogueTypes.RESPONSE, LOSE_DIALOGUE_ID)
 
 
 # Quit to the main menu

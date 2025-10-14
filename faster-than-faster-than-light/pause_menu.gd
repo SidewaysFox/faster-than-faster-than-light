@@ -8,6 +8,9 @@ const MAX_SELECTION: int = 2
 const BUTTON_COLOUR_NORMAL: Color = Color(1.0, 1.0, 1.0)
 const BUTTON_COLOUR_HOVER: Color = Color(0.0, 0.749, 1.0)
 
+const CONTROL_MODE_TEXTS: Array = ["CONTROL MODE: KEYBOARD/MOUSE", "CONTROL MODE: ARCADE"]
+const JOYSTICK_MODE_TEXTS: Array = ["JOYSTICK MODE: SINGLE", "JOYSTICK MODE: DUAL"]
+
 
 func _ready() -> void:
 	%MusicVolume/HSlider.value = Global.music_volume
@@ -23,9 +26,10 @@ func _process(_delta: float) -> void:
 	Global.music_volume = %MusicVolume/HSlider.value
 	Global.sfx_volume = %SFXVolume/HSlider.value
 	
+	%Gameplay/ControlMode.text = CONTROL_MODE_TEXTS[int(Global.joystick_control)]
+	%Gameplay/JoystickMode.text = JOYSTICK_MODE_TEXTS[int(Global.dual_joysticks)]
+	
 	if Global.joystick_control:
-		%Gameplay/ControlMode.text = "CONTROL MODE: ARCADE"
-		
 		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
 			current_selection += 1
 		if Input.is_action_just_pressed("up1") or Input.is_action_just_pressed("up2"):
@@ -40,13 +44,13 @@ func _process(_delta: float) -> void:
 				$Main/Quit/Button.add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
 				if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 					_on_continue_pressed()
-			if current_selection == 1:
+			elif current_selection == 1:
 				$Main/Continue/Button.add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
 				$Main/Settings/Button.add_theme_color_override("font_color", BUTTON_COLOUR_HOVER)
 				$Main/Quit/Button.add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
 				if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 					_on_settings_pressed()
-			if current_selection == 2:
+			else:
 				$Main/Continue/Button.add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
 				$Main/Settings/Button.add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
 				$Main/Quit/Button.add_theme_color_override("font_color", BUTTON_COLOUR_HOVER)
@@ -79,13 +83,6 @@ func _process(_delta: float) -> void:
 				%Back/Button.add_theme_color_override("font_color", BUTTON_COLOUR_HOVER)
 				if Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A"):
 					_on_back_pressed()
-	else:
-		%Gameplay/ControlMode.text = "CONTROL MODE: KEYBOARD/MOUSE"
-	
-	if Global.dual_joysticks:
-		%Gameplay/JoystickMode.text = "JOYSTICK MODE: DUAL"
-	else:
-		%Gameplay/JoystickMode.text = "JOYSTICK MODE: SINGLE"
 	
 	%MusicVolume/Value.text = str(int(Global.music_volume))
 	%SFXVolume/Value.text = str(int(Global.sfx_volume))
@@ -106,8 +103,9 @@ func _on_settings_pressed() -> void:
 
 
 func _on_quit_pressed() -> void:
+	var main_menu: String = "res://Menus/main_menu.tscn"
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
+	get_tree().change_scene_to_file(main_menu)
 
 
 func _on_unpause_timer_timeout() -> void:

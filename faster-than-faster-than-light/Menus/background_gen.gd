@@ -25,7 +25,7 @@ const NEB_RADIUS: Vector2 = Vector2(20, 50)
 const NEB_POS_SHIFT: float = 50.0
 const NEB_COL_SHIFT: float = 0.1
 const NEB_ALPHA_SHIFT: float = 0.05
-const LARGE_NEB_CHANCE: int = 25
+const LARGE_NEB_CHANCE: int = 30
 const LARGE_NEB_SIZE: Vector2i = Vector2i(50, 300)
 const SMALL_NEB_SIZE: Vector2i = Vector2i(1, 20)
 const STAR_RENDER_DISTANCE: float = 3500.0
@@ -76,8 +76,8 @@ func _ready() -> void:
 				new_nebula.mesh.material.emission = nebula_colour
 				new_nebula.mesh.radius = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
 				new_nebula.mesh.height = new_nebula.mesh.radius * HEIGHT_FACTOR
-				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 				$Background.add_child(new_nebula)
+				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 		else:
 			# Small
 			for cloud in randi_range(SMALL_NEB_SIZE.x, SMALL_NEB_SIZE.y):
@@ -87,8 +87,8 @@ func _ready() -> void:
 				new_nebula.mesh.material.emission = nebula_colour
 				new_nebula.mesh.radius = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
 				new_nebula.mesh.height = new_nebula.mesh.radius * HEIGHT_FACTOR
-				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 				$Background.add_child(new_nebula)
+				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 
 
 func _process(delta: float) -> void:

@@ -10,8 +10,11 @@ var movement_target: Vector3
 var damage: int
 var missed: bool = false
 
+const HIT_DETECT_RANGE: float = 8.0
 const SPEED: float = 400.0
 const CRIT_BONUS: int = 2
+const ACCURACY: float = 0.75
+const CRIT_TEXT: String = "CRITICAL HIT"
 
 
 func _ready() -> void:
@@ -23,8 +26,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	global_position = global_position.move_toward(movement_target, SPEED * delta)
-	if global_position.distance_to(target_pos) < 8.0 and target != null and not missed:
-		if target.agility < randf() * 0.75:
+	if global_position.distance_to(target_pos) < HIT_DETECT_RANGE and target != null and not missed:
+		if target.agility < randf() * ACCURACY:
 			if Global.crit_chance > randf():
 				target.hull -= damage + CRIT_BONUS
 			else:
@@ -37,7 +40,7 @@ func _process(delta: float) -> void:
 
 func _crit() -> void:
 	var new_crit: Node = missed_ui.instantiate()
-	new_crit.get_child(0).text = "CRITICAL HIT"
+	new_crit.get_child(0).text = CRIT_TEXT
 	new_crit.global_position = $Control.global_position
 	main.add_child(new_crit)
 

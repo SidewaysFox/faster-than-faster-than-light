@@ -73,11 +73,11 @@ one_shot = true
 one_shot = true
 autostart = true
 
-[node name="WeaponReload1" type="Timer" parent="."]
+[node name="WeaponReload1" type="Timer" parent="." groups=["weapon reloads"]]
 
-[node name="WeaponReload2" type="Timer" parent="."]
+[node name="WeaponReload2" type="Timer" parent="." groups=["weapon reloads"]]
 
-[node name="WeaponReload3" type="Timer" parent="."]
+[node name="WeaponReload3" type="Timer" parent="." groups=["weapon reloads"]]
 
 [node name="ShieldReload" type="Timer" parent="."]
 wait_time = 10.0

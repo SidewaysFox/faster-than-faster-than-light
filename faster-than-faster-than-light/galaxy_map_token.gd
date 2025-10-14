@@ -4,8 +4,8 @@ extends Area2D
 @onready var ui: Control = find_parent("UserInterface")
 var id: int
 var rotation_rate: float = randf_range(-45.0, 45.0)
-var panel_left: float = 365.0
-var panel_right: float = 1555.0
+
+const VISITED_COLOUR: Color = Color.YELLOW
 
 
 func _process(delta: float) -> void:
@@ -26,7 +26,7 @@ func _on_timer_timeout() -> void:
 		$ColorRect2.hide()
 		$Range.hide()
 		if Global.visited_systems.has(id):
-			$ColorRect.color = Color(1, 1, 0)
+			$ColorRect.color = VISITED_COLOUR
 	if Global.galaxy_data[id]["shop presence"]:
 		$ShopIndicator.show()
 	if id == Global.destination:

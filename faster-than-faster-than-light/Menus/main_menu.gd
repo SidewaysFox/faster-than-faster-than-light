@@ -37,11 +37,13 @@ func _on_new_game_pressed(tutorial: bool = false) -> void:
 
 
 func _on_settings_pressed() -> void:
-	get_tree().change_scene_to_file("res://Menus/settings.tscn")
+	var settings: String = "res://Menus/settings.tscn"
+	get_tree().change_scene_to_file(settings)
 
 
 func _on_credits_pressed() -> void:
-	get_tree().change_scene_to_file("res://Menus/credits.tscn")
+	var credits: String = "res://Menus/credits.tscn"
+	get_tree().change_scene_to_file(credits)
 
 
 func _on_quit_pressed() -> void:
