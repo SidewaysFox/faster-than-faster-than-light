@@ -1,7 +1,7 @@
 extends Area2D
 
 
-@onready var ui: Node = find_parent("UserInterface")
+@onready var ui: Control = find_parent("UserInterface")
 var id: int
 var rotation_rate: float = randf_range(-45.0, 45.0)
 var panel_left: float = 365.0

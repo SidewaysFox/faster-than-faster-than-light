@@ -1,10 +1,10 @@
 extends Area3D
 
 
-@onready var main: Node = get_node("/root/Space")
+@onready var main: Node3D = get_node("/root/Space")
 @export var missed_ui: PackedScene
 var starting_position: Vector3
-var target: Node
+var target: Node3D
 var target_pos: Vector3
 var movement_target: Vector3
 var damage: int
@@ -49,7 +49,7 @@ func _process(delta: float) -> void:
 
 
 func _blocked() -> void:
-	var new_missed: Node = missed_ui.instantiate()
+	var new_missed: Control = missed_ui.instantiate()
 	new_missed.get_child(0).text = "BLOCKED"
 	new_missed.global_position = $Control.global_position
 	main.add_child(new_missed)
@@ -57,7 +57,7 @@ func _blocked() -> void:
 
 
 func _crit() -> void:
-	var new_crit: Node = missed_ui.instantiate()
+	var new_crit: Control = missed_ui.instantiate()
 	new_crit.get_child(0).text = "CRITICAL HIT"
 	new_crit.global_position = $Control.global_position
 	main.add_child(new_crit)

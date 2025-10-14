@@ -7,13 +7,36 @@ var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1
 var main_star_count: String
 var bg_object_rotation: float = 5.0
 
+const BG_STARS_SEED: Vector2 = Vector2(0.01, 100.0)
+const BG_STARS_PROB: Vector2 = Vector2(0.91, 1.0)
+const BG_STARS_SIZE: Vector2 = Vector2(50.0, 120.0)
+const RADIUS_RANGE: Vector2 = Vector2(40.0, 250.0)
+const HEIGHT_FACTOR: float = 2.0
+const STAR_POS_Z: Vector2 = Vector2(-2500, -300)
+const STAR_X_FACTOR: float = 1.1
+const STAR_Y_FACTOR: Vector2 = Vector2(0.8, -2.3)
+const NEB_COL: Vector2 = Vector2(0.1, 1.0)
+const NEB_ALPHA: Vector2 = Vector2(0.04, 0.2)
+const NEB_COUNT: Vector2i = Vector2i(1, 25)
+const NEB_POS_X: Vector2 = Vector2(-2000, 2000)
+const NEB_POS_Y: Vector2 = Vector2(-1000, 800)
+const NEB_POS_Z: Vector2 = Vector2(-2000, -800)
+const NEB_RADIUS: Vector2 = Vector2(20, 50)
+const NEB_POS_SHIFT: float = 50.0
+const NEB_COL_SHIFT: float = 0.1
+const NEB_ALPHA_SHIFT: float = 0.05
+const LARGE_NEB_CHANCE: int = 25
+const LARGE_NEB_SIZE: Vector2i = Vector2i(50, 300)
+const SMALL_NEB_SIZE: Vector2i = Vector2i(1, 20)
+const STAR_RENDER_DISTANCE: float = 3500.0
+
 
 func _ready() -> void:
 	$Music.play(Global.menu_music_progress)
 	# Pass information to the BGStar GLSL script
-	$BGStars.material_override.set_shader_parameter("seed", randf_range(0.01, 100.0))
-	$BGStars.material_override.set_shader_parameter("prob", randf_range(0.91, 1.0))
-	$BGStars.material_override.set_shader_parameter("size", randf_range(50.0, 120.0))
+	$BGStars.material_override.set_shader_parameter("seed", randf_range(BG_STARS_SEED.x, BG_STARS_SEED.y))
+	$BGStars.material_override.set_shader_parameter("prob", randf_range(BG_STARS_PROB.x, BG_STARS_PROB.y))
+	$BGStars.material_override.set_shader_parameter("size", randf_range(BG_STARS_SIZE.x, BG_STARS_SIZE.y))
 	# Establish this system's star(s)
 	main_star_count = str(system_types.pick_random())
 	for star in get_tree().get_nodes_in_group(main_star_count):
@@ -22,9 +45,9 @@ func _ready() -> void:
 		star.mesh.material.albedo_color = colour
 		star.mesh.material.emission = colour
 		# Set star size
-		var radius: float = randf_range(40.0, 250.0)
+		var radius: float = randf_range(RADIUS_RANGE.x, RADIUS_RANGE.y)
 		star.mesh.radius = radius
-		star.mesh.height = radius * 2.0
+		star.mesh.height = radius * HEIGHT_FACTOR
 		# Set positioning
 		var star_position: Vector3 = star_reposition()
 		var not_colliding: int = 1
@@ -38,33 +61,33 @@ func _ready() -> void:
 		star.mesh.material.emission_texture.noise.seed = randi()
 	# Create nebulae
 	var nebula_pos: Vector3
-	var nebula_colour: Color = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.05, 0.2))
-	for i in randi_range(1, 25):
-		nebula_pos = Vector3(randf_range(-2000, 2000), randf_range(-1000, 800), randf_range(-2000, -800))
-		nebula_colour += Color(randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.1, 0.1), randf_range(-0.05, 0.05))
-		nebula_colour.a = clamp(nebula_colour.a, 0.04, 0.2)
+	var nebula_colour: Color = Color(randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_ALPHA.x, NEB_ALPHA.y))
+	for nebula in randi_range(NEB_COUNT.x, NEB_COUNT.y):
+		nebula_pos = Vector3(randf_range(NEB_POS_X.x, NEB_POS_X.y), randf_range(NEB_POS_Y.x, NEB_POS_Y.y), randf_range(NEB_POS_Z.x, NEB_POS_Z.y))
+		nebula_colour += Color(randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_ALPHA_SHIFT, NEB_ALPHA_SHIFT))
+		nebula_colour.a = clamp(nebula_colour.a, NEB_ALPHA.x, NEB_ALPHA.y)
 		# Big or small nebula
-		if randi_range(0, 25) == 4: # Because I like the number 4
+		if randi_range(0, LARGE_NEB_CHANCE) == 0:
 			# Big
-			for j in randi_range(50, 300):
-				var new_nebula = bg_nebula.instantiate()
+			for cloud in randi_range(LARGE_NEB_SIZE.x, LARGE_NEB_SIZE.y):
+				var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.05)
-				new_nebula.mesh.material.emission = Color(nebula_colour)
-				new_nebula.mesh.radius = randf_range(20, 50)
-				new_nebula.mesh.height = new_nebula.mesh.radius * 2
-				nebula_pos += Vector3(randf_range(-75, 75), randf_range(-100, 100), randf_range(-100, 100))
+				new_nebula.mesh.material.albedo_color = nebula_colour
+				new_nebula.mesh.material.emission = nebula_colour
+				new_nebula.mesh.radius = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
+				new_nebula.mesh.height = new_nebula.mesh.radius * HEIGHT_FACTOR
+				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 				$Background.add_child(new_nebula)
 		else:
 			# Small
-			for j in randi_range(1, 20):
-				var new_nebula = bg_nebula.instantiate()
+			for cloud in randi_range(SMALL_NEB_SIZE.x, SMALL_NEB_SIZE.y):
+				var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 				new_nebula.position = nebula_pos
-				new_nebula.mesh.material.albedo_color = Color(nebula_colour, 0.04)
-				new_nebula.mesh.material.emission = Color(nebula_colour)
-				new_nebula.mesh.radius = randf_range(20, 50)
-				new_nebula.mesh.height = new_nebula.mesh.radius * 2
-				nebula_pos += Vector3(randf_range(-50, 50), randf_range(-50, 50), randf_range(-50, 50))
+				new_nebula.mesh.material.albedo_color = nebula_colour
+				new_nebula.mesh.material.emission = nebula_colour
+				new_nebula.mesh.radius = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
+				new_nebula.mesh.height = new_nebula.mesh.radius * HEIGHT_FACTOR
+				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 				$Background.add_child(new_nebula)
 
 
@@ -91,12 +114,12 @@ func star_reposition() -> Vector3:
 	var x: float
 	var y: float
 	var z: float
-	z = randf_range(-2500, -300)
-	x = randf_range(z * -1.1, z * 1.1)
-	y = randf_range(z / 0.8, z / -2.3)
+	z = randf_range(STAR_POS_Z.x, STAR_POS_Z.y)
+	x = randf_range(z * -STAR_X_FACTOR, z * STAR_X_FACTOR)
+	y = randf_range(z / STAR_Y_FACTOR.x, z / STAR_Y_FACTOR.y)
 	# Make sure the star is within bounds. because I cannot be bothered to do the math for this
-	while Vector3(x, y, z).distance_to(Vector3.ZERO) > 3500.0:
-		z = randf_range(-2500, -300)
-		x = randf_range(z * -1.1, z * 1.1)
-		y = randf_range(z / 0.8, z / -2.3)
+	while Vector3(x, y, z).distance_to(Vector3.ZERO) > STAR_RENDER_DISTANCE:
+		z = randf_range(STAR_POS_Z.x, STAR_POS_Z.y)
+		x = randf_range(z * -STAR_X_FACTOR, z * STAR_X_FACTOR)
+		y = randf_range(z / STAR_Y_FACTOR.x, z / STAR_Y_FACTOR.y)
 	return Vector3(x, y, z)

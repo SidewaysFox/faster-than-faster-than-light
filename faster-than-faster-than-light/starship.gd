@@ -36,9 +36,9 @@ class_name Starship extends Node3D
 ## The starship's chance to avoid enemy weapons
 @export var agility: float
 ## The starship's currently active weapons
-@export var weapons: Array = [0]
+@export var weapons: Array[int] = [0]
 ## The starship's available drone slots
-@export var drones: Array = [9]
+@export var drones: Array[int] = [9]
 @export_category("Misc")
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []
@@ -48,13 +48,16 @@ class_name Starship extends Node3D
 @export var warp_sfx: Array[AudioStreamOggVorbis] = []
 
 # General variables
-@onready var main: Node = get_node("/root/Space")
-@onready var ui: Node = get_node("/root/Space/CanvasLayer/UserInterface")
+@onready var main: Node3D = get_node("/root/Space")
+@onready var ui: Control = get_node("/root/Space/CanvasLayer/UserInterface")
+@onready var hostile_ships: Node3D = main.get_node("HostileShips")
+@onready var friendly_ships: Node3D = main.get_node("FriendlyShips")
+@onready var all_drones: Node3D = main.get_node("Drones")
 @export_category("Bugfixing")
 @export var hull: int # WHY DOES THIS NEED TO BE EXPORTED
 var status: int
 var active: bool = true
-var target: Node
+var target: Node3D
 var shield_layers: int
 var attacked: bool = false
 var scanned: bool = false
@@ -85,7 +88,7 @@ const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
 
 func _ready() -> void:
 	# Apply appropriate mesh
-	var new_mesh: Node = meshes[type].instantiate()
+	var new_mesh: Node3D = meshes[type].instantiate()
 	new_mesh.type = alignment
 	add_child(new_mesh)
 	
@@ -141,7 +144,7 @@ func _process(_delta: float) -> void:
 		if team == 1 and not is_drone:
 			Global.fleet.remove_at(_get_data_location())
 		if type == 7:
-			for drone in main.get_node("Drones").get_children():
+			for drone in all_drones.get_children():
 				if drone.creator_id == id:
 					drone.hull = 0
 		queue_free()
@@ -170,9 +173,9 @@ func _process(_delta: float) -> void:
 			marker.border_color = Color8(0, 191, 255, hover_alpha)
 		else:
 			marker.border_color = Color8(255, 255, 255, hover_alpha)
-		if ui.selected_ship < main.get_node("FriendlyShips").get_child_count():
-			if main.get_node("FriendlyShips").get_child(ui.selected_ship).target != null:
-				if main.get_node("FriendlyShips").get_child(ui.selected_ship).target == self:
+		if ui.selected_ship < friendly_ships.get_child_count():
+			if friendly_ships.get_child(ui.selected_ship).target != null:
+				if friendly_ships.get_child(ui.selected_ship).target == self:
 					$Marker/Target.show()
 				else:
 					$Marker/Target.hide()
@@ -193,7 +196,7 @@ func _process(_delta: float) -> void:
 			# Start shooting!!!
 			if Global.in_combat:
 				for i in len(weapons):
-					var this_timer: Node = get_node("WeaponReload" + str(i + 1))
+					var this_timer: Timer = get_node("WeaponReload" + str(i + 1))
 					if this_timer.is_stopped():
 						this_timer.start()
 					if this_timer.paused:
@@ -235,7 +238,7 @@ func _process(_delta: float) -> void:
 					elif team == -1:
 						Global.create_enemy_ship(Global.weapon_list[drone]["Ship type"], 1, [0], id)
 			else:
-				for drone in main.get_node("Drones").get_children():
+				for drone in all_drones.get_children():
 					if drone.creator_id == id:
 						drone.active = true
 			drones_deployed = true
@@ -264,7 +267,7 @@ func _process(_delta: float) -> void:
 		$ShieldReload.stop()
 		$InfiltrateReload.stop()
 		if type == 7:
-			for drone in main.get_node("Drones").get_children():
+			for drone in all_drones.get_children():
 				if drone.creator_id == id:
 					drone.active = false
 	
@@ -313,35 +316,35 @@ func new_target(ship: int = 0) -> void:
 	var target_set: bool = false
 	# Choose a target
 	if type == 1 or type == 3 or type == 5:
-		if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
-			target = main.get_node("HostileShips").get_child(ship)
-		elif team == -1 and main.get_node("FriendlyShips").get_child_count() > 0:
-			target = main.get_node("FriendlyShips").get_children().pick_random()
+		if team == 1 and hostile_ships.get_child_count() > 0:
+			target = hostile_ships.get_child(ship)
+		elif team == -1 and friendly_ships.get_child_count() > 0:
+			target = friendly_ships.get_children().pick_random()
 	elif type == 4:
-		if team == -1 and main.get_node("HostileShips").get_child_count() > 0:
-			for potential_target in main.get_node("HostileShips").get_children():
+		if team == -1 and hostile_ships.get_child_count() > 0:
+			for potential_target in hostile_ships.get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
 					target_set = true
 			if not target_set:
 				target = self
-		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0:
-			target = main.get_node("FriendlyShips").get_child(ship)
+		elif team == 1 and friendly_ships.get_child_count() > 0:
+			target = friendly_ships.get_child(ship)
 	elif type == 8:
-		if team == 1 and main.get_node("HostileShips").get_child_count() > 0:
-			target = main.get_node("HostileShips").get_children().pick_random()
-		elif team == -1 and main.get_node("FriendlyShips").get_child_count() > 0:
-			target = main.get_node("FriendlyShips").get_children().pick_random()
+		if team == 1 and hostile_ships.get_child_count() > 0:
+			target = hostile_ships.get_children().pick_random()
+		elif team == -1 and friendly_ships.get_child_count() > 0:
+			target = friendly_ships.get_children().pick_random()
 	elif type == 9:
-		if team == -1 and main.get_node("HostileShips").get_child_count() > 0:
-			for potential_target in main.get_node("HostileShips").get_children():
+		if team == -1 and hostile_ships.get_child_count() > 0:
+			for potential_target in hostile_ships.get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
 					target_set = true
 			if not target_set:
 				target = self
-		elif team == 1 and main.get_node("FriendlyShips").get_child_count() > 0 and $RepairReload.is_stopped():
-			for potential_target in main.get_node("FriendlyShips").get_children():
+		elif team == 1 and friendly_ships.get_child_count() > 0 and $RepairReload.is_stopped():
+			for potential_target in friendly_ships.get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
 					target_set = true
@@ -357,7 +360,7 @@ func _weapon_fire(firing: int) -> void:
 
 
 func _new_projectile(projectile_type: int, damage: int) -> void:
-	var new_projectile: Node = projectiles[projectile_type].instantiate()
+	var new_projectile: Area3D = projectiles[projectile_type].instantiate()
 	new_projectile.starting_position = global_position
 	new_projectile.target = target
 	new_projectile.damage = damage

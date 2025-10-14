@@ -19,7 +19,7 @@ var warp_in_dialogue_needed: bool = true
 const MUSIC_FADE_RATE: float = 0.8
 const SOLAR_FLARE_SFX_DELAY: float = 2.05
 
-var tutorial_enemy_fleet: Array = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
+var tutorial_enemy_fleet: Array[Array] = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
 var pirate_fleets: Dictionary = {
 	"start": [
@@ -217,7 +217,7 @@ func _ready() -> void:
 			if randi_range(0, 40) == 4: # Because I like the number 4
 				# Big
 				for j in randi_range(50, 300):
-					var new_nebula: Node = bg_nebula.instantiate()
+					var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 					new_nebula.position = nebula_pos
 					new_nebula.mesh.material.albedo_color = nebula_colour
 					new_nebula.mesh.material.emission = nebula_colour
@@ -230,7 +230,7 @@ func _ready() -> void:
 			else:
 				# Small
 				for j in randi_range(1, 20):
-					var new_nebula: Node = bg_nebula.instantiate()
+					var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 					new_nebula.position = nebula_pos
 					new_nebula.mesh.material.albedo_color = nebula_colour
 					new_nebula.mesh.material.emission = nebula_colour
@@ -262,7 +262,7 @@ func _ready() -> void:
 			star_index += 1
 		for nebula in Global.galaxy_data[Global.current_system]["nebulae"]:
 			for sphere in nebula:
-				var new_nebula: Node = bg_nebula.instantiate()
+				var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 				new_nebula.position = sphere[0]
 				new_nebula.mesh.material.albedo_color = sphere[1]
 				new_nebula.mesh.material.emission = sphere[1]

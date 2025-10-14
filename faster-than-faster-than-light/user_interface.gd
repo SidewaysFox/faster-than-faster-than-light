@@ -1,7 +1,9 @@
 extends Control
 
 
-@onready var main: Node = get_node("/root/Space")
+@onready var main: Node3D = get_node("/root/Space")
+@onready var friendly_ships: Node3D = main.get_node("FriendlyShips")
+@onready var hostile_ships: Node3D = main.get_node("HostileShips")
 @export var galaxy_map_token: PackedScene
 var intro_dialogue: bool = false
 var fade_mode: int = -1
@@ -222,7 +224,7 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	],
 ]
 
-var response_dialogue: Array = [ # Main text, [option, result]
+var response_dialogue: Array[Array] = [ # Main text, [option, result]
 	["As you search the wreckages, you manage to pick out some scraps.",
 	[["Continue the journey.", ["close", false]]]
 	],
@@ -240,13 +242,13 @@ var response_dialogue: Array = [ # Main text, [option, result]
 	],
 ]
 
-var enemy_running_dialogue: Array = [ # Main text, [option, result]
+var enemy_running_dialogue: Array[Array] = [ # Main text, [option, result]
 	["In the middle of combat, you notice the enemy fleet is beginning to charge its warp drives, in an attempt to get away!",
 	[["Continue combat.", ["close", true]]]
 	],
 ]
 
-var encounter_win_dialogues: Array = [
+var encounter_win_dialogues: Array[Array] = [
 	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials.",
 	[["Continue the journey.", ["close", false]]]
 	],
@@ -264,7 +266,7 @@ var encounter_win_dialogues: Array = [
 	],
 ]
 
-var item_win_dialogues: Array = [
+var item_win_dialogues: Array[Array] = [
 	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials. Among the debris, your crews manage to find an undamaged piece of equipment!\nYou got the ",
 	[["Continue the journey.", ["close", false]]]
 	],
@@ -273,7 +275,7 @@ var item_win_dialogues: Array = [
 	],
 ]
 
-var intro_dialogues: Array = [
+var intro_dialogues: Array[Array] = [
 	["You, as an Alliance fleet commander, have been tasked with a crucial mission: deliver a package of goods and weapons to an isolated Alliance navy, who are currently fighting against the rebel uprising. The region of space ahead is outside of policed Alliance territory and is rife with pirates and other threats. In the rush to respond to the sudden rebel presence, you were only able to mobilise a small squadron of starships.\nMake the delivery, and save millions of lives.\nThe rest is up to you.",
 	[["Let's go.", ["close", false]]]
 	],
@@ -282,7 +284,7 @@ var intro_dialogues: Array = [
 	],
 ]
 
-var tutorial_dialogues: Array = [
+var tutorial_dialogues: Array[Array] = [
 	["First and foremost, the right side of your interface shows your controls and their related keyboard shortcuts. You can hide or show this at will.\nAt the top of your interface, you can see how much \"tech\" (galactic currency) you currently have, as well as how much fuel you have ready to use. Each ship in your fleet requires one fuel canister to jump between star systems. The bar to the right of that displays your fleet's current warp charge progress. You will not be able to travel to another system until your warp drives have finished charging.\nYou can hide the entire interface at any time by holding \"~\".",
 	[["OK.", ["dialogue_set_up", 4, 1]], ["Back", ["dialogue_set_up", 3, 1]]]
 	],
@@ -317,7 +319,7 @@ func _ready() -> void:
 		await main.setup_complete
 	# Generate visual galaxy map
 	for i in Global.galaxy_data:
-		var new_token: Node = galaxy_map_token.instantiate()
+		var new_token: Area2D = galaxy_map_token.instantiate()
 		new_token.id = i["id"]
 		new_token.position = i["position"]
 		$GalaxyMap/Tokens.add_child(new_token)
@@ -454,7 +456,7 @@ func _process(delta: float) -> void:
 					Global.galaxy_data[Global.current_system]["ship shop"] = ship_catalogue
 				if "enemy presence" in main.system_properties:
 					Global.galaxy_data[Global.current_system]["enemies"] = []
-					for enemy in main.get_node("HostileShips").get_children():
+					for enemy in hostile_ships.get_children():
 						if enemy.type == 7:
 							Global.galaxy_data[Global.current_system]["enemies"].append([enemy.type, enemy.level, enemy.drones])
 						else:
@@ -515,7 +517,7 @@ func _process(delta: float) -> void:
 				if Input.is_action_just_pressed("up2"):
 					hovered_target -= 4
 					$HoverSFX.play()
-				selected_ship = clampi(selected_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
+				selected_ship = clampi(selected_ship, 0, friendly_ships.get_child_count() - 1)
 				select_ship()
 			elif left_action_menu:
 				if Input.is_action_just_pressed("left1"):
@@ -571,27 +573,27 @@ func _process(delta: float) -> void:
 				if Input.is_action_just_pressed("up1"):
 					hovered_target -= 4
 					$HoverSFX.play()
-			hovered_ship = clamp(hovered_ship, 0, main.get_node("FriendlyShips").get_child_count() - 1)
+			hovered_ship = clamp(hovered_ship, 0, friendly_ships.get_child_count() - 1)
 		for i in %ActionTargetShips/GridContainer.get_children():
 			i.hide()
 		for i in %ActionFriendlyShips/GridContainer.get_children():
 			i.hide()
 		var index: int = 0
 		if targeting_mode == 1 or targeting_mode == 3 or targeting_mode == 5:
-			var hostiles_count: int = main.get_node("HostileShips").get_child_count()
+			var hostiles_count: int = hostile_ships.get_child_count()
 			if hostiles_count > 0:
 				%ActionTargetShips/NoTargets.hide()
 				hovered_target = clamp(hovered_target, 0, hostiles_count - 1)
-				for ship in main.get_node("HostileShips").get_children():
-					var box: Node = %ActionTargetShips/GridContainer.get_child(index)
+				for ship in hostile_ships.get_children():
+					var box: PanelContainer = %ActionTargetShips/GridContainer.get_child(index)
 					var stylebox: Resource = box.get_theme_stylebox("panel")
 					box.get_node("Code").text = SHIP_CODES[ship.type]
 					if index == hovered_target and (Global.joystick_control and (Global.dual_joysticks or (not Global.dual_joysticks and not left_action_menu)) or not Global.joystick_control):
 						stylebox.border_color = Color8(100, 100, 160)
 					else:
 						stylebox.border_color = Color8(0, 0, 160)
-					if selected_ship < main.get_node("FriendlyShips").get_child_count():
-						var friendly: Node = main.get_node("FriendlyShips").get_child(selected_ship)
+					if selected_ship < friendly_ships.get_child_count():
+						var friendly: Node3D = friendly_ships.get_child(selected_ship)
 						if friendly != null:
 							if friendly.target != null:
 								if index == friendly.target.get_index():
@@ -604,15 +606,15 @@ func _process(delta: float) -> void:
 				%ActionTargetShips/NoTargets.show()
 		elif targeting_mode == 4:
 			%ActionTargetShips/NoTargets.hide()
-			for ship in main.get_node("FriendlyShips").get_children():
-				var box: Node = %ActionTargetShips/GridContainer.get_child(index)
+			for ship in friendly_ships.get_children():
+				var box: PanelContainer = %ActionTargetShips/GridContainer.get_child(index)
 				var stylebox: Resource = box.get_theme_stylebox("panel")
 				box.get_node("Code").text = SHIP_CODES[ship.type]
 				if index == hovered_target and (Global.joystick_control and (Global.dual_joysticks or (not Global.dual_joysticks and not left_action_menu)) or not Global.joystick_control):
 					stylebox.border_color = Color8(100, 100, 160)
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
-				var friendly: Node = main.get_node("FriendlyShips").get_child(selected_ship)
+				var friendly: Node3D = friendly_ships.get_child(selected_ship)
 				if friendly != null:
 					if friendly.target != null:
 						if index == friendly.target.get_index():
@@ -624,8 +626,8 @@ func _process(delta: float) -> void:
 		else:
 			%ActionTargetShips/NoTargets.hide()
 		index = 0
-		for ship in main.get_node("FriendlyShips").get_children():
-			var box: Node = %ActionFriendlyShips/GridContainer.get_child(index)
+		for ship in friendly_ships.get_children():
+			var box: PanelContainer = %ActionFriendlyShips/GridContainer.get_child(index)
 			var stylebox: Resource = box.get_theme_stylebox("panel")
 			box.get_node("Code").text = SHIP_CODES[ship.type]
 			#box.set_meta("type", ship.type)
@@ -641,14 +643,14 @@ func _process(delta: float) -> void:
 			index += 1
 		if Global.joystick_control and (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")):
 			if Global.dual_joysticks:
-				main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+				friendly_ships.get_child(selected_ship).new_target(hovered_target)
 				$PressSFX.play()
 			elif left_action_menu:
 				selected_ship = hovered_ship
 				select_ship()
 				$PressSFX.play()
 			else:
-				main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+				friendly_ships.get_child(selected_ship).new_target(hovered_target)
 				$PressSFX.play()
 	else:
 		$ShipActionMenu.hide()
@@ -656,10 +658,10 @@ func _process(delta: float) -> void:
 	if info_menu_showing:
 		$FleetInfoMenu.show()
 		var index: int = 0
-		var fleet_size = main.get_node("FriendlyShips").get_child_count()
+		var fleet_size: int = friendly_ships.get_child_count()
 		for button in %ShipSelection.get_children():
 			if index < fleet_size:
-				var ship: Node = main.get_node("FriendlyShips").get_child(index)
+				var ship: Node3D = friendly_ships.get_child(index)
 				button.show()
 				button.get_child(0).text = SHIP_CODES[ship.type] + ": " + ship.ship_name.to_upper()
 				var stylebox: Resource = button.get_theme_stylebox("panel")
@@ -679,19 +681,9 @@ func _process(delta: float) -> void:
 						%Information/Leveling/Specification0/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][0]
 						%Information/Leveling/Specification1/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][1]
 						%Information/Leveling/Specification2/Label.text = Global.upgrade_specifications[ship.type][ship.level - 1][2]
-						%Information/Leveling/Cost.show()
-						%Information/Leveling/Upgrade.show()
-						%Information/Leveling/WhenUpgraded.show()
-						%Information/Leveling/Specification0.show()
-						%Information/Leveling/Specification1.show()
-						%Information/Leveling/Specification2.show()
+						get_tree().call_group("leveling panels", "show")
 					else:
-						%Information/Leveling/Cost.hide()
-						%Information/Leveling/Upgrade.hide()
-						%Information/Leveling/WhenUpgraded.hide()
-						%Information/Leveling/Specification0.hide()
-						%Information/Leveling/Specification1.hide()
-						%Information/Leveling/Specification2.hide()
+						get_tree().call_group("leveling panels", "hide")
 					%Information/Instructions/Active/Label.text = ACTIVE_TEXT[int(ship.active)]
 					%Information/Instructions/TakeAction/Button.text = Global.ship_actions[ship.type][0]
 					%Information/Instructions/CeaseAction/Button.text = Global.ship_actions[ship.type][1]
@@ -770,7 +762,7 @@ func _process(delta: float) -> void:
 					info_menu_column += 1
 					$HoverSFX.play()
 				hovered_at_ship_info = looking_at_ship_info
-			var this_ship: Node = main.get_node("FriendlyShips").get_child(looking_at_ship_info)
+			var this_ship: Node3D = friendly_ships.get_child(looking_at_ship_info)
 			if info_menu_column == 1:
 				if Input.is_action_just_pressed("down1"):
 					info_showing += 1
@@ -835,7 +827,7 @@ func _process(delta: float) -> void:
 								button.emit_signal("pressed")
 			info_showing = clampi(info_showing, 0, 3)
 			info_menu_column = clampi(info_menu_column, 0, 2)
-		looking_at_ship_info = clampi(looking_at_ship_info, 0, main.get_node("FriendlyShips").get_child_count() - 1)
+		looking_at_ship_info = clampi(looking_at_ship_info, 0, friendly_ships.get_child_count() - 1)
 	else:
 		$FleetInfoMenu.hide()
 	
@@ -933,7 +925,7 @@ func _process(delta: float) -> void:
 				else:
 					stylebox.border_color = Color8(0, 0, 160)
 		child_index = 1
-		for ship in main.get_node("FriendlyShips").get_children():
+		for ship in friendly_ships.get_children():
 			if ship.type == 0:
 				continue
 			%ShipSell.get_child(child_index).show()
@@ -1119,7 +1111,7 @@ func _info_menu() -> void:
 
 
 func upgrade_ship() -> void:
-	var ship: Node = main.get_node("FriendlyShips").get_child(looking_at_ship_info)
+	var ship: Node3D = friendly_ships.get_child(looking_at_ship_info)
 	var price: int = Global.upgrade_costs[ship.type][ship.level - 1]
 	if Global.resources >= price:
 		resources(-price)
@@ -1253,7 +1245,7 @@ func hover_ship(n: int) -> void:
 func select_ship(n: int = -1) -> void:
 	if n != -1:
 		selected_ship = n
-	targeting_mode = main.get_node("FriendlyShips").get_child(selected_ship).type
+	targeting_mode = friendly_ships.get_child(selected_ship).type
 	%Instruction/Label.text = TARGETING_OPTIONS[targeting_mode]
 
 
@@ -1262,8 +1254,8 @@ func hover_target(n: int) -> void:
 
 
 func select_target() -> void:
-	if main.get_node("FriendlyShips").get_child(selected_ship) != null:
-		main.get_node("FriendlyShips").get_child(selected_ship).new_target(hovered_target)
+	if friendly_ships.get_child(selected_ship) != null:
+		friendly_ships.get_child(selected_ship).new_target(hovered_target)
 	$PressSFX.play()
 
 
@@ -1305,21 +1297,21 @@ func buy_ship(n: int) -> void:
 
 
 func sell_ship(n: int) -> void:
-	var sold_ship: Node = main.get_node("FriendlyShips").get_child(n)
+	var sold_ship: Node3D = friendly_ships.get_child(n)
 	resources((ceil(Global.starship_base_stats[sold_ship.type]["Cost"]) / 2) * sold_ship.level, 0)
 	sold_ship.hull = 0
 	$PressSFX.play()
 
 
 func ship_action(activate: bool) -> void:
-	if main.get_node("FriendlyShips").get_child(looking_at_ship_info) != null:
-		main.get_node("FriendlyShips").get_child(looking_at_ship_info).active = activate
+	if friendly_ships.get_child(looking_at_ship_info) != null:
+		friendly_ships.get_child(looking_at_ship_info).active = activate
 		$PressSFX.play()
 
 
 func abandon_ship() -> void:
-	if main.get_node("FriendlyShips").get_child(looking_at_ship_info) != null:
-		main.get_node("FriendlyShips").get_child(looking_at_ship_info).hull = 0
+	if friendly_ships.get_child(looking_at_ship_info) != null:
+		friendly_ships.get_child(looking_at_ship_info).hull = 0
 		$PressSFX.play()
 
 

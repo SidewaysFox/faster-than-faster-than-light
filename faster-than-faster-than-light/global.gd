@@ -102,7 +102,7 @@ var starship_base_stats: Array[Dictionary] = [
 	},
 ]
 
-var upgrade_costs: Array = [
+var upgrade_costs: Array[Array] = [
 	[85, 90],
 	[60, 95],
 	[50, 65],
@@ -113,7 +113,7 @@ var upgrade_costs: Array = [
 	[90, 95],
 	]
 
-var upgrade_specifications: Array = [
+var upgrade_specifications: Array[Array] = [
 	[
 		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 INVENTORY SLOT"],
 		["+5 HULL STRENGTH", "+0.05 AGILITY", "+1 INVENTORY SLOT"],
@@ -148,7 +148,7 @@ var upgrade_specifications: Array = [
 	],
 ]
 
-var ship_actions: Array = [
+var ship_actions: Array[Array] = [
 	["N/A", "N/A"],
 	["OPEN FIRE!", "CEASE FIRE!"],
 	["ACTIVATE SHIELDS!", "DEACTIVATE SHIELDS!"],
@@ -308,7 +308,7 @@ func establish() -> void:
 		# Because config files can't store the starships properly when the game has been closed
 		fleet = []
 		for ship in config.get_value("Game", "fleet"):
-			var new_ship: Node = starship.instantiate()
+			var new_ship: Node3D = starship.instantiate()
 			new_ship.id = ship.id
 			new_ship.team = ship.team
 			new_ship.type = ship.type
@@ -449,7 +449,7 @@ func new_system(system: int) -> void:
 
 
 func create_new_starship(type: int, ship_name: String = "Starship", creator_id: int = -1) -> void:
-	var new_ship: Node = starship.instantiate()
+	var new_ship: Node3D = starship.instantiate()
 	new_ship.id = get_new_ship_id()
 	new_ship.team = 1
 	new_ship.type = type
@@ -468,7 +468,7 @@ func create_new_starship(type: int, ship_name: String = "Starship", creator_id: 
 
 
 func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = -1) -> void:
-	var new_enemy: Node = starship.instantiate()
+	var new_enemy: Node3D = starship.instantiate()
 	new_enemy.id = get_new_ship_id()
 	new_enemy.team = -1
 	new_enemy.type = type

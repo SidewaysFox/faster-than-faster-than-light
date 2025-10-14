@@ -1,7 +1,7 @@
 extends PanelContainer
 
 
-@onready var ui: Node = get_node("/root/Space/CanvasLayer/UserInterface")
+@onready var ui: Control = get_node("/root/Space/CanvasLayer/UserInterface")
 @onready var id: int = get_meta("id")
 
 

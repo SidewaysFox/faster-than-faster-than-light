@@ -1664,7 +1664,7 @@ text = "CURRENT LEVEL: 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Cost" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="Cost" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling" groups=["leveling panels"]]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_2yj2g")
@@ -1677,7 +1677,7 @@ text = "UPGRADE COST: 40 TECH"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Upgrade" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="Upgrade" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling" groups=["leveling panels"]]
 custom_minimum_size = Vector2(0, 174)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hli4u")
@@ -1788,7 +1788,7 @@ size_flags_vertical = 0
 mouse_filter = 2
 color = Color(0.627451, 0, 0, 1)
 
-[node name="WhenUpgraded" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="WhenUpgraded" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling" groups=["leveling panels"]]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
@@ -1801,7 +1801,7 @@ text = "WHEN UPGRADED:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Specification0" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="Specification0" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling" groups=["leveling panels"]]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
@@ -1814,7 +1814,7 @@ text = "ADDITIONAL WEAPON SLOT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Specification1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="Specification1" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling" groups=["leveling panels"]]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")
@@ -1827,7 +1827,7 @@ text = "INCREASED HULL STRENGTH"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Specification2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling"]
+[node name="Specification2" type="PanelContainer" parent="FleetInfoMenu/VBoxContainer/HBoxContainer/Information/Leveling" groups=["leveling panels"]]
 custom_minimum_size = Vector2(0, 87)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iw2er")

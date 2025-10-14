@@ -1,15 +1,15 @@
 extends Control
 
 
-@onready var main: Node = get_node("/root/Space")
-@onready var ui: Node = get_node("/root/Space/CanvasLayer/UserInterface")
+@onready var main: Control = get_node("/root/Space")
+@onready var ui: Control = get_node("/root/Space/CanvasLayer/UserInterface")
 var inventory_weapons: Array
 var inventory_drones: Array
 
 
 func left_button(weapon_index: int) -> void:
 	sort_inventory()
-	var edited_ship: Node = main.get_node("FriendlyShips").get_child(ui.looking_at_ship_info)
+	var edited_ship: Node3D = main.get_node("FriendlyShips").get_child(ui.looking_at_ship_info)
 	if edited_ship.type == 1 and len(inventory_weapons) > 0:
 		inventory_weapons.insert(0, edited_ship.weapons[weapon_index])
 		edited_ship.weapons[weapon_index] = inventory_weapons.pop_back()
@@ -22,7 +22,7 @@ func left_button(weapon_index: int) -> void:
 
 func right_button(weapon_index: int) -> void:
 	sort_inventory()
-	var edited_ship: Node = main.get_node("FriendlyShips").get_child(ui.looking_at_ship_info)
+	var edited_ship: Node3D = main.get_node("FriendlyShips").get_child(ui.looking_at_ship_info)
 	if edited_ship.type == 1 and len(inventory_weapons) > 0:
 		inventory_weapons.append(edited_ship.weapons[weapon_index])
 		edited_ship.weapons[weapon_index] = inventory_weapons.pop_front()
