@@ -32,18 +32,18 @@ func _process(delta: float) -> void:
 			for ship in main.get_node("FriendlyShips").get_children():
 				if ship.type == Global.StarshipTypes.SHIELD and ship.shield_layers > 0:
 					ship.shield_layers -= 1
-					_blocked()
+					blocked()
 					break
 		else:
 			for ship in main.get_node("HostileShips").get_children():
 				if ship.type == Global.StarshipTypes.SHIELD and ship.shield_layers > 0:
 					ship.shield_layers -= 1
-					_blocked()
+					blocked()
 					break
 		if target.agility < randf() and not is_queued_for_deletion():
 			if Global.crit_chance > randf() * ACCURACY:
 				target.hull -= damage + CRIT_BONUS
-				_crit()
+				crit()
 			else:
 				target.hull -= damage
 			queue_free()
@@ -52,7 +52,7 @@ func _process(delta: float) -> void:
 			$Control.add_child(missed_ui.instantiate())
 
 
-func _blocked() -> void:
+func blocked() -> void:
 	var new_missed: Control = missed_ui.instantiate()
 	new_missed.get_child(0).text = BLOCKED_TEXT
 	new_missed.global_position = $Control.global_position
@@ -60,7 +60,7 @@ func _blocked() -> void:
 	queue_free()
 
 
-func _crit() -> void:
+func crit() -> void:
 	var new_crit: Control = missed_ui.instantiate()
 	new_crit.get_child(0).text = CRIT_TEXT
 	new_crit.global_position = $Control.global_position

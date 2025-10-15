@@ -1,6 +1,7 @@
 extends Control
 
 
+@onready var music: AudioStreamPlayer = get_node("/root/MainMenu/Music/")
 var current_menu_selection: int = 0
 
 const BUTTON_COLOUR_NORMAL: Color = Color(1.0, 1.0, 1.0)
@@ -38,11 +39,13 @@ func _on_new_game_pressed(tutorial: bool = false) -> void:
 
 func _on_settings_pressed() -> void:
 	var settings: String = "res://Menus/settings.tscn"
+	Global.menu_music_progress = music.get_playback_position()
 	get_tree().change_scene_to_file(settings)
 
 
 func _on_credits_pressed() -> void:
 	var credits: String = "res://Menus/credits.tscn"
+	Global.menu_music_progress = music.get_playback_position()
 	get_tree().change_scene_to_file(credits)
 
 

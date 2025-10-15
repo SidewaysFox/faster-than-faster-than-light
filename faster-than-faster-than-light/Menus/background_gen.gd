@@ -32,11 +32,15 @@ const STAR_RENDER_DISTANCE: float = 3500.0
 
 
 func _ready() -> void:
+	# Begin playing music from where it left off in the previous menu
 	$Music.play(Global.menu_music_progress)
 	# Pass information to the BGStar GLSL script
-	$BGStars.material_override.set_shader_parameter("seed", randf_range(BG_STARS_SEED.x, BG_STARS_SEED.y))
-	$BGStars.material_override.set_shader_parameter("prob", randf_range(BG_STARS_PROB.x, BG_STARS_PROB.y))
-	$BGStars.material_override.set_shader_parameter("size", randf_range(BG_STARS_SIZE.x, BG_STARS_SIZE.y))
+	$BGStars.material_override.set_shader_parameter("seed",
+			randf_range(BG_STARS_SEED.x, BG_STARS_SEED.y))
+	$BGStars.material_override.set_shader_parameter("prob",
+			randf_range(BG_STARS_PROB.x, BG_STARS_PROB.y))
+	$BGStars.material_override.set_shader_parameter("size",
+			randf_range(BG_STARS_SIZE.x, BG_STARS_SIZE.y))
 	# Establish this system's star(s)
 	main_star_count = str(system_types.pick_random())
 	for star in get_tree().get_nodes_in_group(main_star_count):
@@ -53,7 +57,11 @@ func _ready() -> void:
 		var not_colliding: int = 1
 		while not_colliding == get_tree().get_node_count_in_group(main_star_count):
 			for other_star in get_tree().get_nodes_in_group(main_star_count):
-				if other_star != star and star_position.distance_to(other_star.position) < star.mesh.radius + other_star.mesh.radius:
+				if (
+						other_star != star
+						and star_position.distance_to(other_star.position)
+						< star.mesh.radius + other_star.mesh.radius
+				):
 					star_position = star_reposition()
 				else:
 					not_colliding += 1
@@ -102,8 +110,6 @@ func _process(delta: float) -> void:
 	
 	for child in $Background.get_children():
 		child.rotation_degrees.y += bg_object_rotation * delta
-	
-	Global.menu_music_progress += delta
 	
 	if not $Music.playing:
 		$Music.play()

@@ -48,6 +48,7 @@ const LARGE_NEB_CHANCE: int = 30
 const LARGE_NEB_SIZE: Vector2i = Vector2i(50, 300)
 const SMALL_NEB_SIZE: Vector2i = Vector2i(1, 20)
 const STAR_RENDER_DISTANCE: float = 3500.0
+const SAVE_DELAY: float = 0.2
 
 var tutorial_enemy_fleet: Array[Array] = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
@@ -239,7 +240,7 @@ func _ready() -> void:
 		var nebula_pos: Vector3
 		var nebula_colour: Color = Color(randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_ALPHA.x, NEB_ALPHA.y))
 		Global.galaxy_data[Global.current_system]["nebulae"] = []
-		for i in randi_range(1, 22):
+		for nebula in randi_range(NEB_COUNT.x, NEB_COUNT.y):
 			# Not as important that it remains in bounds
 			nebula_pos = Vector3(randf_range(NEB_POS_X.x, NEB_POS_X.y), randf_range(NEB_POS_Y.x, NEB_POS_Y.y), randf_range(NEB_POS_Z.x, NEB_POS_Z.y))
 			nebula_colour += Color(randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_ALPHA_SHIFT, NEB_ALPHA_SHIFT))
@@ -256,12 +257,12 @@ func _ready() -> void:
 					var neb_radius: float = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
 					new_nebula.mesh.radius = neb_radius
 					new_nebula.mesh.height = neb_radius * HEIGHT_FACTOR
-					Global.galaxy_data[Global.current_system]["nebulae"][i].append([nebula_pos, nebula_colour, neb_radius])
+					Global.galaxy_data[Global.current_system]["nebulae"][nebula].append([nebula_pos, nebula_colour, neb_radius])
 					$Background.add_child(new_nebula)
 					nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 			else:
 				# Small
-				for j in randi_range(1, 20):
+				for cloud in randi_range(SMALL_NEB_SIZE.x, SMALL_NEB_SIZE.y):
 					var new_nebula: MeshInstance3D = bg_nebula.instantiate()
 					new_nebula.position = nebula_pos
 					new_nebula.mesh.material.albedo_color = nebula_colour
@@ -269,7 +270,7 @@ func _ready() -> void:
 					var neb_radius: float = randf_range(20.0, 50.0)
 					new_nebula.mesh.radius = neb_radius
 					new_nebula.mesh.height = neb_radius * 2.0
-					Global.galaxy_data[Global.current_system]["nebulae"][i].append([nebula_pos, nebula_colour, neb_radius])
+					Global.galaxy_data[Global.current_system]["nebulae"][nebula].append([nebula_pos, nebula_colour, neb_radius])
 					$Background.add_child(new_nebula)
 					nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
 	else:
@@ -335,6 +336,7 @@ func _ready() -> void:
 		system_properties.append("star proximity")
 		$SolarFlare.start()
 	
+	await get_tree().create_timer(SAVE_DELAY).timeout
 	Global.new_system(Global.current_system)
 	Global.save_game()
 
@@ -389,7 +391,8 @@ func commence_warp() -> void:
 
 
 func _on_solar_flare_timeout() -> void:
-	if not "shop presence" in system_properties:
+	var shop_in_system: bool = "shop presence" in system_properties
+	if not shop_in_system:
 		$SolarFlareSFX.play()
 		await get_tree().create_timer(SOLAR_FLARE_SFX_DELAY).timeout
 		for existing_starship in get_tree().get_nodes_in_group("starships"):

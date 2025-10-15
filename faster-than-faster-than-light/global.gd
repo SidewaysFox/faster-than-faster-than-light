@@ -315,7 +315,8 @@ const ENEMY_TARGETERS: Array[int] = [1, 3, 5]
 
 const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
 
-const TUTORIAL_GALAXY: Array[Dictionary] = [
+# This can't be a constant, otherwise it makes everything else a constant
+var tutorial_galaxy: Array[Dictionary] = [
 				{
 					"id": 0,
 					"position": Vector2(155, 310),
@@ -358,8 +359,10 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	AudioServer.set_bus_volume_linear(1, music_volume / VOLUME_FACTOR)
-	AudioServer.set_bus_volume_linear(2, sfx_volume / VOLUME_FACTOR)
+	const BUS_ONE: int = 1
+	const BUS_TWO: int = 2
+	AudioServer.set_bus_volume_linear(BUS_ONE, music_volume / VOLUME_FACTOR)
+	AudioServer.set_bus_volume_linear(BUS_TWO, sfx_volume / VOLUME_FACTOR)
 
 
 func establish() -> void:
@@ -410,7 +413,7 @@ func establish() -> void:
 		if tutorial:
 			starting_fleet = DEFAULT_TUTORIAL_FLEET
 			fleet_inventory = TUTORIAL_INVENTORY.duplicate()
-			galaxy_data = TUTORIAL_GALAXY
+			galaxy_data = tutorial_galaxy
 		else:
 			starting_fleet = DEFAULT_STARTING_FLEET
 			fleet_inventory = STARTING_INVENTORY.duplicate()
@@ -438,13 +441,15 @@ func establish() -> void:
 		
 		# Check which system is furthest to the left
 		# Same for which is furthest to the right
-		var starting_system: Array = [0, 800.0]
-		var end_system: Array = [0, 400.0]
-		for i in galaxy_data:
-			if i["position"].x < starting_system[1]:
-				starting_system = [i["id"], i["position"].x]
-			elif i["position"].x > end_system[1]:
-				end_system = [i["id"], i["position"].x]
+		var MAX_START_X: float = 800.0
+		var MIN_END_X: float = 400.0
+		var starting_system: Array = [0, MAX_START_X]
+		var end_system: Array = [0, MIN_END_X]
+		for node in galaxy_data:
+			if node["position"].x < starting_system[1]:
+				starting_system = [node["id"], node["position"].x]
+			elif node["position"].x > end_system[1]:
+				end_system = [node["id"], node["position"].x]
 		current_system = starting_system[0]
 		destination = end_system[0]
 		galaxy_data[current_system]["enemy presence"] = false

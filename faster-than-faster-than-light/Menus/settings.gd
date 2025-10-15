@@ -1,12 +1,12 @@
 extends Control
 
 
+@onready var music: AudioStreamPlayer = get_node("/root/Settings/Music/")
 var current_selection: int = 0
 
 const MAX_SELECTION: int = 2
 const BUTTON_COLOUR_NORMAL: Color = Color(1.0, 1.0, 1.0)
 const BUTTON_COLOUR_HOVER: Color = Color(0.0, 0.749, 1.0)
-
 const CONTROL_MODE_TEXTS: Array = ["CONTROL MODE: KEYBOARD/MOUSE", "CONTROL MODE: ARCADE"]
 const JOYSTICK_MODE_TEXTS: Array = ["JOYSTICK MODE: SINGLE", "JOYSTICK MODE: DUAL"]
 
@@ -18,6 +18,13 @@ func _ready() -> void:
 
 func _on_back_pressed() -> void:
 	var main_menu: String = "res://Menus/main_menu.tscn"
+	var config: ConfigFile = ConfigFile.new()
+	config.set_value("Settings", "music_volume", Global.music_volume)
+	config.set_value("Settings", "sfx_volume", Global.sfx_volume)
+	config.set_value("Settings", "joystick_control", Global.joystick_control)
+	config.set_value("Settings", "dual_joysticks", Global.dual_joysticks)
+	config.save("user://settings.cfg")
+	Global.menu_music_progress = music.get_playback_position()
 	get_tree().change_scene_to_file(main_menu)
 
 

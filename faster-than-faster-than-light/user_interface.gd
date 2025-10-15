@@ -71,7 +71,7 @@ const WARP_STAGE_B_TIME: float = 3.0
 const WARP_STAGE_C_TIME: float = 4.0
 const MAP_TOKENS_RANGE: Vector2 = Vector2(-2040.0, 45.0)
 const MAP_CURSOR_MIN: Vector2 = Vector2(385.0, 256.0)
-const MAP_CURSOR_MAX: Vector2 = Vector2(824.0, 1535.0)
+const MAP_CURSOR_MAX: Vector2 = Vector2(1535.0, 824.0)
 const ACTION_MENU_VERTICAL: int = 4
 const AGILITY_FACTOR: float = 100.0
 const SHIP_LIST_SEPARATOR: String = ": "
@@ -157,15 +157,15 @@ var shop_ship_descriptions: Array[String] = [
 var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[[1, "tutorial", "enemy presence"],
 	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
-	[["Noted.", ["dialogue_set_up", DialogueTypes.INTRO, 6]]]
+	[["Noted.", ["dialogue_set_up", DialogueTypes.TUTORIAL, 6]]]
 	],
 	[[2, "tutorial", "enemy presence"],
 	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
-	[["Noted.", ["dialogue_set_up", DialogueTypes.INTRO, 6]]]
+	[["Noted.", ["dialogue_set_up", DialogueTypes.TUTORIAL, 6]]]
 	],
 	[[3, "tutorial", "enemy presence"],
 	"Watch out! There are pirates in this system, and they'll engage you immediately. Don't panic, however. You are fortunately a quick-minded commander, and can temporarily stop time by pressing the pause time button.",
-	[["Noted.", ["dialogue_set_up", DialogueTypes.INTRO, 6]]]
+	[["Noted.", ["dialogue_set_up", DialogueTypes.TUTORIAL, 6]]]
 	],
 	[[1, "tutorial", "shop presence"],
 	"This star system has a shop present within it. You can initiate trade to purchase or sell weapons and starships in order to improve your fleet. Have a look around with the tech you have right now and see if you can afford anything.",
@@ -180,27 +180,27 @@ var warp_in_dialogue: Array = [ # Conditions, main text, [option, result]
 	[["OK.", ["close", false]]]
 	],
 	[[1, "tutorial", "destination"],
-	"Well done for completing this short introductory course to Fatal Fleet.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
+	"Well done for completing this short introductory course to FATAL FLEET.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
 	[["OK.", ["close", false, true]]]
 	],
 	[[2, "tutorial", "destination"],
-	"Well done for completing this short introductory course to Fatal Fleet.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
+	"Well done for completing this short introductory course to FATAL FLEET.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
 	[["OK.", ["close", false, true]]]
 	],
 	[[3, "tutorial", "destination"],
-	"Well done for completing this short introductory course to Fatal Fleet.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
+	"Well done for completing this short introductory course to FATAL FLEET.\nDon't forget - this is a difficult game. I hope you enjoy your journey through the galaxy.\nYou may redo this tutorial anytime from the main menu.",
 	[["OK.", ["close", false, true]]]
 	],
 	[[1, "destination"],
-	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing Fatal Fleet.",
+	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing FATAL FLEET.",
 	[["Complete the delivery.", ["close", false, true]]]
 	],
 	[[2, "destination"],
-	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing Fatal Fleet.",
+	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing FATAL FLEET.",
 	[["Complete the delivery.", ["close", false, true]]]
 	],
 	[[3, "destination"],
-	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing Fatal Fleet.",
+	"You have finally arrived at your ultimate destination. Leading your fleet to the nearby Alliance outpost, you hail the personnel who await your arrival. Despite the challenges you and your crew have faced, you were successful in your mission.\nThank you for playing FATAL FLEET.",
 	[["Complete the delivery.", ["close", false, true]]]
 	],
 	[[1],
@@ -368,8 +368,8 @@ var intro_dialogues: Array[Array] = [
 	["You, as an Alliance fleet commander, have been tasked with a crucial mission: deliver a package of goods and weapons to an isolated Alliance navy, who are currently fighting against the rebel uprising. The region of space ahead is outside of policed Alliance territory and is rife with pirates and other threats. In the rush to respond to the sudden rebel presence, you were only able to mobilise a small squadron of starships.\nMake the delivery, and save millions of lives.\nThe rest is up to you.",
 	[["Let's go.", ["close", false]]]
 	],
-	["Welcome, commander, to Fatal Fleet! You have been given authority of a small fleet of ships, and are expected to be able to adequately lead those ships through the cosmos.\nIn this tutorial, you will learn the ropes of fleet command, including the basics of combat.",
-	[["Continue", ["dialogue_set_up", DialogueTypes.INTRO, 0]]]
+	["Welcome, commander, to FATAL FLEET! You have been given authority of a small fleet of ships, and are expected to be able to adequately lead those ships through the cosmos.\nIn this tutorial, you will learn the ropes of fleet command, including the basics of combat.",
+	[["Continue", ["dialogue_set_up", DialogueTypes.TUTORIAL, 0]]]
 	],
 ]
 
@@ -407,10 +407,10 @@ func _ready() -> void:
 		intro_dialogue = true
 		await main.setup_complete
 	# Generate visual galaxy map
-	for i in Global.galaxy_data:
+	for token in Global.galaxy_data:
 		var new_token: Area2D = galaxy_map_token.instantiate()
-		new_token.id = i["id"]
-		new_token.position = i["position"]
+		new_token.id = token["id"]
+		new_token.position = token["position"]
 		$GalaxyMap/Tokens.add_child(new_token)
 
 
@@ -477,16 +477,16 @@ func _process(delta: float) -> void:
 			if (Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and ready_to_select:
 				select_dialogue(current_dialogue_selection)
 			# Appropriately colour the selected option
-			for i in max_option:
-				if i + 1 == current_dialogue_selection:
-					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", HOVERED_COLOUR)
+			for option in max_option:
+				if option + 1 == current_dialogue_selection:
+					%Options.get_node("Option" + str(option + 1)).add_theme_color_override("font_color", HOVERED_COLOUR)
 				else:
-					%Options.get_node("Option" + str(i + 1)).add_theme_color_override("font_color", Color.WHITE)
+					%Options.get_node("Option" + str(option + 1)).add_theme_color_override("font_color", Color.WHITE)
 		else:
 			# Check for numerical inputs
-			for i in max_option:
-				if Input.is_action_just_pressed(str(i + 1)) and ready_to_select:
-					%Options.get_node("Option" + str(i + 1)).emit_signal("pressed")
+			for option in max_option:
+				if Input.is_action_just_pressed(str(option + 1)) and ready_to_select:
+					%Options.get_node("Option" + str(option + 1)).emit_signal("pressed")
 		%ChargeProgress/Label.text = CHARGE_WAITING_TEXT
 	else:
 		if main.warp_charge < MAX_WARP_CHARGE:
@@ -527,11 +527,11 @@ func _process(delta: float) -> void:
 		# Cursor snapping
 		if Input.get_axis("left1", "right1") == 0 and Input.get_axis("up1", "down1") == 0 and len(%Cursor.get_overlapping_areas()) > 0:
 			var in_warp_range: bool = false
-			var closest_token: Dictionary = {"No": 0, "Distance": 400.0, "id": 0}
+			var closest_token: Dictionary = {"Number": 0, "Distance": 400.0, "id": 0}
 			var n: int = 0
 			for token in %Cursor.get_overlapping_areas():
 				var x: Dictionary = {
-					"No": n,
+					"Number": n,
 					"Distance": %Cursor.position.distance_squared_to(token.position),
 					"id": token.id
 					}
@@ -540,7 +540,7 @@ func _process(delta: float) -> void:
 					if token.position.distance_to(Global.system_position) <= Global.jump_distance:
 						in_warp_range = true
 				n += 1
-			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token[0]].position, CURSOR_LERP)
+			%Cursor.position = lerp(%Cursor.position, %Cursor.get_overlapping_areas()[closest_token["Number"]].position, CURSOR_LERP)
 			# Warping input
 			if (((Input.is_action_just_pressed("1") or Input.is_action_just_pressed("A")) and Global.joystick_control) or (Input.is_action_just_pressed("warp") and not Global.joystick_control)) and in_warp_range and closest_token["id"] != Global.current_system and Global.fuel >= len(Global.fleet):
 				$PressSFX.play()
@@ -561,7 +561,7 @@ func _process(delta: float) -> void:
 				galaxy_map_showing = false
 				Global.in_combat = false
 				Global.fuel -= len(Global.fleet)
-				_quantity_change(1, false)
+				quantity_change(1, false)
 				Global.new_system(closest_token["id"])
 				# Warp sequence
 				await get_tree().create_timer(WARP_STAGE_A_TIME).timeout
@@ -667,10 +667,10 @@ func _process(delta: float) -> void:
 					hovered_target -= ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 			hovered_ship = clamp(hovered_ship, 0, friendly_ships.get_child_count() - 1)
-		for i in %ActionTargetShips/GridContainer.get_children():
-			i.hide()
-		for i in %ActionFriendlyShips/GridContainer.get_children():
-			i.hide()
+		for child in %ActionTargetShips/GridContainer.get_children():
+			child.hide()
+		for child in %ActionFriendlyShips/GridContainer.get_children():
+			child.hide()
 		var index: int = 0
 		if targeting_mode in Global.ENEMY_TARGETERS:
 			var hostiles_count: int = hostile_ships.get_child_count()
@@ -973,7 +973,7 @@ func _process(delta: float) -> void:
 			%ItemSell.get_child(child_index).show()
 			%ItemSell.get_child(child_index).get_node("Row/Col1/Name").text = NAME_TEXT + Global.weapon_list[item]["Name"]
 			%ItemSell.get_child(child_index).get_node("Row/Col1/Type").text = TYPE_TEXT + Global.weapon_types[Global.weapon_list[item]["Type"]]
-			%ItemSell.get_child(child_index).get_node("Row/Col1/Value").text = SELL_VALUE_TEXT + str((ceil(Global.weapon_list[item]["Cost"]) * SELL_MODIFIER)) + TECH_SUFFIX
+			%ItemSell.get_child(child_index).get_node("Row/Col1/Value").text = SELL_VALUE_TEXT + str(int((ceil(Global.weapon_list[item]["Cost"]) * SELL_MODIFIER))) + TECH_SUFFIX
 			%ItemSell.get_child(child_index).get_node("Row/Col2/Damage").text = DAMAGE_TEXT + str(Global.weapon_list[item]["Damage"]) + HULL_SUFFIX
 			%ItemSell.get_child(child_index).get_node("Row/Col2/Reload").text = RELOAD_TEXT + str(Global.weapon_list[item]["Reload time"]) + SECONDS_SUFFIX
 			child_index += 1
@@ -1025,7 +1025,7 @@ func _process(delta: float) -> void:
 			%ShipSell.get_child(child_index).get_node("Row/Col1/Name").text = NAME_TEXT + ship.ship_name
 			%ShipSell.get_child(child_index).get_node("Row/Col1/Type").text = TYPE_TEXT + SHIP_CODES[ship.type]
 			%ShipSell.get_child(child_index).get_node("Row/Col2/Level").text = LEVEL_TEXT + str(ship.level)
-			%ShipSell.get_child(child_index).get_node("Row/Col2/Value").text = SELL_VALUE_TEXT + str((ceil(Global.starship_base_stats[ship.type]["Cost"]) * SELL_MODIFIER) * ship.level) + TECH_SUFFIX
+			%ShipSell.get_child(child_index).get_node("Row/Col2/Value").text = SELL_VALUE_TEXT + str(int((ceil(Global.starship_base_stats[ship.type]["Cost"]) * SELL_MODIFIER) * ship.level)) + TECH_SUFFIX
 			child_index += 1
 		
 		if Global.joystick_control:
@@ -1110,61 +1110,61 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 		%DialogueText.text = warp_in_dialogue[id][1]
 		max_option = len(warp_in_dialogue[id][2])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + warp_in_dialogue[id][2][i][0]
-			option_results.append(warp_in_dialogue[id][2][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + warp_in_dialogue[id][2][option][0]
+			option_results.append(warp_in_dialogue[id][2][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	# Response dialogue
 	elif library == DialogueTypes.RESPONSE:
 		%DialogueText.text = response_dialogue[id][0]
 		max_option = len(response_dialogue[id][1])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + response_dialogue[id][1][i][0]
-			option_results.append(response_dialogue[id][1][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + response_dialogue[id][1][option][0]
+			option_results.append(response_dialogue[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	# Encounter win dialogue
 	elif library == DialogueTypes.ENCOUNTER_WIN:
 		%DialogueText.text = encounter_win_dialogues[id][0]
 		max_option = len(encounter_win_dialogues[id][1])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + encounter_win_dialogues[id][1][i][0]
-			option_results.append(encounter_win_dialogues[id][1][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + encounter_win_dialogues[id][1][option][0]
+			option_results.append(encounter_win_dialogues[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	# Intro dialogue
 	elif library == DialogueTypes.INTRO:
 		%DialogueText.text = intro_dialogues[id][0]
 		max_option = len(intro_dialogues[id][1])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + intro_dialogues[id][1][i][0]
-			option_results.append(intro_dialogues[id][1][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + intro_dialogues[id][1][option][0]
+			option_results.append(intro_dialogues[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	elif library == DialogueTypes.TUTORIAL:
 		%DialogueText.text = tutorial_dialogues[id][0]
 		max_option = len(tutorial_dialogues[id][1])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + tutorial_dialogues[id][1][i][0]
-			option_results.append(tutorial_dialogues[id][1][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + tutorial_dialogues[id][1][option][0]
+			option_results.append(tutorial_dialogues[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	elif library == DialogueTypes.ITEM_WIN:
 		%DialogueText.text = item_win_dialogues[id][0] + bonus_text
 		max_option = len(item_win_dialogues[id][1])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + item_win_dialogues[id][1][i][0]
-			option_results.append(item_win_dialogues[id][1][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + item_win_dialogues[id][1][option][0]
+			option_results.append(item_win_dialogues[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	elif library == DialogueTypes.ENEMY_RUNNING:
 		%DialogueText.text = enemy_running_dialogue[id][0]
 		max_option = len(enemy_running_dialogue[id][1])
 		# Options
-		for i in max_option:
-			%Options.get_node("Option" + str(i + 1)).text = str(i + 1) + ". " + enemy_running_dialogue[id][1][i][0]
-			option_results.append(enemy_running_dialogue[id][1][i][1])
-			%Options.get_node("Option" + str(i + 1)).show()
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text = str(option + 1) + ". " + enemy_running_dialogue[id][1][option][0]
+			option_results.append(enemy_running_dialogue[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	$Dialogue.show()
 	dialogue_showing = true
 	ready_to_select = true
@@ -1270,16 +1270,16 @@ func _on_warp_in_dialogue_timeout() -> void:
 			# Search through options for the warp in dialogue and find which ones are
 			# appropriate for this system
 			var possible_dialogues: Array = []
-			for i in warp_in_dialogue:
-				if i[0] == main.system_properties:
-					possible_dialogues.append(warp_in_dialogue.find(i))
+			for dialogue_set in warp_in_dialogue:
+				if dialogue_set[0] == main.system_properties:
+					possible_dialogues.append(warp_in_dialogue.find(dialogue_set))
 			dialogue_set_up(DialogueTypes.WARP_IN, possible_dialogues.pick_random())
 	else:
 		close(Global.galaxy_data[Global.current_system]["enemy presence"])
 
 
 # Called when either fuel or resources are spent or gained
-func _quantity_change(quantity_type: int, up: bool) -> void:
+func quantity_change(quantity_type: int, up: bool) -> void:
 	# Resources
 	if quantity_type == 0:
 		if up:
@@ -1310,15 +1310,15 @@ func close(combat: bool, end: bool = false) -> void:
 
 
 # Give (or remove) resources or fuel
-func resources(n: int, resource_type: int = 0, dialogue: bool = false, response: int = 0, library: int = 1) -> void:
+func resources(value: int, resource_type: int = 0, dialogue: bool = false, response: int = 0, library: int = 1) -> void:
 	if resource_type == 0:
-		Global.resources += n
+		Global.resources += value
 	elif resource_type == 1:
-		Global.fuel += n
-	if n >= 0:
-		_quantity_change(resource_type, true)
+		Global.fuel += value
+	if value >= 0:
+		quantity_change(resource_type, true)
 	else:
-		_quantity_change(resource_type, false)
+		quantity_change(resource_type, false)
 	if dialogue:
 		dialogue_set_up(library, response)
 
@@ -1326,8 +1326,8 @@ func resources(n: int, resource_type: int = 0, dialogue: bool = false, response:
 func select_dialogue(n: int) -> void:
 	var args: Array = []
 	if len(option_results[n - 1]) > 1:
-		for i in len(option_results[n - 1]) - 1:
-			args.append(option_results[n - 1][i + 1])
+		for result in len(option_results[n - 1]) - 1:
+			args.append(option_results[n - 1][result + 1])
 		callv(option_results[n - 1][0], args)
 	else:
 		call(option_results[n - 1][0])
@@ -1439,10 +1439,11 @@ func lose() -> void:
 
 # Quit to the main menu
 func quit_to_menu() -> void:
+	var main_menu: String = "res://Menus/main_menu.tscn"
 	# Adds the current system to the database
 	Global.playing = false
 	Global.menu_music_progress = 0.0
-	get_tree().change_scene_to_file("res://Menus/main_menu.tscn")
+	get_tree().change_scene_to_file(main_menu)
 
 
 # Restart the game

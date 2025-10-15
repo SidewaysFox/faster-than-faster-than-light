@@ -36,7 +36,7 @@ class_name Starship extends Node3D
 ## The starship's chance to avoid enemy weapons
 @export var agility: float
 ## The starship's currently active weapons
-@export var weapons: Array[int] = [0]
+@export var weapons: Array = [0]
 ## The starship's available drone slots
 @export var drones: Array[int] = [9]
 @export_category("Misc")
@@ -225,7 +225,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if hull <= 0:
 		if team == Global.Teams.FRIENDLY and not is_drone:
-			Global.fleet.remove_at(_get_data_location())
+			Global.fleet.remove_at(get_data_location())
 		if type == Global.StarshipTypes.DRONE_COMMAND:
 			for drone in all_drones.get_children():
 				if drone.creator_id == id:
@@ -278,15 +278,15 @@ func _process(_delta: float) -> void:
 		if type == Global.StarshipTypes.FIGHTER:
 			# Start shooting!!!
 			if Global.in_combat:
-				for i in len(weapons):
-					var this_timer: Timer = get_node("WeaponReload" + str(i + 1))
+				for index in len(weapons):
+					var this_timer: Timer = get_node("WeaponReload" + str(index + 1))
 					if this_timer.is_stopped():
 						this_timer.start()
 					if this_timer.paused:
 						this_timer.paused = false
 					if ui.action_menu_showing:
-						get_node("Marker/Reload" + str(i + 1)).show()
-					get_node("Marker/Reload" + str(i + 1) + "/ProgressBar").value = BAR_FACTOR - ((this_timer.time_left / this_timer.wait_time) * BAR_FACTOR)
+						get_node("Marker/Reload" + str(index + 1)).show()
+					get_node("Marker/Reload" + str(index + 1) + "/ProgressBar").value = BAR_FACTOR - ((this_timer.time_left / this_timer.wait_time) * BAR_FACTOR)
 			else:
 				$WeaponReload1.stop()
 				$WeaponReload2.stop()
@@ -343,6 +343,8 @@ func _process(_delta: float) -> void:
 			if $RepairReload.is_stopped():
 				new_target()
 	else:
+		print(active)
+		print(attacked)
 		for reload in get_tree().get_nodes_in_group("weapon reloads"):
 			if reload.time_left < RELOAD_HOLD:
 				reload.paused = true
@@ -376,7 +378,7 @@ func _on_jump_delay_timeout() -> void:
 
 
 func stats_update() -> void:
-	var index: int = _get_data_location()
+	var index: int = get_data_location()
 	Global.fleet[index].ship_name = ship_name
 	Global.fleet[index].level = level
 	Global.fleet[index].hull_strength = hull_strength
@@ -439,10 +441,10 @@ func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
 	if target == null or is_drone or (targeting_strategy == Strategies.RANDOM and team == Global.Teams.HOSTILE):
 		new_target()
-	_new_projectile(weapon_info["Type"], weapon_info["Damage"])
+	create_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 
-func _new_projectile(projectile_type: int, damage: int) -> void:
+func create_new_projectile(projectile_type: int, damage: int) -> void:
 	var new_projectile: Area3D = projectiles[projectile_type].instantiate()
 	new_projectile.starting_position = global_position
 	new_projectile.target = target
@@ -450,7 +452,7 @@ func _new_projectile(projectile_type: int, damage: int) -> void:
 	main.get_node("Projectiles").add_child(new_projectile)
 
 
-func _get_data_location() -> int:
+func get_data_location() -> int:
 	var index: int = 0
 	for temp_ship in Global.fleet:
 		if temp_ship.id == id:
