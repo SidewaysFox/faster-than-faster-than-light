@@ -9,6 +9,7 @@ const NORMAL_COLOUR: Color = Color8(160, 0, 0)
 
 
 func _process(_delta: float) -> void:
+	# Is this the selected info menu?
 	if ui.info_showing == id:
 		get_theme_stylebox("panel").draw_center = true
 	else:
@@ -16,14 +17,17 @@ func _process(_delta: float) -> void:
 
 
 func _on_button_pressed() -> void:
+	# When clicked
 	ui.info_showing = id
 	ui.get_node("PressSFX").play()
 
 
 func _on_button_mouse_entered() -> void:
+	# When hovered
 	get_theme_stylebox("panel").border_color = HOVER_COLOUR
 	ui.get_node("HoverSFX").play()
 
 
 func _on_button_mouse_exited() -> void:
+	# When unhovered
 	get_theme_stylebox("panel").border_color = NORMAL_COLOUR

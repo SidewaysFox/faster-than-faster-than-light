@@ -25,25 +25,31 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# Moving to target
 	global_position = global_position.move_toward(movement_target, SPEED * delta)
+	# Hitting the target
 	if global_position.distance_to(target_pos) < HIT_DETECT_RANGE and target != null and not missed:
+		# Checking if it misses
 		if target.agility < randf() * ACCURACY:
+			# Checking if it is a critical hit
 			if Global.crit_chance > randf():
 				target.hull -= damage + CRIT_BONUS
 			else:
 				target.hull -= damage
 			queue_free()
-		else:
+		else: # Miss
 			missed = true
 			$Control.add_child(missed_ui.instantiate())
 
 
 func _crit() -> void:
+	# Create critical hit text
 	var new_crit: Node = missed_ui.instantiate()
 	new_crit.get_child(0).text = CRIT_TEXT
 	new_crit.global_position = $Control.global_position
 	main.add_child(new_crit)
 
 
+# Auto delete if missed
 func _on_auto_free_timeout() -> void:
 	queue_free()

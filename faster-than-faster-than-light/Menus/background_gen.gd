@@ -3,7 +3,15 @@ extends Node3D
 
 @export var bg_nebula: PackedScene
 var system_types: Array[int] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3]
-var star_colours: Array[Color] = [Color(1, 1, 0), Color(1, 0.3, 0), Color(1, 0.1, 0), Color(0.9, 0.9, 0.9), Color(0.6, 0.6, 1), Color(0.3, 0.3, 1), Color(0.1, 0.1, 1)]
+var star_colours: Array[Color] = [
+	Color(1, 1, 0),
+	Color(1, 0.3, 0),
+	Color(1, 0.1, 0),
+	Color(0.9, 0.9, 0.9),
+	Color(0.6, 0.6, 1),
+	Color(0.3, 0.3, 1),
+	Color(0.1, 0.1, 1)
+	]
 var main_star_count: String
 var bg_object_rotation: float = 5.0
 
@@ -55,6 +63,7 @@ func _ready() -> void:
 		# Set positioning
 		var star_position: Vector3 = star_reposition()
 		var not_colliding: int = 1
+		# Make sure it's not colliding with any other stars
 		while not_colliding == get_tree().get_node_count_in_group(main_star_count):
 			for other_star in get_tree().get_nodes_in_group(main_star_count):
 				if (
@@ -69,10 +78,26 @@ func _ready() -> void:
 		star.mesh.material.emission_texture.noise.seed = randi()
 	# Create nebulae
 	var nebula_pos: Vector3
-	var nebula_colour: Color = Color(randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_COL.x, NEB_COL.y), randf_range(NEB_ALPHA.x, NEB_ALPHA.y))
+	var nebula_colour: Color = Color(
+			randf_range(NEB_COL.x, NEB_COL.y),
+			randf_range(NEB_COL.x, NEB_COL.y),
+			randf_range(NEB_COL.x, NEB_COL.y),
+			randf_range(NEB_ALPHA.x, NEB_ALPHA.y)
+	)
 	for nebula in randi_range(NEB_COUNT.x, NEB_COUNT.y):
-		nebula_pos = Vector3(randf_range(NEB_POS_X.x, NEB_POS_X.y), randf_range(NEB_POS_Y.x, NEB_POS_Y.y), randf_range(NEB_POS_Z.x, NEB_POS_Z.y))
-		nebula_colour += Color(randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT), randf_range(-NEB_ALPHA_SHIFT, NEB_ALPHA_SHIFT))
+		# Set position
+		nebula_pos = Vector3(
+				randf_range(NEB_POS_X.x, NEB_POS_X.y),
+				randf_range(NEB_POS_Y.x, NEB_POS_Y.y),
+				randf_range(NEB_POS_Z.x, NEB_POS_Z.y)
+		)
+		# Set colour
+		nebula_colour += Color(
+				randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT),
+				randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT),
+				randf_range(-NEB_COL_SHIFT, NEB_COL_SHIFT),
+				randf_range(-NEB_ALPHA_SHIFT, NEB_ALPHA_SHIFT)
+		)
 		nebula_colour.a = clamp(nebula_colour.a, NEB_ALPHA.x, NEB_ALPHA.y)
 		# Big or small nebula
 		if randi_range(0, LARGE_NEB_CHANCE) == 0:
@@ -85,7 +110,11 @@ func _ready() -> void:
 				new_nebula.mesh.radius = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
 				new_nebula.mesh.height = new_nebula.mesh.radius * HEIGHT_FACTOR
 				$Background.add_child(new_nebula)
-				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
+				nebula_pos += Vector3(
+						randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT),
+						randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT),
+						randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT)
+				)
 		else:
 			# Small
 			for cloud in randi_range(SMALL_NEB_SIZE.x, SMALL_NEB_SIZE.y):
@@ -96,7 +125,11 @@ func _ready() -> void:
 				new_nebula.mesh.radius = randf_range(NEB_RADIUS.x, NEB_RADIUS.y)
 				new_nebula.mesh.height = new_nebula.mesh.radius * HEIGHT_FACTOR
 				$Background.add_child(new_nebula)
-				nebula_pos += Vector3(randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT))
+				nebula_pos += Vector3(
+						randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT),
+						randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT), 
+						randf_range(-NEB_POS_SHIFT, NEB_POS_SHIFT)
+				)
 
 
 func _process(delta: float) -> void:
@@ -108,9 +141,11 @@ func _process(delta: float) -> void:
 	else:
 		$CanvasLayer.show()
 	
+	# Rotate background objects
 	for child in $Background.get_children():
 		child.rotation_degrees.y += bg_object_rotation * delta
 	
+	# Restart music if it ends
 	if not $Music.playing:
 		$Music.play()
 		Global.menu_music_progress = 0.0
@@ -121,9 +156,10 @@ func star_reposition() -> Vector3:
 	var y: float
 	var z: float
 	z = randf_range(STAR_POS_Z.x, STAR_POS_Z.y)
+	# X and Y are set relative to the Z value in an attempt to keep it on screen
 	x = randf_range(z * -STAR_X_FACTOR, z * STAR_X_FACTOR)
 	y = randf_range(z / STAR_Y_FACTOR.x, z / STAR_Y_FACTOR.y)
-	# Make sure the star is within bounds. because I cannot be bothered to do the math for this
+	# Make sure the star is within rendering bounds
 	while Vector3(x, y, z).distance_to(Vector3.ZERO) > STAR_RENDER_DISTANCE:
 		z = randf_range(STAR_POS_Z.x, STAR_POS_Z.y)
 		x = randf_range(z * -STAR_X_FACTOR, z * STAR_X_FACTOR)

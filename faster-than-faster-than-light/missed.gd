@@ -8,6 +8,7 @@ const SPEED: float = 30.0
 
 
 func _process(delta: float) -> void:
+	# Constant fade until queue freeing
 	global_position.y -= SPEED * delta
 	if fading:
 		modulate.a -= FADE_RATE * delta
@@ -15,5 +16,6 @@ func _process(delta: float) -> void:
 			queue_free()
 
 
+# Start fading
 func _on_timer_timeout() -> void:
 	fading = true

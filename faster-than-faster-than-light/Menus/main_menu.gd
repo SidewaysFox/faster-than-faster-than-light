@@ -14,6 +14,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if Global.joystick_control:
+		# Selecting options
 		if Input.is_action_just_pressed("down1") or Input.is_action_just_pressed("down2"):
 			current_menu_selection += 1
 			if current_menu_selection >= %Buttons.get_child_count():
@@ -23,6 +24,7 @@ func _process(_delta: float) -> void:
 			if current_menu_selection < 0:
 				current_menu_selection = %Buttons.get_child_count() - 1
 		
+		# Hovering and pressing
 		for button in %Buttons.get_children():
 			if button.get_index() == current_menu_selection:
 				button.get_child(0).add_theme_color_override("font_color", BUTTON_COLOUR_HOVER)
@@ -33,23 +35,27 @@ func _process(_delta: float) -> void:
 
 
 func _on_new_game_pressed(tutorial: bool = false) -> void:
+	# New game
 	Global.continuing = false
 	Global.new_game(tutorial)
 
 
 func _on_settings_pressed() -> void:
+	# Go to settings menu
 	var settings: String = "res://Menus/settings.tscn"
 	Global.menu_music_progress = music.get_playback_position()
 	get_tree().change_scene_to_file(settings)
 
 
 func _on_credits_pressed() -> void:
+	# Go to credits menu
 	var credits: String = "res://Menus/credits.tscn"
 	Global.menu_music_progress = music.get_playback_position()
 	get_tree().change_scene_to_file(credits)
 
 
 func _on_quit_pressed() -> void:
+	# Save settings and then quit game
 	var config: ConfigFile = ConfigFile.new()
 	config.set_value("Settings", "music_volume", Global.music_volume)
 	config.set_value("Settings", "sfx_volume", Global.sfx_volume)
@@ -60,5 +66,6 @@ func _on_quit_pressed() -> void:
 
 
 func _on_continue_pressed() -> void:
+	# Continue game
 	Global.continuing = true
 	Global.new_game()

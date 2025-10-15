@@ -191,19 +191,20 @@ var ship_actions: Array[Array] = [
 	["ACTIVATE DRONES!", "DEACTIVATE DRONES!"],
 ]
 
-var possible_names: Array[String] = ["STRONGARM", "POWER", "FRAY", "PEREGRIN", "FALCON", "STORM", \
-		"BRAWN", "HAZE", "CRACKDOWN", "DART", "QUASAR", "PILGRIM", "LOCKDOWN", "GREATAXE", "NOVA", \
-		"DEADEYE", "DESTINY", "SCALAR", "VECTOR", "MATRIX", "GHOST", "PHANTOM", "OWL", "CRYSTAL", \
-		"VERMILLION", "PIKE", "SPEARHEAD", "BASIS", "ANGLER", "ESSENCE", "FULCRUM", "HALO", \
-		"ICHOR", "JET", "JEWEL", "KILO", "LANTERN", "MAESTRO", "OCULAR", "RAVEN", "PLACEBO", \
-		"SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN", "ZERO", "PULSAR", "ANDROMEDA", "WOLF", \
-		"FOX", "RANGER", "JUDICATOR", "TENSOR", "NEBULA", "GALAXY", "BASTION", "AEGIS", "TOTEM", \
-		"BULWARK", "PHALANX", "HERO", "SNAKE", "XENOLITH", "XEMA", "STALWART", "HORIZON", \
-		"BAILIFF", "STALLION", "ANACONDA", "WYVERN", "WHALE", "MOLE", "BASKEMTBALL", "CLAW", \
-		"DUKE", "ASTRA", "EAGLE", "ALTUS", "ATLAS", "BREVIS", "CELER", "CLAM", "DEFENESTRATOR", \
-		"MUSCLE", "BARNACLE", "CANINE", "WHIRLWIND", "TORNADO", "TYPHOON", "REVEREND", "TOME", \
-		"HAWK", "NARWHAL", "SCIMITAR", "EXIMUS", "SHOCKWAVE", "BUCCANEER", "CUTLASS", "GLADIUS", \
-		"SABRE", "KATANA", "MACE", "TALWAR", "SCOURGE", "SPIKE", "BULLPUP", "YUKON"]
+var possible_names: Array[String] = [
+	"STRONGARM", "POWER", "FRAY", "PEREGRIN", "FALCON", "STORM", "BRAWN", "HAZE", "CRACKDOWN",
+	"DART", "QUASAR", "PILGRIM", "LOCKDOWN", "GREATAXE", "NOVA", "DEADEYE", "DESTINY", "SCALAR",
+	"VECTOR", "MATRIX", "GHOST", "PHANTOM", "OWL", "CRYSTAL", "VERMILLION", "PIKE", "SPEARHEAD",
+	"BASIS", "ANGLER", "ESSENCE", "FULCRUM", "HALO", "ICHOR", "JET", "JEWEL", "KILO", "LANTERN",
+	"MAESTRO", "OCULAR", "RAVEN", "PLACEBO", "SURGE", "TROJAN", "UMBRA", "WAYFARER", "SCORN",
+	"ZERO", "PULSAR", "ANDROMEDA", "WOLF", "FOX", "RANGER", "JUDICATOR", "TENSOR", "NEBULA",
+	"GALAXY", "BASTION", "AEGIS", "TOTEM", "BULWARK", "PHALANX", "HERO", "SNAKE", "XENOLITH",
+	"XEMA", "STALWART", "HORIZON", "BAILIFF", "STALLION", "ANACONDA", "WYVERN", "WHALE", "MOLE",
+	"BASKEMTBALL", "CLAW", "DUKE", "ASTRA", "EAGLE", "ALTUS", "ATLAS", "BREVIS", "CELER", "CLAM",
+	"DEFENESTRATOR", "MUSCLE", "BARNACLE", "CANINE", "WHIRLWIND", "TORNADO", "TYPHOON", "REVEREND",
+	"TOME", "HAWK", "NARWHAL", "SCIMITAR", "EXIMUS", "SHOCKWAVE", "BUCCANEER", "CUTLASS", "GLADIUS",
+	"SABRE", "KATANA", "MACE", "TALWAR", "SCOURGE", "SPIKE", "BULLPUP", "YUKON"
+]
 
 var weapon_list: Array[Dictionary] = [
 	{ # 0
@@ -349,6 +350,7 @@ var tutorial_galaxy: Array[Dictionary] = [
 
 
 func _ready() -> void:
+	# Load settings
 	var config: ConfigFile = ConfigFile.new()
 	var err: Error = config.load("user://settings.cfg")
 	if err == OK:
@@ -359,6 +361,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	# Change audio bus volumes
 	const BUS_ONE: int = 1
 	const BUS_TWO: int = 2
 	AudioServer.set_bus_volume_linear(BUS_ONE, music_volume / VOLUME_FACTOR)
@@ -369,9 +372,10 @@ func establish() -> void:
 	# Establish the game
 	playing = true
 	in_combat = false
+	# Load save if continuing game
 	var config: ConfigFile = ConfigFile.new()
 	var err: Error = config.load("user://save.cfg")
-	if continuing and err == OK:
+	if continuing and err == OK: # Continuing
 		resources = config.get_value("Game", "resources")
 		fuel = config.get_value("Game", "fuel")
 		max_inventory = config.get_value("Game", "max_inventory")
@@ -383,6 +387,7 @@ func establish() -> void:
 		current_system = config.get_value("Game", "current_system")
 		
 		# Because config files can't store the starships properly when the game has been closed
+		# Needs to load info for each ship individually
 		fleet = []
 		for ship in config.get_value("Game", "fleet"):
 			var new_ship: Node3D = starship.instantiate()
@@ -401,7 +406,7 @@ func establish() -> void:
 			new_ship.active = ship.active
 			new_ship.shield_layers = ship.shield_layers
 			fleet.append(new_ship)
-	else:
+	else: # New game
 		resources = STARTING_RESOURCES
 		fuel = STARTING_FUEL
 		max_inventory = DEFAULT_INV_SIZE
@@ -410,6 +415,7 @@ func establish() -> void:
 		visited_systems = []
 		unique_visits = 0
 		next_ship_id = -1
+		# Is this the tutorial?
 		if tutorial:
 			starting_fleet = DEFAULT_TUTORIAL_FLEET
 			fleet_inventory = TUTORIAL_INVENTORY.duplicate()
@@ -432,7 +438,10 @@ func establish() -> void:
 						# Set up and store data
 						galaxy_data.append({
 							"id": system_id,
-							"position": Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x), GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y)),
+							"position": (
+									Vector2((column * SECTOR_SIZE.x) + (randf() * SECTOR_SIZE.x),
+									GMAP_TOP + (row * SECTOR_SIZE.y) + (randf() * SECTOR_SIZE.y))
+							),
 							"sector": column,
 							"enemy presence": enemy_presence,
 							"shop presence": shop_presence,
@@ -452,6 +461,7 @@ func establish() -> void:
 				end_system = [node["id"], node["position"].x]
 		current_system = starting_system[0]
 		destination = end_system[0]
+		# Make sure nothing too interesting 
 		galaxy_data[current_system]["enemy presence"] = false
 		galaxy_data[destination]["enemy presence"] = false
 		galaxy_data[destination]["shop presence"] = false
@@ -464,6 +474,7 @@ func establish() -> void:
 	stats_update()
 
 
+# Starting new game
 func new_game(is_tutorial: bool = false) -> void:
 	var main_scene: String = "res://space.tscn"
 	print("NEW GAME")
@@ -472,6 +483,7 @@ func new_game(is_tutorial: bool = false) -> void:
 	get_tree().change_scene_to_file(main_scene)
 
 
+# For creating new ships and incrementing the id
 func get_new_ship_id() -> int:
 	next_ship_id += 1
 	return next_ship_id
@@ -499,6 +511,7 @@ func new_system(system: int) -> void:
 	current_system = system
 
 
+# Creating new friendly starships
 func create_new_starship(type: int, ship_name: String = "Starship", creator_id: int = -1) -> void:
 	var new_ship: Node3D = starship.instantiate()
 	new_ship.id = get_new_ship_id()
@@ -518,6 +531,7 @@ func create_new_starship(type: int, ship_name: String = "Starship", creator_id: 
 		get_node("/root/Space/Drones").add_child(new_ship)
 
 
+# Creating new hostile ships
 func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = -1) -> void:
 	var new_enemy: Node3D = starship.instantiate()
 	new_enemy.id = get_new_ship_id()
@@ -540,6 +554,7 @@ func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = 
 		get_node("/root/Space/Drones").add_child(new_enemy)
 
 
+# Saving all required game variables
 func save_game() -> void:
 	var config: ConfigFile = ConfigFile.new()
 	config.set_value("Game", "resources", resources)

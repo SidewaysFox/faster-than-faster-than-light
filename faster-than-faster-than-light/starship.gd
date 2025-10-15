@@ -170,17 +170,19 @@ const UPGRADES: Array[Dictionary] = [
 
 
 func _ready() -> void:
-	# Apply appropriate mesh
+	# Apply appropriate mesh based on type
 	var new_mesh: Node3D = meshes[type].instantiate()
 	new_mesh.type = alignment
 	add_child(new_mesh)
 	
 	marker = $Marker/Selection.get_theme_stylebox("panel")
 	
+	# Is this ship a drone?
 	if type > Global.StarshipTypes.DRONE_COMMAND:
 		is_drone = true
 		scale = DRONE_RESIZE
 	
+	# Set up the ship's name
 	if ship_name == DEFAULT_NAME and team == Global.Teams.FRIENDLY:
 		if is_drone:
 			ship_name = DRONE_NAME
@@ -193,13 +195,19 @@ func _ready() -> void:
 	
 	# Starting location based on team
 	if team != Global.Teams.NEUTRAL:
-		global_position = Vector3(START_POS_MOD.x * team, randf_range(-START_POS_MOD.y, START_POS_MOD.y), randf_range(START_POS_MOD.z, 0.0))
+		global_position = Vector3(
+				START_POS_MOD.x * team,
+				randf_range(-START_POS_MOD.y, START_POS_MOD.y),
+				randf_range(START_POS_MOD.z, 0.0)
+		)
 		rotation.y = QUARTER_ROTATION - ((PI * team) / 2.0)
 		
+		# Also set up marker colouration while you're at it
 		if team == 1:
 			marker.border_color = Color.WHITE
 		else:
 			marker.border_color = Color.DARK_RED
+			# Targeting timer, too
 			if targeting_strategy == Strategies.DELAYED:
 				$Retarget.start(randf_range(RETARGET_DELAY.x, RETARGET_DELAY.y))
 	else:
@@ -209,10 +217,13 @@ func _ready() -> void:
 	warp_destination = -global_position.x
 	$JumpDelay.start(1 + (randf() * JUMP_DELAY))
 	
+	# Set up appropriate timers
 	if type == Global.StarshipTypes.FIGHTER or type == Global.StarshipTypes.FIGHTER_DRONE:
 		var index: int = 1
 		for weapon_id in weapons:
-			get_node("WeaponReload" + str(index)).wait_time = Global.weapon_list[weapon_id]["Reload time"]
+			get_node("WeaponReload" + str(index)).wait_time = (
+					Global.weapon_list[weapon_id]["Reload time"]
+			)
 			index += 1
 	elif type == Global.StarshipTypes.SHIELD:
 		shield_layers = level
@@ -223,45 +234,61 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	# Has this ship been destroyed?
 	if hull <= 0:
 		if team == Global.Teams.FRIENDLY and not is_drone:
 			Global.fleet.remove_at(get_data_location())
+		# Delete all of its drones if it's a drone command ship
 		if type == Global.StarshipTypes.DRONE_COMMAND:
 			for drone in all_drones.get_children():
 				if drone.creator_id == id:
 					drone.hull = 0
 		queue_free()
 	
+	# Drones don't have markers
 	if not is_drone:
 		$Marker/Reload1.hide()
 		$Marker/Reload2.hide()
 		$Marker/Reload3.hide()
+		# Change marker properties based on player input
+		# This statement needs to be distinct/separate because it won't let me construct the Color8
+		# alongside the alpha channel variable. As such, this is the best alternative solution
+		if ui.selected_ship == get_index() and team == Global.Teams.FRIENDLY:
+			marker.border_color = BORDER_COLOUR_ON
+		else:
+			marker.border_color = BORDER_COLOUR_OFF
+		# Friendly markers
 		if team == Global.Teams.FRIENDLY:
 			if ui.selected_ship == get_index():
 				$Marker.modulate.a = 1.0
 			else:
 				$Marker.modulate.a = MARKER_SELECTION_ALPHA
-			if ui.hovered_ship == get_index() or (ui.hovered_target == get_index() and ui.targeting_mode == Global.StarshipTypes.REPAIR):
+			if (
+					ui.hovered_ship == get_index()
+					or (
+							ui.hovered_target == get_index()
+							and ui.targeting_mode == Global.StarshipTypes.REPAIR
+					)
+			):
 				marker.border_color.a = MARKER_HOVER_ALPHA.x
 			else:
 				marker.border_color.a = MARKER_HOVER_ALPHA.y
+		# Hostile markers
 		elif team == Global.Teams.HOSTILE:
-			if ui.hovered_target == get_index() and ui.targeting_mode != Global.StarshipTypes.REPAIR:
+			if (
+					ui.hovered_target == get_index()
+					and ui.targeting_mode != Global.StarshipTypes.REPAIR
+			):
 				marker.border_color.a = MARKER_HOVER_ALPHA.x
 			else:
 				marker.border_color.a = MARKER_HOVER_ALPHA.y
-		# This needs to be distinct because it requires specific AND and ELSE conditions
-		if ui.selected_ship == get_index() and team == Global.Teams.FRIENDLY:
-			# Won't let me construct it with the full Color8
-			marker.border_color = BORDER_COLOUR_ON
-		else:
-			marker.border_color = BORDER_COLOUR_OFF
 		if ui.selected_ship < friendly_ships.get_child_count():
 			if friendly_ships.get_child(ui.selected_ship).target != null:
 				if friendly_ships.get_child(ui.selected_ship).target == self:
 					$Marker/Target.show()
 				else:
 					$Marker/Target.hide()
+		# Marker labels setup
 		$Marker/Info/Name.text = NAME_LABEL + ship_name
 		$Marker/Info/Type.text = TYPE_LABEL + ui.SHIP_CODES[type]
 		$Marker/Info/Hull.text = HULL_LABEL + str(hull)
@@ -274,10 +301,12 @@ func _process(_delta: float) -> void:
 	
 	scanned = false
 	
+	# General ship behaviour
 	if active and not attacked:
 		if type == Global.StarshipTypes.FIGHTER:
 			# Start shooting!!!
 			if Global.in_combat:
+				# Fighters have three different ProgressBars for weapon reloading information
 				for index in len(weapons):
 					var this_timer: Timer = get_node("WeaponReload" + str(index + 1))
 					if this_timer.is_stopped():
@@ -286,21 +315,28 @@ func _process(_delta: float) -> void:
 						this_timer.paused = false
 					if ui.action_menu_showing:
 						get_node("Marker/Reload" + str(index + 1)).show()
-					get_node("Marker/Reload" + str(index + 1) + "/ProgressBar").value = BAR_FACTOR - ((this_timer.time_left / this_timer.wait_time) * BAR_FACTOR)
+					get_node("Marker/Reload" + str(index + 1) + "/ProgressBar").value = (
+							BAR_FACTOR - (
+									(this_timer.time_left / this_timer.wait_time) * BAR_FACTOR)
+							)
 			else:
 				$WeaponReload1.stop()
 				$WeaponReload2.stop()
 				$WeaponReload3.stop()
 		if type == Global.StarshipTypes.SHIELD:
+			# Should it reload its shields
 			if shield_layers < level:
 				if $ShieldReload.is_stopped():
 					$ShieldReload.start()
 				if ui.action_menu_showing:
 					$Marker/Reload1.show()
-				$Marker/Reload1/ProgressBar.value = BAR_FACTOR - (($ShieldReload.time_left / $ShieldReload.wait_time) * BAR_FACTOR)
+				$Marker/Reload1/ProgressBar.value = BAR_FACTOR - (
+						($ShieldReload.time_left / $ShieldReload.wait_time) * BAR_FACTOR
+				)
 			else:
 				$ShieldReload.stop()
 		if type == Global.StarshipTypes.INFILTRATION and $InfiltratingProcess.is_stopped():
+			# Where we droppin' boys
 			if Global.in_combat:
 				if $InfiltrateReload.is_stopped():
 					$InfiltrateReload.start()
@@ -308,18 +344,30 @@ func _process(_delta: float) -> void:
 				$InfiltrateReload.stop()
 		if type == Global.StarshipTypes.REPAIR and ui.action_menu_showing:
 			$Marker/Reload1.show()
-			$Marker/Reload1/ProgressBar.value = BAR_FACTOR - (($RepairReload.time_left / $RepairReload.wait_time) * BAR_FACTOR)
+			$Marker/Reload1/ProgressBar.value = BAR_FACTOR - (
+					($RepairReload.time_left / $RepairReload.wait_time) * BAR_FACTOR
+			)
 		if type == Global.StarshipTypes.SCANNER and Global.in_combat:
 			if target == null:
 				new_target()
 			target.scanned = true
 		if type == Global.StarshipTypes.DRONE_COMMAND and Global.in_combat:
+			# Only deploys drones once in battle
 			if not drones_deployed:
 				for drone in drones:
 					if team == Global.Teams.FRIENDLY:
-						Global.create_new_starship(Global.weapon_list[drone]["Ship type"], DEFAULT_NAME, id)
+						Global.create_new_starship(
+								Global.weapon_list[drone]["Ship type"],
+								DEFAULT_NAME,
+								id
+						)
 					elif team == Global.Teams.HOSTILE:
-						Global.create_enemy_ship(Global.weapon_list[drone]["Ship type"], 1, [0], id)
+						Global.create_enemy_ship(
+								Global.weapon_list[drone]["Ship type"],
+								1,
+								[0],
+								id
+						)
 			else:
 				for drone in all_drones.get_children():
 					if drone.creator_id == id:
@@ -339,24 +387,33 @@ func _process(_delta: float) -> void:
 					$RepairReload.start()
 				elif target.hull >= target.hull_strength:
 					$RepairReload.stop()
-		if type == Global.StarshipTypes.REPAIR_DRONE or (type == Global.StarshipTypes.REPAIR and team == Global.Teams.HOSTILE):
+		if (
+				type == Global.StarshipTypes.REPAIR_DRONE
+				or (
+						type == Global.StarshipTypes.REPAIR
+						and team == Global.Teams.HOSTILE
+				)
+		):
+			# Always searching for ships to repair
 			if $RepairReload.is_stopped():
 				new_target()
 	else:
 		print(active)
 		print(attacked)
+		# Hold fire for when reactivated
 		for reload in get_tree().get_nodes_in_group("weapon reloads"):
 			if reload.time_left < RELOAD_HOLD:
 				reload.paused = true
 		$RepairReload.stop()
 		$ShieldReload.stop()
 		$InfiltrateReload.stop()
+		# Deactivate all "children" drones
 		if type == Global.StarshipTypes.DRONE_COMMAND:
 			for drone in all_drones.get_children():
 				if drone.creator_id == id:
 					drone.active = false
 	
-	# Do jumping animations
+	# Do warping animations
 	if jumping:
 		if jump_mode == 0 and team != Global.Teams.NEUTRAL:
 			global_position.x = lerp(global_position.x, jump_destination, JUMP_LERP)
@@ -366,8 +423,10 @@ func _process(_delta: float) -> void:
 				queue_free()
 
 
+# Warp
 func _on_jump_delay_timeout() -> void:
-	$WarpSFX.stream = warp_sfx[jump_mode + 1] # The actual setting of the variable has to be delayed
+	# The actual setting of the jump_mode variable has to be delayed
+	$WarpSFX.stream = warp_sfx[jump_mode + 1]
 	if jump_mode == 0:
 		$WarpSFX.play()
 		await get_tree().create_timer(WARP_OUT_SFX_DELAY).timeout
@@ -377,6 +436,7 @@ func _on_jump_delay_timeout() -> void:
 		$WarpSFX.play()
 
 
+# Update all stats in data
 func stats_update() -> void:
 	var index: int = get_data_location()
 	Global.fleet[index].ship_name = ship_name
@@ -390,6 +450,7 @@ func stats_update() -> void:
 	Global.stats_update()
 
 
+# Begin the warping process and update stats
 func begin_warp() -> void:
 	if team == Global.Teams.FRIENDLY:
 		# Update fleet data
@@ -397,9 +458,10 @@ func begin_warp() -> void:
 	$JumpDelay.start(randf() * JUMP_DELAY)
 
 
+# Find a new target
 func new_target(ship: int = 0) -> void:
 	var target_set: bool = false
-	# Choose a target
+	# Target selection depends on various factors
 	if type in Global.ENEMY_TARGETERS:
 		if team == Global.Teams.FRIENDLY and hostile_ships.get_child_count() > 0:
 			target = hostile_ships.get_child(ship)
@@ -428,7 +490,11 @@ func new_target(ship: int = 0) -> void:
 					target_set = true
 			if not target_set:
 				target = self
-		elif team == Global.Teams.FRIENDLY and friendly_ships.get_child_count() > 0 and $RepairReload.is_stopped():
+		elif (
+				team == Global.Teams.FRIENDLY
+				and friendly_ships.get_child_count() > 0
+				and $RepairReload.is_stopped()
+		):
 			for potential_target in friendly_ships.get_children():
 				if potential_target.hull < potential_target.hull_strength:
 					target = potential_target
@@ -437,13 +503,22 @@ func new_target(ship: int = 0) -> void:
 				target = self
 
 
+# Fire a weapon
 func _weapon_fire(firing: int) -> void:
 	var weapon_info: Dictionary = Global.weapon_list[weapons[firing]]
-	if target == null or is_drone or (targeting_strategy == Strategies.RANDOM and team == Global.Teams.HOSTILE):
+	if (
+			target == null
+			or is_drone
+			or (
+					targeting_strategy == Strategies.RANDOM
+					and team == Global.Teams.HOSTILE
+			)
+	):
 		new_target()
 	create_new_projectile(weapon_info["Type"], weapon_info["Damage"])
 
 
+# Create a new projectile upon firing a weapon
 func create_new_projectile(projectile_type: int, damage: int) -> void:
 	var new_projectile: Area3D = projectiles[projectile_type].instantiate()
 	new_projectile.starting_position = global_position
@@ -452,6 +527,7 @@ func create_new_projectile(projectile_type: int, damage: int) -> void:
 	main.get_node("Projectiles").add_child(new_projectile)
 
 
+# Get the location/index of this ship's data
 func get_data_location() -> int:
 	var index: int = 0
 	for temp_ship in Global.fleet:
@@ -461,6 +537,7 @@ func get_data_location() -> int:
 	return index
 
 
+# Repair another ship
 func _repair() -> void:
 	if target == null:
 		new_target()
@@ -468,11 +545,13 @@ func _repair() -> void:
 	target.hull = clampi(target.hull, 0, target.hull_strength)
 
 
+# Recover a shield layer
 func _shield_up() -> void:
 	shield_layers += 1
 	shield_layers = clampi(shield_layers, 0, level)
 
 
+# Infiltrate another ship
 func _on_infiltrate_reload_timeout() -> void:
 	if target == null:
 		new_target()
@@ -482,10 +561,12 @@ func _on_infiltrate_reload_timeout() -> void:
 	$InfiltratingProcess.start()
 
 
+# Stop being attacked
 func _on_under_attack_timeout() -> void:
 	attacked = false
 
 
+# Upgrade level and related stats
 func upgrade() -> void:
 	hull_strength += UPGRADES[type]["Hull" + str(level)]
 	hull += UPGRADES[type]["Hull" + str(level)]
@@ -501,6 +582,7 @@ func upgrade() -> void:
 		stats_update()
 
 
+# Choose a new target
 func _on_retarget_timeout() -> void:
 	new_target()
 	$Retarget.start(randf_range(RETARGET_DELAY.x, RETARGET_DELAY.y))

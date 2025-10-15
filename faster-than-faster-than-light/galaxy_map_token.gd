@@ -11,11 +11,11 @@ const VISITED_COLOUR: Color = Color.YELLOW
 func _process(delta: float) -> void:
 	# Spin
 	rotation_degrees += rotation_rate * delta
+	# Sizing warp range circle
 	$Range.scale = Vector2.ONE * (Global.jump_distance / 100.0)
 
 
-# This is slightly delayed instead of being on the _ready() function so that it
-# uses updated data
+# This is slightly delayed instead of being on the _ready() function so that it uses updated data
 func _on_timer_timeout() -> void:
 	# Check if this token represents the current system
 	if id == Global.current_system:
@@ -27,7 +27,9 @@ func _on_timer_timeout() -> void:
 		$Range.hide()
 		if Global.visited_systems.has(id):
 			$ColorRect.color = VISITED_COLOUR
+	# Display shop ring if it has a shop in it
 	if Global.galaxy_data[id]["shop presence"]:
 		$ShopIndicator.show()
+	# Display destination detail if it is the destination
 	if id == Global.destination:
 		$DestinationIndicator.show()
