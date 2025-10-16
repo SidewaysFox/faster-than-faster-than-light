@@ -14,6 +14,7 @@ var ready_to_select: bool = false
 var current_dialogue_selection: int = 1
 var option_results: Array
 var action_menu_showing: bool = false
+var action_menu_up: bool = true
 var info_menu_showing: bool = false
 var shop_showing: bool = false
 var hovered_ship: int = 0
@@ -39,6 +40,7 @@ var ship_catalogue = [
 var current_shopfront: int = 0
 var hovered_shop_button: int = 0
 var selected_shop_side: int = 0
+var enemy_ran_away: bool = false
 
 const HOVERED_COLOUR: Color = Color(0.0, 0.749, 1.0)
 const BLUE_PANEL_HOVER: Color = Color8(100, 100, 160)
@@ -86,6 +88,9 @@ const RESOURCE_COLOUR_LERP: float = 0.05
 const SOLAR_FLARE_LERP: float = 0.02
 const TIME_SCALE_LERP: float = 0.15
 const CURSOR_LERP: float = 0.2
+const ACTION_MENU_LERP: float = 0.15
+const ACTION_MENU_UP_POS: float = 788.0
+const ACTION_MENU_DOWN_POS: float = 1000.0
 const FPS_LABEL: String = "FPS: "
 const TECH_LABEL: String = "TECH: "
 const FUEL_LABEL: String = "FUEL: "
@@ -163,7 +168,8 @@ enum DialogueTypes {
 	INTRO,
 	TUTORIAL,
 	ITEM_WIN,
-	ENEMY_RUNNING
+	ENEMY_RUNNING,
+	ENEMY_RAN_AWAY
 }
 
 enum Shopfronts {
@@ -381,6 +387,12 @@ var enemy_running_dialogue: Array[Array] = [ # Main text, [option, result]
 	],
 ]
 
+var enemy_ran_away_dialogues: Array[Array] = [ # Main text, [option, result]
+	["Unfortunately - or fortunately - depending on how you look at it, the remaining enemy ships managed to get away. You pick through the remains of the scrap you did manage to break down and take what's useful.\nAt least you won't have to deal with them again.",
+	[["Move on with the journey.", ["close", false]]]
+	],
+]
+
 var encounter_win_dialogues: Array[Array] = [
 	["As soon as the final ship in the enemy fleet is torn apart, you strip down each worn ship carcass for materials.",
 	[["Continue the journey.", ["close", false]]]
@@ -498,109 +510,74 @@ func _process(delta: float) -> void:
 	# What a terrible day to have eyes
 	var shop_in_system: bool = "shop presence" in main.system_properties
 	if (
-			(
-					Input.is_action_just_pressed("action menu")
-					and not Global.joystick_control
-			)
-			or (
-					Global.joystick_control
-					and (
-							Input.is_action_just_pressed("2")
-							or Input.is_action_just_pressed("B")
-					)
+			(Input.is_action_just_pressed("action menu")
+			and not Global.joystick_control)
+			or (Global.joystick_control
+					and (Input.is_action_just_pressed("2")
+							or Input.is_action_just_pressed("B"))
 			)
 	):
 		_action_menu()
 	
 	if (
-			(
-					Input.is_action_just_pressed("info menu")
-					and not Global.joystick_control
-			)
-			or (
-					Global.joystick_control
-					and (
-							Input.is_action_just_pressed("3")
-							or Input.is_action_just_pressed("C")
-					)
+			(Input.is_action_just_pressed("info menu")
+					and not Global.joystick_control)
+			or (Global.joystick_control
+					and (Input.is_action_just_pressed("3")
+							or Input.is_action_just_pressed("C"))
 			)
 	):
 		_info_menu()
 	
 	if (
-			(
-					Input.is_action_just_pressed("galaxy map")
-					and not Global.joystick_control
-			)
-			or (
-					Global.joystick_control
-					and (
-							Input.is_action_just_pressed("4")
-							or Input.is_action_just_pressed("D")
-					)
+			(Input.is_action_just_pressed("galaxy map")
+					and not Global.joystick_control)
+			or (Global.joystick_control
+					and (Input.is_action_just_pressed("4")
+							or Input.is_action_just_pressed("D"))
 			)
 	):
 		_galaxy_map()
 	
 	if (
-			(
-					Input.is_action_just_pressed("time pause")
-					and not Global.joystick_control
-			)
-			or (
-					Global.joystick_control
-					and (
-							Input.is_action_just_pressed("5")
-							or Input.is_action_just_pressed("E")
-					)
+			(Input.is_action_just_pressed("time pause")
+					and not Global.joystick_control)
+			or (Global.joystick_control
+					and (Input.is_action_just_pressed("5")
+							or Input.is_action_just_pressed("E"))
 					and not shop_in_system
 			)
 	):
 		_time_pause()
 	
 	if (
-			(
-					Input.is_action_just_pressed("shop")
-					and not Global.joystick_control
-			)
-			or (
-					Global.joystick_control
-					and (
-							Input.is_action_just_pressed("5")
-							or Input.is_action_just_pressed("E")
-					)
+			(Input.is_action_just_pressed("shop")
+					and not Global.joystick_control)
+			or (Global.joystick_control
+					and (Input.is_action_just_pressed("5")
+							or Input.is_action_just_pressed("E"))
 			)
 	):
 		_shop()
 	
 	if (
 			(
-					(
-							Input.is_action_just_pressed("pause")
-							and not Global.joystick_control
-					)
-					or (
-							Global.joystick_control
-							and (
-									Input.is_action_just_pressed("6")
-									or Input.is_action_just_pressed("F")
-							)
+					(Input.is_action_just_pressed("pause")
+							and not Global.joystick_control)
+					or (Global.joystick_control
+							and (Input.is_action_just_pressed("6")
+									or Input.is_action_just_pressed("F"))
 					)
 			)
 	):
 		_pause()
 	
 	if (
-			(
-					Input.is_action_just_pressed("hide controls")
-					and not Global.joystick_control
-			)
-			or (
-					Global.joystick_control
-					and (
-							Input.is_action_just_pressed("1")
-							or Input.is_action_just_pressed("A")
-					)
+			(Input.is_action_just_pressed("hide controls")
+					and not Global.joystick_control)
+			or (Global.joystick_control
+					and (Input.is_action_just_pressed("1")
+							or Input.is_action_just_pressed("A"))
 			)
 	):
 		_hide_controls()
@@ -623,10 +600,8 @@ func _process(delta: float) -> void:
 			current_dialogue_selection = clampi(current_dialogue_selection, 1, max_option)
 			# Select
 			if (
-					(
-							Input.is_action_just_pressed("1")
-							or Input.is_action_just_pressed("A")
-					)
+					(Input.is_action_just_pressed("1")
+							or Input.is_action_just_pressed("A"))
 					and ready_to_select
 			):
 				select_dialogue(current_dialogue_selection)
@@ -722,16 +697,12 @@ func _process(delta: float) -> void:
 			if (
 					(
 							(
-									(
-											Input.is_action_just_pressed("1")
-											or Input.is_action_just_pressed("A")
-									)
+									(Input.is_action_just_pressed("1")
+											or Input.is_action_just_pressed("A"))
 									and Global.joystick_control
 							)
-							or (
-									Input.is_action_just_pressed("warp")
-									and not Global.joystick_control
-							)
+							or (Input.is_action_just_pressed("warp")
+									and not Global.joystick_control)
 					)
 					and in_warp_range
 					and closest_token["id"] != Global.current_system
@@ -796,6 +767,8 @@ func _process(delta: float) -> void:
 	if action_menu_showing:
 		$ShipActionMenu.show()
 		if Global.joystick_control:
+			action_menu_up = true
+			$ShipActionMenu.position.y = ACTION_MENU_UP_POS
 			if Global.dual_joysticks:
 				if Input.is_action_just_pressed("left1"):
 					selected_ship -= 1
@@ -900,6 +873,24 @@ func _process(delta: float) -> void:
 					hovered_target -= ACTION_MENU_VERTICAL
 					$HoverSFX.play()
 			hovered_ship = clamp(hovered_ship, 0, friendly_ships.get_child_count() - 1)
+		else:
+			# Manage action menu up or down
+			if action_menu_up:
+				$ShipActionMenu.position.y = lerp(
+						$ShipActionMenu.position.y,
+						ACTION_MENU_UP_POS,
+						ACTION_MENU_LERP
+				)
+				if get_global_mouse_position().y < ACTION_MENU_UP_POS:
+					action_menu_up = false
+			else:
+				$ShipActionMenu.position.y = lerp(
+						$ShipActionMenu.position.y,
+						ACTION_MENU_DOWN_POS,
+						ACTION_MENU_LERP
+				)
+				if get_global_mouse_position().y > ACTION_MENU_DOWN_POS:
+					action_menu_up = true
 		# Hide all children so they can be selectively shown
 		for child in %ActionTargetShips/GridContainer.get_children():
 			child.hide()
@@ -919,14 +910,10 @@ func _process(delta: float) -> void:
 					box.get_node("Code").text = SHIP_CODES[ship.type]
 					if (
 							index == hovered_target
-							and (
-									Global.joystick_control
-									and (
-											Global.dual_joysticks
-											or (
-													not Global.dual_joysticks
-													and not left_action_menu
-											)
+							and (Global.joystick_control
+									and (Global.dual_joysticks
+											or (not Global.dual_joysticks
+													and not left_action_menu)
 									)
 									or not Global.joystick_control
 							)
@@ -955,14 +942,10 @@ func _process(delta: float) -> void:
 				box.get_node("Code").text = SHIP_CODES[ship.type]
 				if (
 						index == hovered_target
-						and (
-								Global.joystick_control
-								and (
-										Global.dual_joysticks
-										or (
-												not Global.dual_joysticks
-												and not left_action_menu
-										)
+						and (Global.joystick_control
+								and (Global.dual_joysticks
+										or (not Global.dual_joysticks
+												and not left_action_menu)
 								)
 								or not Global.joystick_control
 						)
@@ -988,12 +971,10 @@ func _process(delta: float) -> void:
 			var box: PanelContainer = %ActionFriendlyShips/GridContainer.get_child(index)
 			var stylebox: Resource = box.get_theme_stylebox("panel")
 			box.get_node("Code").text = SHIP_CODES[ship.type]
-			#box.set_meta("type", ship.type)
 			if (
 					index == hovered_ship
 					and (
-							(
-									Global.joystick_control
+							(Global.joystick_control
 									and not Global.dual_joysticks
 									and left_action_menu
 							)
@@ -1011,8 +992,7 @@ func _process(delta: float) -> void:
 			index += 1
 		if (
 				Global.joystick_control
-				and (
-						Input.is_action_just_pressed("1")
+				and (Input.is_action_just_pressed("1")
 						or Input.is_action_just_pressed("A")
 				)
 		):
@@ -1044,12 +1024,9 @@ func _process(delta: float) -> void:
 				var stylebox: Resource = button.get_theme_stylebox("panel")
 				if (
 						index == hovered_at_ship_info
-						and (
-								not Global.joystick_control
-								or (
-										Global.joystick_control
-										and info_menu_column == 0
-								)
+						and (not Global.joystick_control
+								or (Global.joystick_control
+										and info_menu_column == 0)
 						)
 				):
 					stylebox.border_color = RED_PANEL_HOVER
@@ -1211,18 +1188,13 @@ func _process(delta: float) -> void:
 				if (
 						Input.is_action_just_pressed("right1")
 						and (
-								(
-										info_showing == InfoTabs.LEVELING
-										and this_ship.level < this_ship.MAX_LEVEL
-								)
+								(info_showing == InfoTabs.LEVELING
+										and this_ship.level < this_ship.MAX_LEVEL)
 								or info_showing == InfoTabs.INSTRUCTIONS
-								or (
-										info_showing == InfoTabs.MISC
-										and (
-												this_ship.type == Global.StarshipTypes.FIGHTER
+								or (info_showing == InfoTabs.MISC
+										and (this_ship.type == Global.StarshipTypes.FIGHTER
 												or this_ship.type \
-														== Global.StarshipTypes.DRONE_COMMAND
-										)
+														== Global.StarshipTypes.DRONE_COMMAND)
 								)
 						)
 				):
@@ -1536,9 +1508,18 @@ func _process(delta: float) -> void:
 	else:
 		$Shop.hide()
 	
+	# Button for universal exiting of menus
+	if Input.is_action_just_pressed("universal exit"):
+		action_menu_showing = false
+		info_menu_showing = false
+		galaxy_map_showing = false
+		shop_showing = false
+		$PressSFX.play()
+	
 	# For some reason the very first frame does not have a viewport and it generates an error
 	if get_viewport() != null:
 		prev_mouse_pos = get_global_mouse_position()
+
 
 # Sets up the dialogue box, with text and dialogue options
 func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
@@ -1610,6 +1591,15 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 					= str(option + 1) + ". " + enemy_running_dialogue[id][1][option][0]
 			option_results.append(enemy_running_dialogue[id][1][option][1])
 			%Options.get_node("Option" + str(option + 1)).show()
+	elif library == DialogueTypes.ENEMY_RAN_AWAY:
+		%DialogueText.text = enemy_ran_away_dialogues[id][0]
+		max_option = len(enemy_ran_away_dialogues[id][1])
+		# Options
+		for option in max_option:
+			%Options.get_node("Option" + str(option + 1)).text \
+					= str(option + 1) + ". " + enemy_ran_away_dialogues[id][1][option][0]
+			option_results.append(enemy_ran_away_dialogues[id][1][option][1])
+			%Options.get_node("Option" + str(option + 1)).show()
 	$Dialogue.show()
 	dialogue_showing = true
 	ready_to_select = true
@@ -1617,14 +1607,11 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 
 # Open/close galaxy map
 func _galaxy_map() -> void:
-	if (
-			not action_menu_showing
-			and not info_menu_showing
-			and not dialogue_showing
-			and not shop_showing
-			and main.warp_charge >= MAX_WARP_CHARGE
-			and not warping
-	):
+	if main.warp_charge >= MAX_WARP_CHARGE and not warping:
+		action_menu_showing = false
+		info_menu_showing = false
+		dialogue_showing = false
+		shop_showing = false
 		galaxy_map_showing = not galaxy_map_showing
 		$PressSFX.play()
 		if galaxy_map_showing:
@@ -1638,13 +1625,10 @@ func _galaxy_map() -> void:
 
 # Open/close ship action menu
 func _action_menu() -> void:
-	if (
-			not galaxy_map_showing
-			and not info_menu_showing
-			and not dialogue_showing
-			and not shop_showing
-			and not warping
-	):
+	if not warping and not galaxy_map_showing:
+		info_menu_showing = false
+		dialogue_showing = false
+		shop_showing = false
 		action_menu_showing = not action_menu_showing
 		$PressSFX.play()
 
@@ -1666,13 +1650,11 @@ func _pause() -> void:
 
 # Open/close fleet information menu
 func _info_menu() -> void:
-	if (
-			not galaxy_map_showing
-			and not action_menu_showing
-			and not dialogue_showing
-			and not shop_showing
-			and not warping
-	):
+	if not warping:
+		galaxy_map_showing = false
+		action_menu_showing = false
+		dialogue_showing = false
+		shop_showing = false
 		info_menu_showing = not info_menu_showing
 		$PressSFX.play()
 
@@ -1712,14 +1694,11 @@ func _on_shop_setup_timeout() -> void:
 # Open/close shop
 func _shop() -> void:
 	var shop_in_system: bool = "shop presence" in main.system_properties
-	if (
-			not galaxy_map_showing
-			and not action_menu_showing
-			and not info_menu_showing
-			and not dialogue_showing
-			and not warping
-			and shop_in_system
-	):
+	if not warping and shop_in_system:
+		galaxy_map_showing = false
+		action_menu_showing = false
+		info_menu_showing = false
+		dialogue_showing = false
 		shop_showing = not shop_showing
 		$PressSFX.play()
 
@@ -1728,14 +1707,12 @@ func _shop() -> void:
 func _hide_controls() -> void:
 	if (
 			not Global.joystick_control
-			or (
-					Global.joystick_control
+			or (Global.joystick_control
 					and not action_menu_showing
 					and not info_menu_showing
 					and not galaxy_map_showing
 					and not dialogue_showing
-					and not shop_showing
-			)
+					and not shop_showing)
 	):
 		Global.controls_showing = not Global.controls_showing
 		$PressSFX.play()
@@ -1860,13 +1837,13 @@ func select_target() -> void:
 	$PressSFX.play()
 
 
-# Hover an info tab in the info menu
+# Hover on a ship in the info menu
 func hover_info(num: int) -> void:
 	hovered_at_ship_info = num
 	$HoverSFX.play()
 
 
-# Select an info tab in the info menu
+# Select a ship in the info menu
 func select_info(num: int) -> void:
 	looking_at_ship_info = num
 	$PressSFX.play()
@@ -1875,7 +1852,6 @@ func select_info(num: int) -> void:
 # Hover a shop button
 func hover_shop(num: int) -> void:
 	hovered_shop_button = num
-	$HoverSFX.play()
 
 
 # Buy an item
@@ -1952,6 +1928,8 @@ func win_encounter() -> void:
 				len(item_win_dialogues) - 1,
 				Global.weapon_list[weapon_won]["Name"] + "."
 		)
+	elif enemy_ran_away:
+		dialogue_set_up(DialogueTypes.ENEMY_RAN_AWAY, len(enemy_ran_away_dialogues) - 1)
 	else:
 		dialogue_set_up(DialogueTypes.ENCOUNTER_WIN, len(encounter_win_dialogues) - 1)
 

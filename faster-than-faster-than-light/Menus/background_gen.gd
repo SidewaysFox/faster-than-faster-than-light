@@ -147,8 +147,8 @@ func _process(delta: float) -> void:
 	
 	# Restart music if it ends
 	if not $Music.playing:
-		$Music.play()
 		Global.menu_music_progress = 0.0
+		$Music.play()
 
 
 func star_reposition() -> Vector3:

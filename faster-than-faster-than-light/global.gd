@@ -57,6 +57,8 @@ const SHOP_THRESHOLD: int = 8 # Default 8
 const ITEM_WIN_THRESHOLD: int = 17 # Default 17
 
 const VOLUME_FACTOR: float = 100.0
+const MUSIC_BUS: int = 1
+const SFX_BUS: int = 2
 
 enum Teams {
 	HOSTILE = -1,
@@ -77,11 +79,11 @@ enum StarshipTypes {
 	REPAIR_DRONE
 	}
 
-enum Alignments {
+enum Liveries {
 	ALLIANCE,
-	CIVILIAN,
-	REBEL,
-	PIRATE
+	PIRATE_YELLOW,
+	PIRATE_GREEN,
+	PIRATE_PURPLE
 }
 
 var starship_base_stats: Array[Dictionary] = [
@@ -297,6 +299,33 @@ var weapon_list: Array[Dictionary] = [
 		"Reload time": 15.0,
 		"Description": "A basic repair drone for use by Drone Command Ships."
 	},
+	{ # 11
+		"Name": "RAILGUN DRONE",
+		"Type": 3,
+		"Ship type": 8,
+		"Cost": 85,
+		"Damage": 3,
+		"Reload time": 6.0,
+		"Description": "A fighter drone equipped with a specialised laser railgun."
+	},
+	{ # 12
+		"Name": "REPAIR DRONE 2",
+		"Type": 3,
+		"Ship type": 9,
+		"Cost": 105,
+		"Damage": 0,
+		"Reload time": 7.5,
+		"Description": "An advanced and extremely capable repair drone."
+	},
+	{ # 13
+		"Name": "FIGHTER DRONE 2",
+		"Type": 3,
+		"Ship type": 8,
+		"Cost": 64,
+		"Damage": 1,
+		"Reload time": 4.0,
+		"Description": "An advanced fighter drone, great for breaking down enemy shields."
+	},
 ]
 
 var weapon_types: Array[String] = ["LASER", "PHYSICAL", "EMP", "DRONE"]
@@ -310,7 +339,21 @@ enum WeaponTypes {
 
 var fleet_inventory: Array = [] # Stores the weapon ID
 
-const WINNABLE_WEAPONS: Array[int] = [0, 1, 2, 3, 5, 6, 7, 9, 10]
+# Pool from which random drops are pulled (as such some weapons are doubled to modify chances)
+const WINNABLE_WEAPONS: Array[int] = [
+	0, 0, 0, 0,
+	1, 1, 1,
+	2, 2,
+	3, 3,
+	5, 5, 5, 5,
+	6, 6, 6,
+	7, 7,
+	9, 9, 9,
+	10, 10, 10,
+	11, 11,
+	12,
+	13,
+]
 
 const ENEMY_TARGETERS: Array[int] = [1, 3, 5]
 
@@ -318,35 +361,35 @@ const STATUS_MESSAGES: Array[String] = ["STATUS: OK", "STATUS: UNDER ATTACK"]
 
 # This can't be a constant, otherwise it makes everything else a constant
 var tutorial_galaxy: Array[Dictionary] = [
-				{
-					"id": 0,
-					"position": Vector2(155, 310),
-					"sector": 0,
-					"enemy presence": false,
-					"shop presence": false,
-				},
-				{
-					"id": 1,
-					"position": Vector2(235, 310),
-					"sector": 1,
-					"enemy presence": true,
-					"shop presence": false,
-				},
-				{
-					"id": 2,
-					"position": Vector2(360, 310),
-					"sector": 2,
-					"enemy presence": false,
-					"shop presence": true,
-				},
-				{
-					"id": 3,
-					"position": Vector2(450, 310),
-					"sector": 3,
-					"enemy presence": false,
-					"shop presence": false,
-				},
-				]
+	{
+		"id": 0,
+		"position": Vector2(155, 310),
+		"sector": 0,
+		"enemy presence": false,
+		"shop presence": false,
+	},
+	{
+		"id": 1,
+		"position": Vector2(235, 310),
+		"sector": 1,
+		"enemy presence": true,
+		"shop presence": false,
+	},
+	{
+		"id": 2,
+		"position": Vector2(360, 310),
+		"sector": 2,
+		"enemy presence": false,
+		"shop presence": true,
+	},
+	{
+		"id": 3,
+		"position": Vector2(450, 310),
+		"sector": 3,
+		"enemy presence": false,
+		"shop presence": false,
+	},
+]
 
 
 func _ready() -> void:
@@ -358,14 +401,14 @@ func _ready() -> void:
 		sfx_volume = config.get_value("Settings", "sfx_volume")
 		joystick_control = config.get_value("Settings", "joystick_control")
 		dual_joysticks = config.get_value("Settings", "dual_joysticks")
+	AudioServer.set_bus_volume_linear(MUSIC_BUS, music_volume / VOLUME_FACTOR)
+	AudioServer.set_bus_volume_linear(SFX_BUS, sfx_volume / VOLUME_FACTOR)
 
 
 func _process(_delta: float) -> void:
 	# Change audio bus volumes
-	const BUS_ONE: int = 1
-	const BUS_TWO: int = 2
-	AudioServer.set_bus_volume_linear(BUS_ONE, music_volume / VOLUME_FACTOR)
-	AudioServer.set_bus_volume_linear(BUS_TWO, sfx_volume / VOLUME_FACTOR)
+	AudioServer.set_bus_volume_linear(MUSIC_BUS, music_volume / VOLUME_FACTOR)
+	AudioServer.set_bus_volume_linear(SFX_BUS, sfx_volume / VOLUME_FACTOR)
 
 
 func establish() -> void:
@@ -385,6 +428,7 @@ func establish() -> void:
 		next_ship_id = config.get_value("Game", "next_ship_id")
 		fleet_inventory = config.get_value("Game", "fleet_inventory")
 		current_system = config.get_value("Game", "current_system")
+		destination = config.get_value("Game", "destination")
 		
 		# Because config files can't store the starships properly when the game has been closed
 		# Needs to load info for each ship individually
@@ -394,7 +438,7 @@ func establish() -> void:
 			new_ship.id = ship.id
 			new_ship.team = ship.team
 			new_ship.type = ship.type
-			new_ship.alignment = ship.alignment
+			new_ship.livery = ship.livery
 			new_ship.ship_name = ship.ship_name
 			new_ship.level = ship.level
 			new_ship.hull_strength = ship.hull_strength
@@ -517,7 +561,7 @@ func create_new_starship(type: int, ship_name: String = "Starship", creator_id: 
 	new_ship.id = get_new_ship_id()
 	new_ship.team = Teams.FRIENDLY
 	new_ship.type = type
-	new_ship.alignment = Alignments.ALLIANCE
+	new_ship.livery = Liveries.ALLIANCE
 	new_ship.ship_name = ship_name
 	new_ship.level = 1
 	new_ship.hull_strength = starship_base_stats[type]["Hull Strength"]
@@ -537,7 +581,7 @@ func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = 
 	new_enemy.id = get_new_ship_id()
 	new_enemy.team = Teams.HOSTILE
 	new_enemy.type = type
-	new_enemy.alignment = Alignments.PIRATE
+	new_enemy.livery = randi_range(Liveries.PIRATE_YELLOW, Liveries.PIRATE_PURPLE)
 	new_enemy.level = 1
 	new_enemy.hull_strength = starship_base_stats[type]["Hull Strength"]
 	new_enemy.hull = starship_base_stats[type]["Hull Strength"]

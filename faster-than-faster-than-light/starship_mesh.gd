@@ -4,18 +4,28 @@ extends Node3D
 var type: int = 0
 var palettes: Array[Array] = [
 	[
-		preload("res://federation_primary.tres").duplicate(),
-		preload("res://federation_secondary.tres").duplicate(),
-		preload("res://federation_tertiary.tres").duplicate(),
-		preload("res://federation_accent.tres").duplicate()
+		preload("res://alliance_primary.tres").duplicate(),
+		preload("res://alliance_secondary.tres").duplicate(),
+		preload("res://alliance_tertiary.tres").duplicate(),
+		preload("res://alliance_accent.tres").duplicate()
 	],
-	[], # Unused for the foreseeable future
-	[], # Unused for the foreseeable future
 	[
-		preload("res://pirate_primary.tres").duplicate(),
-		preload("res://pirate_secondary.tres").duplicate(),
-		preload("res://pirate_tertiary.tres").duplicate(),
-		preload("res://pirate_accent.tres").duplicate()
+		preload("res://pirate_yellow_primary.tres").duplicate(),
+		preload("res://pirate_yellow_secondary.tres").duplicate(),
+		preload("res://pirate_yellow_tertiary.tres").duplicate(),
+		preload("res://pirate_yellow_accent.tres").duplicate()
+	],
+	[
+		preload("res://pirate_green_primary.tres").duplicate(),
+		preload("res://pirate_green_secondary.tres").duplicate(),
+		preload("res://pirate_green_tertiary.tres").duplicate(),
+		preload("res://pirate_green_accent.tres").duplicate()
+	],
+	[
+		preload("res://pirate_purple_primary.tres").duplicate(),
+		preload("res://pirate_purple_secondary.tres").duplicate(),
+		preload("res://pirate_purple_tertiary.tres").duplicate(),
+		preload("res://pirate_purple_accent.tres").duplicate()
 	],
 ]
 

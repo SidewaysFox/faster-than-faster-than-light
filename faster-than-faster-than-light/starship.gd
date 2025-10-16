@@ -21,12 +21,12 @@ class_name Starship extends Node3D
 # 7: drone command ship
 # 8: drone fighter
 # 9: drone repair
-## The starship's alignment
-@export var alignment: int
+## The starship's livery
+@export var livery: int
 # 0: Alliance
-# 1: Civilian (outdated)
-# 2: Rebel (outdated)
-# 3: Pirate
+# 1: Pirate Yellow
+# 2: Pirate Green
+# 3: Pirate Purple
 ## The starship's name
 @export var ship_name: String = "Starship"
 ## The starship's current level
@@ -104,7 +104,7 @@ const WARP_IN_SFX_DELAY: float = 0.4
 const RETARGET_DELAY: Vector2 = Vector2(16.0, 32.0)
 const JUMP_DELAY: float = 2.0
 const MARKER_SELECTION_ALPHA: float = 0.4
-const MARKER_HOVER_ALPHA: Vector2i = Vector2i(255, 160)
+const MARKER_HOVER_ALPHA: Vector2 = Vector2(1.0, 0.63)
 const BORDER_COLOUR_ON: Color = Color8(0, 191, 255)
 const BORDER_COLOUR_OFF: Color = Color8(255, 255, 255)
 const NAME_LABEL: String = "NAME: "
@@ -172,7 +172,7 @@ const UPGRADES: Array[Dictionary] = [
 func _ready() -> void:
 	# Apply appropriate mesh based on type
 	var new_mesh: Node3D = meshes[type].instantiate()
-	new_mesh.type = alignment
+	new_mesh.type = livery
 	add_child(new_mesh)
 	
 	marker = $Marker/Selection.get_theme_stylebox("panel")
@@ -245,59 +245,66 @@ func _process(_delta: float) -> void:
 					drone.hull = 0
 		queue_free()
 	
+	# Ship marker stuff
+	$Marker.hide()
 	# Drones don't have markers
 	if not is_drone:
-		$Marker/Reload1.hide()
-		$Marker/Reload2.hide()
-		$Marker/Reload3.hide()
-		# Change marker properties based on player input
-		# This statement needs to be distinct/separate because it won't let me construct the Color8
-		# alongside the alpha channel variable. As such, this is the best alternative solution
-		if ui.selected_ship == get_index() and team == Global.Teams.FRIENDLY:
-			marker.border_color = BORDER_COLOUR_ON
-		else:
-			marker.border_color = BORDER_COLOUR_OFF
-		# Friendly markers
-		if team == Global.Teams.FRIENDLY:
-			if ui.selected_ship == get_index():
-				$Marker.modulate.a = 1.0
-			else:
-				$Marker.modulate.a = MARKER_SELECTION_ALPHA
-			if (
-					ui.hovered_ship == get_index()
-					or (
-							ui.hovered_target == get_index()
-							and ui.targeting_mode == Global.StarshipTypes.REPAIR
-					)
-			):
-				marker.border_color.a = MARKER_HOVER_ALPHA.x
-			else:
-				marker.border_color.a = MARKER_HOVER_ALPHA.y
-		# Hostile markers
-		elif team == Global.Teams.HOSTILE:
-			if (
-					ui.hovered_target == get_index()
-					and ui.targeting_mode != Global.StarshipTypes.REPAIR
-			):
-				marker.border_color.a = MARKER_HOVER_ALPHA.x
-			else:
-				marker.border_color.a = MARKER_HOVER_ALPHA.y
-		if ui.selected_ship < friendly_ships.get_child_count():
-			if friendly_ships.get_child(ui.selected_ship).target != null:
-				if friendly_ships.get_child(ui.selected_ship).target == self:
-					$Marker/Target.show()
-				else:
-					$Marker/Target.hide()
-		# Marker labels setup
-		$Marker/Info/Name.text = NAME_LABEL + ship_name
-		$Marker/Info/Type.text = TYPE_LABEL + ui.SHIP_CODES[type]
-		$Marker/Info/Hull.text = HULL_LABEL + str(hull)
-		$Marker/Info/Status.text = Global.STATUS_MESSAGES[int(attacked)]
-		
-		if ui.action_menu_showing and (team == Global.Teams.FRIENDLY or scanned):
+		var selected_friendly: bool = ui.selected_ship == get_index()
+		# Whether or not the marker's actually showing in the first place
+		if (
+				(team == Global.Teams.FRIENDLY
+						and (ui.action_menu_showing
+								or selected_friendly)
+				)
+				or (team == Global.Teams.HOSTILE
+						and scanned)
+		):
 			$Marker.show()
-		else:
-			$Marker.hide()
+			
+			$Marker/Reload1.hide()
+			$Marker/Reload2.hide()
+			$Marker/Reload3.hide()
+			# Change marker properties based on player input
+			# This statement needs to be distinct/separate because it won't let me construct the Color8
+			# alongside the alpha channel variable. As such, this is the best alternative solution
+			if ui.selected_ship == get_index() and team == Global.Teams.FRIENDLY:
+				marker.border_color = BORDER_COLOUR_ON
+			else:
+				marker.border_color = BORDER_COLOUR_OFF
+			# Friendly markers
+			if team == Global.Teams.FRIENDLY:
+				if ui.selected_ship == get_index():
+					$Marker.modulate.a = 1.0
+				else:
+					$Marker.modulate.a = MARKER_SELECTION_ALPHA
+				if (
+						ui.hovered_ship == get_index()
+						or (ui.hovered_target == get_index()
+								and ui.targeting_mode == Global.StarshipTypes.REPAIR)
+				):
+					marker.border_color.a = MARKER_HOVER_ALPHA.x
+				else:
+					marker.border_color.a = MARKER_HOVER_ALPHA.y
+			# Hostile markers
+			elif team == Global.Teams.HOSTILE:
+				if (
+						ui.hovered_target == get_index()
+						and ui.targeting_mode != Global.StarshipTypes.REPAIR
+				):
+					marker.border_color.a = MARKER_HOVER_ALPHA.x
+				else:
+					marker.border_color.a = MARKER_HOVER_ALPHA.y
+			if ui.selected_ship < friendly_ships.get_child_count():
+				if friendly_ships.get_child(ui.selected_ship).target != null:
+					if friendly_ships.get_child(ui.selected_ship).target == self:
+						$Marker/Target.show()
+					else:
+						$Marker/Target.hide()
+			# Marker labels setup
+			$Marker/Info/Name.text = NAME_LABEL + ship_name
+			$Marker/Info/Type.text = TYPE_LABEL + ui.SHIP_CODES[type]
+			$Marker/Info/Hull.text = HULL_LABEL + str(hull)
+			$Marker/Info/Status.text = Global.STATUS_MESSAGES[int(attacked)]
 	
 	scanned = false
 	
@@ -389,21 +396,18 @@ func _process(_delta: float) -> void:
 					$RepairReload.stop()
 		if (
 				type == Global.StarshipTypes.REPAIR_DRONE
-				or (
-						type == Global.StarshipTypes.REPAIR
-						and team == Global.Teams.HOSTILE
-				)
+				or (type == Global.StarshipTypes.REPAIR
+						and team == Global.Teams.HOSTILE)
 		):
 			# Always searching for ships to repair
 			if $RepairReload.is_stopped():
 				new_target()
 	else:
-		print(active)
-		print(attacked)
 		# Hold fire for when reactivated
-		for reload in get_tree().get_nodes_in_group("weapon reloads"):
-			if reload.time_left < RELOAD_HOLD:
-				reload.paused = true
+		# Can't use groups for this, otherwise it affects all starships
+		for index in MAX_LEVEL:
+			if get_node("WeaponReload" + str(index + 1)).time_left < RELOAD_HOLD:
+				get_node("WeaponReload" + str(index + 1)).paused = true
 		$RepairReload.stop()
 		$ShieldReload.stop()
 		$InfiltrateReload.stop()
@@ -415,11 +419,14 @@ func _process(_delta: float) -> void:
 	
 	# Do warping animations
 	if jumping:
+		# Jump in
 		if jump_mode == 0 and team != Global.Teams.NEUTRAL:
 			global_position.x = lerp(global_position.x, jump_destination, JUMP_LERP)
+		# Warp out
 		elif jump_mode == 1:
 			global_position.x = lerp(global_position.x, warp_destination, JUMP_LERP)
-			if global_position.x > warp_destination - 1.0 and team != Global.Teams.FRIENDLY:
+			if global_position.x < warp_destination + 1.0 and team == Global.Teams.HOSTILE:
+				main.enemy_ship_count -= 1
 				queue_free()
 
 
@@ -467,6 +474,7 @@ func new_target(ship: int = 0) -> void:
 			target = hostile_ships.get_child(ship)
 		elif team == Global.Teams.HOSTILE and friendly_ships.get_child_count() > 0:
 			target = friendly_ships.get_children().pick_random()
+	
 	elif type == Global.StarshipTypes.REPAIR:
 		if team == Global.Teams.HOSTILE and hostile_ships.get_child_count() > 0:
 			for potential_target in hostile_ships.get_children():
@@ -477,11 +485,13 @@ func new_target(ship: int = 0) -> void:
 				target = self
 		elif team == Global.Teams.FRIENDLY and friendly_ships.get_child_count() > 0:
 			target = friendly_ships.get_child(ship)
+	
 	elif type == Global.StarshipTypes.FIGHTER_DRONE:
 		if team == Global.Teams.FRIENDLY and hostile_ships.get_child_count() > 0:
 			target = hostile_ships.get_children().pick_random()
 		elif team == Global.Teams.HOSTILE and friendly_ships.get_child_count() > 0:
 			target = friendly_ships.get_children().pick_random()
+	
 	elif type == Global.StarshipTypes.REPAIR_DRONE:
 		if team == Global.Teams.HOSTILE and hostile_ships.get_child_count() > 0:
 			for potential_target in hostile_ships.get_children():
@@ -509,10 +519,8 @@ func _weapon_fire(firing: int) -> void:
 	if (
 			target == null
 			or is_drone
-			or (
-					targeting_strategy == Strategies.RANDOM
-					and team == Global.Teams.HOSTILE
-			)
+			or (targeting_strategy == Strategies.RANDOM
+					and team == Global.Teams.HOSTILE)
 	):
 		new_target()
 	create_new_projectile(weapon_info["Type"], weapon_info["Damage"])
@@ -573,7 +581,7 @@ func upgrade() -> void:
 	agility += UPGRADES[type]["Agility" + str(level)]
 	if type == Global.StarshipTypes.COMMAND_SHIP:
 		Global.max_inventory += 1
-	elif type == Global.StarshipTypes.FIGHTER:
+	elif type == Global.StarshipTypes.FIGHTER and team == Global.Teams.FRIENDLY:
 		weapons.append(0)
 	elif type == Global.StarshipTypes.DRONE_COMMAND:
 		drones.append(UPGRADES[type][str(level)])

@@ -24,9 +24,10 @@ var run_away: bool = false
 var enemy_aggression: int
 var warp_in_dialogue_needed: bool = true
 
-const LATE_GAME: float = 2400.0
-const MID_GAME: float = 1600.0
-const EARLY_GAME: float = 800.0
+const VERY_LATE_GAME: float = 2600.0
+const LATE_GAME: float = 2000.0
+const MID_GAME: float = 1200.0
+const EARLY_GAME: float = 550.0
 const MUSIC_FADE_RATE: float = 0.8
 const SOLAR_FLARE_SFX_DELAY: float = 2.05
 const MAX_SOLAR_FLARE_DAMAGE: int = 2
@@ -62,11 +63,14 @@ enum GameStage {
 	START,
 	EARLY,
 	MID,
-	LATE
+	LATE,
+	VERY_LATE
 }
 
 var tutorial_enemy_fleet: Array[Array] = [[1, 0, [0]], [2, 0, [0]], [6, 0, [0]]]
 
+# These are NOT balanced in the slightest, that would take literal hours of playtesting
+# I do not have that kind of time available
 var pirate_fleets: Dictionary = {
 	GameStage.START: [
 		[
@@ -78,6 +82,10 @@ var pirate_fleets: Dictionary = {
 			[1, 0, [5]],
 		],
 		[
+			[1, 0, [0]],
+			[2, 0, [0]],
+		],
+		[
 			[1, 0, [5]],
 			[2, 0, [0]],
 		],
@@ -86,7 +94,15 @@ var pirate_fleets: Dictionary = {
 			[3, 0, [0]],
 		],
 		[
+			[1, 0, [5]],
+			[3, 0, [0]],
+		],
+		[
 			[1, 0, [0]],
+			[4, 0, [0]],
+		],
+		[
+			[1, 0, [5]],
 			[4, 0, [0]],
 		],
 		[
@@ -94,8 +110,27 @@ var pirate_fleets: Dictionary = {
 			[5, 0, [0]],
 		],
 		[
+			[1, 0, [1]],
+			[5, 0, [0]],
+		],
+		[
+			[1, 0, [5]],
+			[5, 0, [0]],
+		],
+		[
 			[1, 0, [0]],
 			[6, 0, [0]],
+		],
+		[
+			[1, 0, [1]],
+			[6, 0, [0]],
+		],
+		[
+			[1, 0, [5]],
+			[6, 0, [0]],
+		],
+		[
+			[7, 0, [9]],
 		],
 		[
 			[1, 0, [0]],
@@ -110,7 +145,17 @@ var pirate_fleets: Dictionary = {
 		[
 			[1, 0, [5]],
 			[2, 0, [0]],
+			[5, 0, [0]],
+		],
+		[
+			[1, 0, [5]],
+			[2, 0, [0]],
 			[6, 0, [0]],
+		],
+		[
+			[1, 0, [0]],
+			[3, 0, [0]],
+			[4, 0, [0]],
 		],
 		[
 			[1, 0, [0]],
@@ -120,11 +165,6 @@ var pirate_fleets: Dictionary = {
 		[
 			[1, 0, [0]],
 			[3, 0, [0]],
-			[4, 0, [0]],
-		],
-		[
-			[1, 0, [0]],
-			[3, 0, [0]],
 			[6, 0, [0]],
 		],
 		[
@@ -146,21 +186,29 @@ var pirate_fleets: Dictionary = {
 			[1, 0, [0]],
 			[5, 0, [0]],
 			[5, 0, [0]],
+			[5, 0, [0]],
+		],
+		[
+			[1, 0, [0]],
+			[5, 1, [0]],
 		],
 		[
 			[1, 1, [0, 5]],
 		],
 		[
-			[1, 0, [1]],
-			[6, 0, [0]],
+			[3, 0, [0]],
+			[3, 0, [0]],
+		],
+		[
+			[3, 1, [0]],
+		],
+		[
+			[3, 1, [0]],
+			[6, 1, [0]],
 		],
 	],
 	GameStage.EARLY: [
 		[
-			[1, 1, [0, 1]],
-			[1, 1, [0, 1]],
-		],
-		[
 			[1, 0, [1]],
 			[1, 0, [1]],
 			[2, 0, [0]],
@@ -169,13 +217,59 @@ var pirate_fleets: Dictionary = {
 			[1, 0, [1]],
 			[2, 0, [0]],
 			[2, 0, [0]],
+		],
+		[
+			[1, 1, [0, 0]],
+			[1, 1, [0, 0]],
 		],
 	],
 	GameStage.MID: [
-		
+		[
+			[1, 0, [1]],
+			[1, 0, [1]],
+			[2, 0, [0]],
+			[4, 0, [0]],
+		],
+		[
+			[3, 1, [0]],
+			[3, 1, [0]],
+			[3, 1, [0]],
+		],
 	],
 	GameStage.LATE: [
-		
+		[
+			[1, 1, [0, 2]],
+			[1, 0, [2]],
+			[2, 0, [0]],
+			[4, 0, [0]],
+		],
+		[
+			[1, 1, [1, 1]],
+			[2, 2, [0]],
+			[2, 2, [0]],
+		],
+	],
+	GameStage.VERY_LATE: [
+		[
+			[1, 2, [0, 1, 2]],
+			[1, 0, [2]],
+			[2, 1, [0]],
+			[4, 2, [0]],
+		],
+		[
+			[1, 2, [5, 6, 7]],
+			[5, 2, [0]],
+			[5, 2, [0]],
+			[5, 2, [0]],
+		],
+		[
+			[2, 0, [0]],
+			[5, 1, [0]],
+			[7, 2, [9, 9, 10]],
+			[7, 2, [9, 10, 10]],
+			[7, 2, [9, 9, 10]],
+			[7, 2, [9, 10, 10]],
+		],
 	]
 }
 
@@ -202,7 +296,9 @@ func _ready() -> void:
 	$MusicCombat.play(Global.game_music_progress)
 	
 	# Check what section of the game this is
-	if Global.galaxy_data[Global.current_system]["position"].x > LATE_GAME:
+	if Global.galaxy_data[Global.current_system]["position"].x > VERY_LATE_GAME:
+		system_stage = GameStage.VERY_LATE
+	elif Global.galaxy_data[Global.current_system]["position"].x > LATE_GAME:
 		system_stage = GameStage.LATE
 	elif Global.galaxy_data[Global.current_system]["position"].x > MID_GAME:
 		system_stage = GameStage.MID
@@ -362,7 +458,8 @@ func _ready() -> void:
 			star.mesh.height = radius * HEIGHT_FACTOR
 			# Not saved because it's not important enough (ouch)
 			star.mesh.material.emission_texture.noise.seed = randi()
-			if ((radius * PROXIMITY_RADIUS_WEIGHT) / star_position.distance_to(Vector3.ZERO)
+			if (
+					(radius * PROXIMITY_RADIUS_WEIGHT) / star_position.distance_to(Vector3.ZERO)
 					> STAR_PROXIMITY_THRESHOLD
 			):
 				star_proximity = true
@@ -497,8 +594,8 @@ func commence_warp() -> void:
 # Initiate a solar flare
 func _on_solar_flare_timeout() -> void:
 	var shop_in_system: bool = "shop presence" in system_properties
-	# No effect if there is a shop in the system
-	if not shop_in_system:
+	# No effect if there is a shop in the system or the player is in the middle of warping
+	if not shop_in_system and not %UserInterface.warping:
 		$SolarFlareSFX.play()
 		await get_tree().create_timer(SOLAR_FLARE_SFX_DELAY).timeout
 		# Potentially deal damage to every existing ship
@@ -509,6 +606,7 @@ func _on_solar_flare_timeout() -> void:
 
 # Enemies successfully escape
 func _on_run_away_timeout() -> void:
+	%UserInterface.enemy_ran_away = true
 	for ship in $HostileShips.get_children():
 		ship.begin_warp()
 

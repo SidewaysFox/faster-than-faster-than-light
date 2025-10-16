@@ -7,7 +7,7 @@ uniform float prob = 0.9;
 uniform float size = 100.0;
 
 float rand(vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233)) * seed) * 43758.5453123);
+	return fract(sin(dot(st.xy, vec2(12.9898,78.233)) * seed) * 43758.5453123);
 }
 
 void fragment() {
