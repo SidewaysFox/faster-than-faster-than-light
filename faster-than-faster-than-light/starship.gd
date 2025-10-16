@@ -248,7 +248,7 @@ func _process(_delta: float) -> void:
 	# Ship marker stuff
 	$Marker.hide()
 	# Drones don't have markers
-	if not is_drone:
+	if not is_drone and ui.visible:
 		var selected_friendly: bool = ui.selected_ship == get_index()
 		# Whether or not the marker's actually showing in the first place
 		if (
