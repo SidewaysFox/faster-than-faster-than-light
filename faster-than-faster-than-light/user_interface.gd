@@ -1607,10 +1607,9 @@ func dialogue_set_up(library: int, id: int, bonus_text: String = "") -> void:
 
 # Open/close galaxy map
 func _galaxy_map() -> void:
-	if main.warp_charge >= MAX_WARP_CHARGE and not warping:
+	if main.warp_charge >= MAX_WARP_CHARGE and not warping and not dialogue_showing:
 		action_menu_showing = false
 		info_menu_showing = false
-		dialogue_showing = false
 		shop_showing = false
 		galaxy_map_showing = not galaxy_map_showing
 		$PressSFX.play()
@@ -1625,9 +1624,8 @@ func _galaxy_map() -> void:
 
 # Open/close ship action menu
 func _action_menu() -> void:
-	if not warping and not galaxy_map_showing:
+	if not warping and not galaxy_map_showing and not dialogue_showing:
 		info_menu_showing = false
-		dialogue_showing = false
 		shop_showing = false
 		action_menu_showing = not action_menu_showing
 		$PressSFX.play()
@@ -1650,10 +1648,9 @@ func _pause() -> void:
 
 # Open/close fleet information menu
 func _info_menu() -> void:
-	if not warping:
+	if not warping and not dialogue_showing:
 		galaxy_map_showing = false
 		action_menu_showing = false
-		dialogue_showing = false
 		shop_showing = false
 		info_menu_showing = not info_menu_showing
 		$PressSFX.play()
@@ -1694,11 +1691,10 @@ func _on_shop_setup_timeout() -> void:
 # Open/close shop
 func _shop() -> void:
 	var shop_in_system: bool = "shop presence" in main.system_properties
-	if not warping and shop_in_system:
+	if not warping and shop_in_system and not dialogue_showing:
 		galaxy_map_showing = false
 		action_menu_showing = false
 		info_menu_showing = false
-		dialogue_showing = false
 		shop_showing = not shop_showing
 		$PressSFX.play()
 

@@ -13,7 +13,8 @@ var star_colours: Array[Color] = [
 	Color(0.3, 0.3, 1),
 	Color(0.1, 0.1, 1)
 ]
-var main_star_count: String # Needs to be a string for use in other applications
+# Needs to be a string for use in other applications
+var main_star_count: String
 var system_properties: Array = []
 var system_stage: int
 var star_proximity: bool = false

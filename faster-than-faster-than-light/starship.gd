@@ -38,7 +38,7 @@ class_name Starship extends Node3D
 ## The starship's currently active weapons
 @export var weapons: Array = [0]
 ## The starship's available drone slots
-@export var drones: Array[int] = [9]
+@export var drones: Array = [9]
 @export_category("Misc")
 ## Ship meshes
 @export var meshes: Array[PackedScene] = []

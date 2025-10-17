@@ -56,6 +56,13 @@ func _process(_delta: float) -> void:
 		
 		# Check which menu is currently being looked at
 		if $Main.visible:
+			if (
+					(Input.is_action_just_pressed("6")
+							or Input.is_action_just_pressed("F"))
+					and unpause_ready
+			):
+				_on_continue_pressed()
+			
 			if current_selection == PauseButtons.CONTINUE:
 				$Main/Continue/Button.add_theme_color_override("font_color", BUTTON_COLOUR_HOVER)
 				$Main/Settings/Button.add_theme_color_override("font_color", BUTTON_COLOUR_NORMAL)
@@ -127,6 +134,7 @@ func _on_settings_pressed() -> void:
 func _on_quit_pressed() -> void:
 	# Quit to menu
 	var main_menu: String = "res://Menus/main_menu.tscn"
+	Global.menu_music_progress = 0.0
 	get_tree().paused = false
 	get_tree().change_scene_to_file(main_menu)
 

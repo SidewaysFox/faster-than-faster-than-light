@@ -31,30 +31,53 @@ var in_combat: bool = false
 var controls_showing: bool = true
 var continuing: bool = false
 
-const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2] # Default [0, 1, 1, 2]
-const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]#Default [0, 1, 1, 2, 3, 4, 5, 6]
-const MAX_FLEET_SIZE: int = 8 # Default 8
-const STARTING_RESOURCES: int = 25 # Default 32
-const STARTING_FUEL: int = 32 # Default 25
-const STARTING_INVENTORY: Array[int] = [] # Default []
-const TUTORIAL_INVENTORY: Array[int] = [1, 6] # Default [1, 6]
-const DEFAULT_INV_SIZE: int = 4 # Default 4
-const DEFAULT_JUMP_DISTANCE: float = 140.0 # Default 140.0
-const DEFAULT_CHARGE_RATE: float = 3.0 # Default 3.0
-const DEFAULT_CRIT_CHANCE: float = 0.0 # Default 0.0
-const JUMP_DISTANCE_UPGRADE: float = 20.0 # Default 20.0
-const CRIT_CHANCE_UPGRADE: float = 0.05 # Default 0.05
+## Default [0, 1, 1, 2]
+const DEFAULT_STARTING_FLEET: Array[int] = [0, 1, 1, 2]
+## Default [0, 1, 1, 2, 3, 4, 5, 6]
+const DEFAULT_TUTORIAL_FLEET: Array[int] = [0, 1, 1, 2, 3, 4, 5, 6]
+## Default 8
+const MAX_FLEET_SIZE: int = 8
+## Default 25
+const STARTING_RESOURCES: int = 25
+## Default 32
+const STARTING_FUEL: int = 32
+## Default []
+const STARTING_INVENTORY: Array[int] = []
+## Default [1, 6]
+const TUTORIAL_INVENTORY: Array[int] = [1, 6]
+## Default 4
+const DEFAULT_INV_SIZE: int = 4
+## Default 140.0
+const DEFAULT_JUMP_DISTANCE: float = 140.0
+## Default 3.0
+const DEFAULT_CHARGE_RATE: float = 3.0
+## Default 0.0
+const DEFAULT_CRIT_CHANCE: float = 0.0
+## Default 20.0
+const JUMP_DISTANCE_UPGRADE: float = 20.0
+## Default 0.05
+const CRIT_CHANCE_UPGRADE: float = 0.05
 
-const SECTOR_ROWS: int = 8 # Default 8
-const SECTOR_COLUMNS: int = 32 # Default 32
-const SECTOR_SIZE: Vector2 = Vector2(100, 70) # Default (100, 70)
-const MAX_SECTOR_SYSTEMS: int = 3 # Default 3
-const GMAP_TOP: float = 30.0 # Default 30.0
-const GMAP_BOT: float = 590.0 # Default 590.0
-const SYSTEM_TYPE_THRESHOLD: int = 19 # Default 19
-const ENEMY_THRESHOLD: int = 9 # Default 9
-const SHOP_THRESHOLD: int = 8 # Default 8
-const ITEM_WIN_THRESHOLD: int = 17 # Default 17
+## Default 8
+const SECTOR_ROWS: int = 8
+## Default 32
+const SECTOR_COLUMNS: int = 32
+## Default Vector2(100.0, 70.0)
+const SECTOR_SIZE: Vector2 = Vector2(100.0, 70.0)
+## Default 3
+const MAX_SECTOR_SYSTEMS: int = 3
+## Default 30.0
+const GMAP_TOP: float = 30.0
+## Default 590.0
+const GMAP_BOT: float = 590.0
+## Default 19
+const SYSTEM_TYPE_THRESHOLD: int = 19
+## Default 9
+const ENEMY_THRESHOLD: int = 9
+## Default 8
+const SHOP_THRESHOLD: int = 8
+## Default 17
+const ITEM_WIN_THRESHOLD: int = 17
 
 const VOLUME_FACTOR: float = 100.0
 const MUSIC_BUS: int = 1
@@ -600,16 +623,17 @@ func create_enemy_ship(type: int, level: int, weapons: Array, creator_id: int = 
 
 # Saving all required game variables
 func save_game() -> void:
-	var config: ConfigFile = ConfigFile.new()
-	config.set_value("Game", "resources", resources)
-	config.set_value("Game", "fuel", fuel)
-	config.set_value("Game", "max_inventory", max_inventory)
-	config.set_value("Game", "fleet", fleet)
-	config.set_value("Game", "galaxy_data", galaxy_data)
-	config.set_value("Game", "visited_systems", visited_systems)
-	config.set_value("Game", "unique_visits", unique_visits)
-	config.set_value("Game", "next_ship_id", next_ship_id)
-	config.set_value("Game", "fleet_inventory", fleet_inventory)
-	config.set_value("Game", "destination", destination)
-	config.set_value("Game", "current_system", current_system)
-	config.save("user://save.cfg")
+	if not tutorial:
+		var config: ConfigFile = ConfigFile.new()
+		config.set_value("Game", "resources", resources)
+		config.set_value("Game", "fuel", fuel)
+		config.set_value("Game", "max_inventory", max_inventory)
+		config.set_value("Game", "fleet", fleet)
+		config.set_value("Game", "galaxy_data", galaxy_data)
+		config.set_value("Game", "visited_systems", visited_systems)
+		config.set_value("Game", "unique_visits", unique_visits)
+		config.set_value("Game", "next_ship_id", next_ship_id)
+		config.set_value("Game", "fleet_inventory", fleet_inventory)
+		config.set_value("Game", "destination", destination)
+		config.set_value("Game", "current_system", current_system)
+		config.save("user://save.cfg")
